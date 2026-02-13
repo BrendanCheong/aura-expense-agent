@@ -1,0 +1,68 @@
+{
+  "uob_bank_alert": {
+    "subject": "UOB Transaction Alert",
+    "text": "Dear Cardholder, A transaction of SGD 16.23 was made with your UOB Card ending 8909 on 08/02/26 at DIGITALOCEAN.COM. If this transaction is unauthorised, please call our 24/7 Fraud Hotline at 6255 0160.",
+    "html": "<p>Dear Cardholder,<br>A transaction of SGD 16.23 was made with your UOB Card ending 8909 on 08/02/26 at DIGITALOCEAN.COM. If this transaction is unauthorised, please call our 24/7 Fraud Hotline at 6255 0160.</p>",
+    "expected": {
+      "amount": 16.23,
+      "vendor": "DIGITALOCEAN.COM",
+      "date_raw": "08/02/26"
+    }
+  },
+  "dbs_bank_alert": {
+    "subject": "DBS Card Transaction",
+    "text": "DBS: SGD 25.50 was charged to your card ending 1234 at GRAB *GRABFOOD on 09 Feb 2026. Ref: 0209GRAB01.",
+    "html": "<p>DBS: SGD 25.50 was charged to your card ending 1234 at GRAB *GRABFOOD on 09 Feb 2026. Ref: 0209GRAB01.</p>",
+    "expected": {
+      "amount": 25.50,
+      "vendor": "GRAB *GRABFOOD",
+      "date_raw": "09 Feb 2026"
+    }
+  },
+  "ocbc_bank_alert": {
+    "subject": "OCBC Card Notification",
+    "text": "Your OCBC Card ending 5678 was used for a transaction of S$89.99 at AMAZON.SG on 08 Feb 2026.",
+    "html": "<p>Your OCBC Card ending 5678 was used for a transaction of S$89.99 at AMAZON.SG on 08 Feb 2026.</p>",
+    "expected": {
+      "amount": 89.99,
+      "vendor": "AMAZON.SG",
+      "date_raw": "08 Feb 2026"
+    }
+  },
+  "grab_receipt_html": {
+    "subject": "Your GrabFood receipt",
+    "text": "Thank you for your order! Order Total: SGD 18.50. Restaurant: Boon Tong Kee. Delivery Fee: SGD 3.00. Platform Fee: SGD 0.30.",
+    "html": "<div><h2>Your GrabFood Receipt</h2><table><tr><td>Order Total</td><td>SGD 18.50</td></tr><tr><td>Restaurant</td><td>Boon Tong Kee</td></tr><tr><td>Delivery Fee</td><td>SGD 3.00</td></tr><tr><td>Platform Fee</td><td>SGD 0.30</td></tr></table></div>",
+    "expected": {
+      "amount": 18.50,
+      "vendor": "GRAB *GRABFOOD",
+      "date_raw": null
+    }
+  },
+  "newsletter_non_transaction": {
+    "subject": "Weekly Newsletter",
+    "text": "Welcome to our weekly newsletter. Check out our latest deals and offers!",
+    "html": "<p>Welcome to our weekly newsletter. Check out our latest deals and offers!</p>",
+    "expected": null
+  },
+  "large_amount_comma": {
+    "subject": "DBS Card Transaction",
+    "text": "DBS: SGD 1,234.56 was charged to your card ending 1234 at SCOOT AIRLINES on 15 Feb 2026.",
+    "html": "<p>DBS: SGD 1,234.56 was charged to your card ending 1234 at SCOOT AIRLINES on 15 Feb 2026.</p>",
+    "expected": {
+      "amount": 1234.56,
+      "vendor": "SCOOT AIRLINES",
+      "date_raw": "15 Feb 2026"
+    }
+  },
+  "s_dollar_format": {
+    "subject": "OCBC Transaction",
+    "text": "Payment of S$48.00 was made to SINGTEL MOBILE on 07/02/26.",
+    "html": "<p>Payment of S$48.00 was made to SINGTEL MOBILE on 07/02/26.</p>",
+    "expected": {
+      "amount": 48.00,
+      "vendor": "SINGTEL MOBILE",
+      "date_raw": "07/02/26"
+    }
+  }
+}

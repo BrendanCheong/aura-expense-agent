@@ -1,0 +1,62 @@
+{
+  "resend_email_received": {
+    "type": "email.received",
+    "data": {
+      "email_id": "4ef9a417-02e9-4d39-ad75-9611e0fcc33c",
+      "from": "unialerts@uobgroup.com",
+      "to": ["user-test-user-001@inbound.yourdomain.com"],
+      "subject": "UOB Transaction Alert",
+      "created_at": "2026-02-08T01:31:11.894719+00:00"
+    }
+  },
+  "resend_full_email_uob": {
+    "id": "4ef9a417-02e9-4d39-ad75-9611e0fcc33c",
+    "to": ["user-test-user-001@inbound.yourdomain.com"],
+    "from": "unialerts@uobgroup.com",
+    "subject": "UOB Transaction Alert",
+    "html": "<p>Dear Cardholder,<br>A transaction of SGD 16.23 was made with your UOB Card ending 8909 on 08/02/26 at DIGITALOCEAN.COM. If this transaction is unauthorised, please call our 24/7 Fraud Hotline at 6255 0160.</p>",
+    "text": "Dear Cardholder, A transaction of SGD 16.23 was made with your UOB Card ending 8909 on 08/02/26 at DIGITALOCEAN.COM. If this transaction is unauthorised, please call our 24/7 Fraud Hotline at 6255 0160.",
+    "headers": { "return-path": "unialerts@uobgroup.com", "mime-version": "1.0" },
+    "created_at": "2026-02-08T01:31:11.894719+00:00"
+  },
+  "resend_full_email_dbs": {
+    "id": "5af0b528-13fa-5e4a-be86-a722f1dcc44d",
+    "to": ["user-test-user-001@inbound.yourdomain.com"],
+    "from": "alerts@dbs.com.sg",
+    "subject": "DBS Card Transaction",
+    "html": "<p>DBS: SGD 25.50 was charged to your card ending 1234 at GRAB *GRABFOOD on 09 Feb 2026. Ref: 0209GRAB01.</p>",
+    "text": "DBS: SGD 25.50 was charged to your card ending 1234 at GRAB *GRABFOOD on 09 Feb 2026. Ref: 0209GRAB01.",
+    "headers": { "return-path": "alerts@dbs.com.sg", "mime-version": "1.0" },
+    "created_at": "2026-02-09T12:00:00.000000+00:00"
+  },
+  "resend_full_email_ocbc": {
+    "id": "6bf1c639-24gb-6f5b-cf97-b833g2edd55e",
+    "to": ["user-test-user-001@inbound.yourdomain.com"],
+    "from": "alerts@ocbc.com",
+    "subject": "OCBC Card Notification",
+    "html": "<p>Your OCBC Card ending 5678 was used for a transaction of S$89.99 at AMAZON.SG on 08 Feb 2026.</p>",
+    "text": "Your OCBC Card ending 5678 was used for a transaction of S$89.99 at AMAZON.SG on 08 Feb 2026.",
+    "headers": { "return-path": "alerts@ocbc.com", "mime-version": "1.0" },
+    "created_at": "2026-02-08T11:00:00.000000+00:00"
+  },
+  "resend_full_email_non_transaction": {
+    "id": "7cf2d740-35hc-7g6c-dg08-c944h3fee66f",
+    "to": ["user-test-user-001@inbound.yourdomain.com"],
+    "from": "newsletter@company.com",
+    "subject": "Weekly Newsletter",
+    "html": "<p>Welcome to our weekly newsletter. Check out our latest deals and offers!</p>",
+    "text": "Welcome to our weekly newsletter. Check out our latest deals and offers!",
+    "headers": { "return-path": "newsletter@company.com", "mime-version": "1.0" },
+    "created_at": "2026-02-10T09:00:00.000000+00:00"
+  },
+  "resend_duplicate_email": {
+    "type": "email.received",
+    "data": {
+      "email_id": "resend-001",
+      "from": "unialerts@uobgroup.com",
+      "to": ["user-test-user-001@inbound.yourdomain.com"],
+      "subject": "UOB Transaction Alert (duplicate)",
+      "created_at": "2026-02-01T12:30:00.000000+00:00"
+    }
+  }
+}

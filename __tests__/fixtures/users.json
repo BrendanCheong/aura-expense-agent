@@ -1,0 +1,22 @@
+{
+  "test_user": {
+    "id": "test-user-001",
+    "email": "testuser@example.com",
+    "name": "Test User",
+    "avatar_url": "https://lh3.googleusercontent.com/a/default-user",
+    "inbound_email": "user-test-user-001@inbound.yourdomain.com",
+    "oauth_provider": "google",
+    "monthly_salary": 6000.00,
+    "budget_mode": "direct"
+  },
+  "secondary_user": {
+    "id": "test-user-002",
+    "email": "seconduser@example.com",
+    "name": "Second User",
+    "avatar_url": "",
+    "inbound_email": "user-test-user-002@inbound.yourdomain.com",
+    "oauth_provider": "github",
+    "monthly_salary": null,
+    "budget_mode": "direct"
+  }
+}

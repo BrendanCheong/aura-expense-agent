@@ -1,0 +1,9 @@
+[
+  { "id": "vc-001", "user_id": "test-user-001", "vendor_name": "GRAB *GRABFOOD",   "category_id": "cat-food",      "hit_count": 15 },
+  { "id": "vc-002", "user_id": "test-user-001", "vendor_name": "GRAB *RIDE",       "category_id": "cat-transport", "hit_count": 22 },
+  { "id": "vc-003", "user_id": "test-user-001", "vendor_name": "NETFLIX.COM",      "category_id": "cat-entertain", "hit_count": 6 },
+  { "id": "vc-004", "user_id": "test-user-001", "vendor_name": "SP GROUP",         "category_id": "cat-bills",     "hit_count": 6 },
+  { "id": "vc-005", "user_id": "test-user-001", "vendor_name": "DIGITALOCEAN.COM", "category_id": "cat-bills",     "hit_count": 12 },
+  { "id": "vc-006", "user_id": "test-user-001", "vendor_name": "SINGTEL MOBILE",   "category_id": "cat-bills",     "hit_count": 6 },
+  { "id": "vc-007", "user_id": "test-user-001", "vendor_name": "SPOTIFY",          "category_id": "cat-entertain", "hit_count": 6 }
+]

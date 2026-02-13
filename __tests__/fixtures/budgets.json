@@ -1,0 +1,10 @@
+[
+  { "id": "budget-001", "user_id": "test-user-001", "category_id": "cat-food",      "amount": 400.00, "year": 2026, "month": 2 },
+  { "id": "budget-002", "user_id": "test-user-001", "category_id": "cat-transport", "amount": 150.00, "year": 2026, "month": 2 },
+  { "id": "budget-003", "user_id": "test-user-001", "category_id": "cat-shopping",  "amount": 300.00, "year": 2026, "month": 2 },
+  { "id": "budget-004", "user_id": "test-user-001", "category_id": "cat-entertain", "amount": 100.00, "year": 2026, "month": 2 },
+  { "id": "budget-005", "user_id": "test-user-001", "category_id": "cat-bills",     "amount": 500.00, "year": 2026, "month": 2 },
+  { "id": "budget-006", "user_id": "test-user-001", "category_id": "cat-travel",    "amount": 400.00, "year": 2026, "month": 2 },
+  { "id": "budget-007", "user_id": "test-user-001", "category_id": "cat-invest",    "amount": 800.00, "year": 2026, "month": 2 },
+  { "id": "budget-008", "user_id": "test-user-001", "category_id": "cat-other",     "amount": 50.00,  "year": 2026, "month": 2 }
+]

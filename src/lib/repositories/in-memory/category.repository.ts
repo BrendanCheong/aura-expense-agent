@@ -1,16 +1,19 @@
 import type { ICategoryRepository } from '../interfaces';
 import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category';
 
+/**
+ * Default categories per DATABASE_SCHEMA.md.
+ * Seeded for each new user on first login.
+ */
 const DEFAULT_CATEGORIES = [
-  { name: 'Food & Dining', icon: '🍽️', color: '#FF6B6B' },
-  { name: 'Transportation', icon: '🚗', color: '#4ECDC4' },
-  { name: 'Shopping', icon: '🛍️', color: '#45B7D1' },
-  { name: 'Entertainment', icon: '🎬', color: '#96CEB4' },
-  { name: 'Bills & Utilities', icon: '💡', color: '#FFEAA7' },
-  { name: 'Health & Fitness', icon: '💪', color: '#DDA0DD' },
-  { name: 'Travel', icon: '✈️', color: '#98D8C8' },
-  { name: 'Education', icon: '📚', color: '#F7DC6F' },
-  { name: 'Other', icon: '📦', color: '#BDC3C7' },
+  { name: 'Food & Beverage', description: 'Restaurants, cafes, coffee shops, bubble tea, hawker centres, food delivery (GrabFood, Foodpanda, Deliveroo)', icon: '🍔', color: '#ef4444' },
+  { name: 'Transportation', description: 'Public transit (MRT, bus), ride-hailing (Grab, Gojek), fuel, parking, ERP charges', icon: '🚗', color: '#f97316' },
+  { name: 'Shopping', description: 'Retail purchases, clothing, electronics, online shopping (Shopee, Lazada, Amazon)', icon: '🛍️', color: '#eab308' },
+  { name: 'Entertainment', description: 'Movies, concerts, streaming subscriptions (Netflix, Spotify), games, nightlife', icon: '🎬', color: '#22c55e' },
+  { name: 'Bills & Utilities', description: 'Electricity, water, gas, internet, phone bill, insurance premiums, loan repayments', icon: '💡', color: '#3b82f6' },
+  { name: 'Travel', description: 'Flights, hotels, travel insurance, overseas purchases, airport transfers', icon: '✈️', color: '#8b5cf6' },
+  { name: 'Investment', description: 'Stocks, crypto, ETFs, robo-advisors (StashAway, Syfe, Endowus), fixed deposits, bonds', icon: '📈', color: '#a78bfa' },
+  { name: 'Other', description: 'Anything that doesn\'t fit — miscellaneous or one-off expenses', icon: '📦', color: '#6b7280' },
 ];
 
 export class InMemoryCategoryRepository implements ICategoryRepository {
@@ -80,11 +83,11 @@ export class InMemoryCategoryRepository implements ICategoryRepository {
       const category = await this.create({
         userId: userId,
         name: def.name,
-        description: '',
+        description: def.description,
         icon: def.icon,
         color: def.color,
         isDefault: true,
-        sortOrder: i,
+        sortOrder: i + 1,
       });
       categories.push(category);
     }

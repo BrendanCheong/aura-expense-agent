@@ -8,9 +8,9 @@
  * Format a number as USD currency string.
  */
 export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('en-SG', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'SGD',
   }).format(amount);
 }
 

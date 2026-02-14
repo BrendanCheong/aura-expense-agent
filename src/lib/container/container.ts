@@ -29,7 +29,7 @@ let containerPromise: Promise<ServiceContainer> | null = null;
 
 function buildContainer(repos: Repositories): ServiceContainer {
   const transactionService = new TransactionService(repos.transactions, repos.vendorCache);
-  const categoryService = new CategoryService(repos.categories, repos.vendorCache, repos.budgets);
+  const categoryService = new CategoryService(repos.categories, repos.vendorCache, repos.budgets, repos.transactions);
   const budgetService = new BudgetService(repos.budgets, repos.transactions);
   const dashboardService = new DashboardService(repos.transactions, repos.budgets, repos.categories);
   const webhookService = new WebhookService(repos.transactions, repos.vendorCache, null);

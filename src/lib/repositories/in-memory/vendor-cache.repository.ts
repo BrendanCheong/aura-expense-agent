@@ -64,4 +64,9 @@ export class InMemoryVendorCacheRepository implements IVendorCacheRepository {
   reset(): void {
     this.store.clear();
   }
+
+  /** Test helper: seed an entry with a specific ID */
+  seed(entry: VendorCacheEntry): void {
+    this.store.set(entry.id, entry);
+  }
 }

@@ -98,4 +98,9 @@ export class InMemoryCategoryRepository implements ICategoryRepository {
   reset(): void {
     this.store.clear();
   }
+
+  /** Test helper: seed a category with a specific ID */
+  seed(category: Category): void {
+    this.store.set(category.id, category);
+  }
 }

@@ -82,4 +82,9 @@ export class InMemoryBudgetRepository implements IBudgetRepository {
   reset(): void {
     this.store.clear();
   }
+
+  /** Test helper: seed a budget with a specific ID */
+  seed(budget: Budget): void {
+    this.store.set(budget.id, budget);
+  }
 }

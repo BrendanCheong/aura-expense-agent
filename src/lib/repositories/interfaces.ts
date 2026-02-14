@@ -31,8 +31,6 @@ export interface CategorySpendingSummary {
   totalSpent: number;
 }
 
-// --- Transaction Repository ---
-
 export interface ITransactionRepository {
   findById(id: string): Promise<Transaction | null>;
   findByUserId(userId: string, options: TransactionQueryOptions): Promise<PaginatedResult<Transaction>>;
@@ -45,8 +43,6 @@ export interface ITransactionRepository {
   sumByUserCategoryDateRange(userId: string, start: string, end: string): Promise<CategorySpendingSummary[]>;
 }
 
-// --- Category Repository ---
-
 export interface ICategoryRepository {
   findById(id: string): Promise<Category | null>;
   findByUserId(userId: string): Promise<Category[]>;
@@ -56,8 +52,6 @@ export interface ICategoryRepository {
   delete(id: string): Promise<void>;
   seedDefaults(userId: string): Promise<Category[]>;
 }
-
-// --- Budget Repository ---
 
 export interface IBudgetRepository {
   findById(id: string): Promise<Budget | null>;
@@ -69,8 +63,6 @@ export interface IBudgetRepository {
   deleteByCategoryId(categoryId: string): Promise<void>;
 }
 
-// --- Vendor Cache Repository ---
-
 export interface IVendorCacheRepository {
   findByUserAndVendor(userId: string, vendorName: string): Promise<VendorCacheEntry | null>;
   findByUserId(userId: string): Promise<VendorCacheEntry[]>;
@@ -79,8 +71,6 @@ export interface IVendorCacheRepository {
   incrementHitCount(id: string, currentCount: number): Promise<void>;
   deleteByCategoryId(categoryId: string): Promise<void>;
 }
-
-// --- User Repository ---
 
 export interface IUserRepository {
   findById(id: string): Promise<User | null>;

@@ -148,4 +148,9 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
   reset(): void {
     this.store.clear();
   }
+
+  /** Test helper: seed a transaction with a specific ID */
+  seed(transaction: Transaction): void {
+    this.store.set(transaction.id, transaction);
+  }
 }

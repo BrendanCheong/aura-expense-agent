@@ -2,6 +2,7 @@ import type { TablesDB } from 'node-appwrite';
 import { ID, Query } from 'node-appwrite';
 import type { IBudgetRepository } from '../interfaces';
 import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
+import type { BudgetRow } from '@/types/appwrite/rows';
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import {
   mapRowToBudget,
@@ -17,7 +18,7 @@ export class AppwriteBudgetRepository implements IBudgetRepository {
 
   async findById(id: string): Promise<Budget | null> {
     try {
-      const row = await this.tablesDb.getRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
+      const row = await this.tablesDb.getRow<BudgetRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
       return mapRowToBudget(row);
     } catch (err: unknown) {
       if (this.isNotFound(err)) return null;
@@ -30,7 +31,7 @@ export class AppwriteBudgetRepository implements IBudgetRepository {
     year: number,
     month: number,
   ): Promise<Budget[]> {
-    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
+    const result = await this.tablesDb.listRows<BudgetRow>({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.equal('year', year),
       Query.equal('month', month),
@@ -45,7 +46,7 @@ export class AppwriteBudgetRepository implements IBudgetRepository {
     year: number,
     month: number,
   ): Promise<Budget | null> {
-    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
+    const result = await this.tablesDb.listRows<BudgetRow>({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.equal('category_id', categoryId),
       Query.equal('year', year),
@@ -58,13 +59,13 @@ export class AppwriteBudgetRepository implements IBudgetRepository {
 
   async create(data: BudgetCreate): Promise<Budget> {
     const rowData = mapBudgetToRow(data);
-    const row = await this.tablesDb.createRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: ID.unique(), data: rowData });
+    const row = await this.tablesDb.createRow<BudgetRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: ID.unique(), data: rowData });
     return mapRowToBudget(row);
   }
 
   async update(id: string, data: BudgetUpdate): Promise<Budget> {
     const rowData = mapBudgetUpdateToRow(data);
-    const row = await this.tablesDb.updateRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
+    const row = await this.tablesDb.updateRow<BudgetRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
     return mapRowToBudget(row);
   }
 
@@ -73,7 +74,7 @@ export class AppwriteBudgetRepository implements IBudgetRepository {
   }
 
   async deleteByCategoryId(categoryId: string): Promise<void> {
-    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
+    const result = await this.tablesDb.listRows<BudgetRow>({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('category_id', categoryId),
       Query.limit(5000),
     ] });

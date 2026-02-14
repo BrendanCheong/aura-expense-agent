@@ -2,6 +2,7 @@ import type { TablesDB } from 'node-appwrite';
 import { ID, Query } from 'node-appwrite';
 import type { IVendorCacheRepository } from '../interfaces';
 import type { VendorCacheEntry } from '@/types/vendor-cache';
+import type { VendorCacheRow } from '@/types/appwrite/rows';
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import { mapRowToVendorCacheEntry } from '@/lib/appwrite/mappers';
 import { normalizeVendorName } from '@/lib/utils/vendor';
@@ -17,7 +18,7 @@ export class AppwriteVendorCacheRepository implements IVendorCacheRepository {
     vendorName: string,
   ): Promise<VendorCacheEntry | null> {
     const normalized = normalizeVendorName(vendorName);
-    const result = await this.tablesDb.listRows({
+    const result = await this.tablesDb.listRows<VendorCacheRow>({
       databaseId: DB_ID,
       tableId: TABLE_ID,
       queries: [
@@ -32,7 +33,7 @@ export class AppwriteVendorCacheRepository implements IVendorCacheRepository {
   }
 
   async findByUserId(userId: string): Promise<VendorCacheEntry[]> {
-    const result = await this.tablesDb.listRows({
+    const result = await this.tablesDb.listRows<VendorCacheRow>({
       databaseId: DB_ID,
       tableId: TABLE_ID,
       queries: [
@@ -49,7 +50,7 @@ export class AppwriteVendorCacheRepository implements IVendorCacheRepository {
     categoryId: string,
   ): Promise<VendorCacheEntry> {
     const normalized = normalizeVendorName(vendorName);
-    const row = await this.tablesDb.createRow({
+    const row = await this.tablesDb.createRow<VendorCacheRow>({
       databaseId: DB_ID,
       tableId: TABLE_ID,
       rowId: ID.unique(),
@@ -85,7 +86,7 @@ export class AppwriteVendorCacheRepository implements IVendorCacheRepository {
   }
 
   async deleteByCategoryId(categoryId: string): Promise<void> {
-    const result = await this.tablesDb.listRows({
+    const result = await this.tablesDb.listRows<VendorCacheRow>({
       databaseId: DB_ID,
       tableId: TABLE_ID,
       queries: [

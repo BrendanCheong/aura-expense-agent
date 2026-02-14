@@ -9,14 +9,30 @@ import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category'
 import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
 import type { VendorCacheEntry } from '@/types/vendor-cache';
 import type { User, UserCreate, UserUpdate } from '@/types/user';
+import type { Models } from 'node-appwrite';
+import type {
+  UserRow,
+  CategoryRow,
+  TransactionRow,
+  BudgetRow,
+  VendorCacheRow,
+} from '@/types/appwrite/rows';
+
+// ---------------------------------------------------------------------------
+// Row data types (for create/update — excludes Models.Row base fields)
+// ---------------------------------------------------------------------------
+
+export type TransactionRowData = Omit<TransactionRow, keyof Models.Row>;
+export type CategoryRowData = Omit<CategoryRow, keyof Models.Row>;
+export type BudgetRowData = Omit<BudgetRow, keyof Models.Row>;
+export type VendorCacheRowData = Omit<VendorCacheRow, keyof Models.Row>;
+export type UserRowData = Omit<UserRow, keyof Models.Row>;
 
 // ---------------------------------------------------------------------------
 // Row → Domain
 // ---------------------------------------------------------------------------
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-export function mapRowToTransaction(row: any): Transaction {
+export function mapRowToTransaction(row: TransactionRow): Transaction {
   return {
     id: row.$id,
     userId: row.user_id,
@@ -27,14 +43,14 @@ export function mapRowToTransaction(row: any): Transaction {
     transactionDate: row.transaction_date,
     resendEmailId: row.resend_email_id ?? null,
     rawEmailSubject: row.raw_email_subject ?? '',
-    confidence: row.confidence,
-    source: row.source,
+    confidence: row.confidence as Transaction['confidence'],
+    source: row.source as Transaction['source'],
     createdAt: row.$createdAt,
     updatedAt: row.$updatedAt,
   };
 }
 
-export function mapRowToCategory(row: any): Category {
+export function mapRowToCategory(row: CategoryRow): Category {
   return {
     id: row.$id,
     userId: row.user_id,
@@ -49,7 +65,7 @@ export function mapRowToCategory(row: any): Category {
   };
 }
 
-export function mapRowToBudget(row: any): Budget {
+export function mapRowToBudget(row: BudgetRow): Budget {
   return {
     id: row.$id,
     userId: row.user_id,
@@ -62,7 +78,7 @@ export function mapRowToBudget(row: any): Budget {
   };
 }
 
-export function mapRowToVendorCacheEntry(row: any): VendorCacheEntry {
+export function mapRowToVendorCacheEntry(row: VendorCacheRow): VendorCacheEntry {
   return {
     id: row.$id,
     userId: row.user_id,
@@ -78,7 +94,7 @@ export function mapRowToVendorCacheEntry(row: any): VendorCacheEntry {
 // Domain → Row (for create/update operations)
 // ---------------------------------------------------------------------------
 
-export function mapTransactionToRow(data: TransactionCreate): Record<string, unknown> {
+export function mapTransactionToRow(data: TransactionCreate): TransactionRowData {
   return {
     user_id: data.userId,
     category_id: data.categoryId,
@@ -93,8 +109,8 @@ export function mapTransactionToRow(data: TransactionCreate): Record<string, unk
   };
 }
 
-export function mapTransactionUpdateToRow(data: TransactionUpdate): Record<string, unknown> {
-  const row: Record<string, unknown> = {};
+export function mapTransactionUpdateToRow(data: TransactionUpdate): Partial<TransactionRowData> {
+  const row: Partial<TransactionRowData> = {};
   if (data.categoryId !== undefined) row.category_id = data.categoryId;
   if (data.amount !== undefined) row.amount = data.amount;
   if (data.vendor !== undefined) row.vendor = data.vendor;
@@ -104,7 +120,7 @@ export function mapTransactionUpdateToRow(data: TransactionUpdate): Record<strin
   return row;
 }
 
-export function mapCategoryToRow(data: CategoryCreate): Record<string, unknown> {
+export function mapCategoryToRow(data: CategoryCreate): CategoryRowData {
   return {
     user_id: data.userId,
     name: data.name,
@@ -116,8 +132,8 @@ export function mapCategoryToRow(data: CategoryCreate): Record<string, unknown> 
   };
 }
 
-export function mapCategoryUpdateToRow(data: CategoryUpdate): Record<string, unknown> {
-  const row: Record<string, unknown> = {};
+export function mapCategoryUpdateToRow(data: CategoryUpdate): Partial<CategoryRowData> {
+  const row: Partial<CategoryRowData> = {};
   if (data.name !== undefined) row.name = data.name;
   if (data.description !== undefined) row.description = data.description;
   if (data.icon !== undefined) row.icon = data.icon;
@@ -126,7 +142,7 @@ export function mapCategoryUpdateToRow(data: CategoryUpdate): Record<string, unk
   return row;
 }
 
-export function mapBudgetToRow(data: BudgetCreate): Record<string, unknown> {
+export function mapBudgetToRow(data: BudgetCreate): BudgetRowData {
   return {
     user_id: data.userId,
     category_id: data.categoryId,
@@ -136,8 +152,8 @@ export function mapBudgetToRow(data: BudgetCreate): Record<string, unknown> {
   };
 }
 
-export function mapBudgetUpdateToRow(data: BudgetUpdate): Record<string, unknown> {
-  const row: Record<string, unknown> = {};
+export function mapBudgetUpdateToRow(data: BudgetUpdate): Partial<BudgetRowData> {
+  const row: Partial<BudgetRowData> = {};
   if (data.amount !== undefined) row.amount = data.amount;
   return row;
 }
@@ -146,35 +162,35 @@ export function mapBudgetUpdateToRow(data: BudgetUpdate): Record<string, unknown
 // User mappers
 // ---------------------------------------------------------------------------
 
-export function mapRowToUser(row: any): User {
+export function mapRowToUser(row: UserRow): User {
   return {
     id: row.$id,
     email: row.email,
     name: row.name,
     avatarUrl: row.avatar_url ?? '',
     inboundEmail: row.inbound_email ?? '',
-    oauthProvider: row.oauth_provider,
+    oauthProvider: row.oauth_provider as User['oauthProvider'],
     monthlySalary: row.monthly_salary ?? null,
-    budgetMode: row.budget_mode ?? 'direct',
+    budgetMode: (row.budget_mode ?? 'direct') as User['budgetMode'],
     createdAt: row.$createdAt,
     updatedAt: row.$updatedAt,
   };
 }
 
-export function mapUserToRow(data: UserCreate): Record<string, unknown> {
+export function mapUserToRow(data: UserCreate): UserRowData {
   return {
     email: data.email,
     name: data.name,
     avatar_url: data.avatarUrl,
-    oauth_provider: data.oauthProvider,
     inbound_email: '',
+    oauth_provider: data.oauthProvider,
     monthly_salary: 0,
     budget_mode: 'direct',
   };
 }
 
-export function mapUserUpdateToRow(data: UserUpdate): Record<string, unknown> {
-  const row: Record<string, unknown> = {};
+export function mapUserUpdateToRow(data: UserUpdate): Partial<UserRowData> {
+  const row: Partial<UserRowData> = {};
   if (data.name !== undefined) row.name = data.name;
   if (data.avatarUrl !== undefined) row.avatar_url = data.avatarUrl;
   if (data.monthlySalary !== undefined) row.monthly_salary = data.monthlySalary ?? 0;

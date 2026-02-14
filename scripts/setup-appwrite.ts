@@ -72,13 +72,13 @@ async function setupUsersTable(): Promise<void> {
   const isNew = await ensureTable('users', 'Users');
   if (!isNew) return;
 
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'users', key: 'email', size: 320, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'users', key: 'name', size: 255, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'users', key: 'inbound_email', size: 320, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'users', key: 'oauth_provider', size: 20, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'users', key: 'avatar_url', size: 500, required: false, xdefault: '' });
+  await tablesDb.createEmailColumn({ databaseId: DB_ID, tableId: 'users', key: 'email', required: true });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'users', key: 'name', size: 255, required: true });
+  await tablesDb.createEmailColumn({ databaseId: DB_ID, tableId: 'users', key: 'inbound_email', required: true });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'users', key: 'oauth_provider', size: 20, required: true });
+  await tablesDb.createUrlColumn({ databaseId: DB_ID, tableId: 'users', key: 'avatar_url', required: false });
   await tablesDb.createFloatColumn({ databaseId: DB_ID, tableId: 'users', key: 'monthly_salary', required: false });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'users', key: 'budget_mode', size: 20, required: false, xdefault: 'direct' });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'users', key: 'budget_mode', size: 20, required: false, xdefault: 'direct' });
 
   await delay(2000);
 
@@ -93,13 +93,13 @@ async function setupCategoriesTable(): Promise<void> {
   const isNew = await ensureTable('categories', 'Categories');
   if (!isNew) return;
 
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'categories', key: 'user_id', size: 36, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'categories', key: 'name', size: 100, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'categories', key: 'description', size: 500, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'categories', key: 'icon', size: 10, required: false, xdefault: '📦' });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'categories', key: 'color', size: 7, required: false, xdefault: '#6366f1' });
-  await tablesDb.createBooleanColumn({ databaseId: DB_ID, tableId: 'categories', key: 'is_default', required: true, xdefault: true });
-  await tablesDb.createIntegerColumn({ databaseId: DB_ID, tableId: 'categories', key: 'sort_order', required: true, min: 0, max: 100, xdefault: 0 });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'categories', key: 'user_id', size: 36, required: true });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'categories', key: 'name', size: 100, required: true });
+  await tablesDb.createTextColumn({ databaseId: DB_ID, tableId: 'categories', key: 'description', required: true });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'categories', key: 'icon', size: 10, required: false, xdefault: '📦' });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'categories', key: 'color', size: 7, required: false, xdefault: '#6366f1' });
+  await tablesDb.createBooleanColumn({ databaseId: DB_ID, tableId: 'categories', key: 'is_default', required: true });
+  await tablesDb.createIntegerColumn({ databaseId: DB_ID, tableId: 'categories', key: 'sort_order', required: true, min: 0, max: 100 });
 
   await delay(2000);
 
@@ -114,16 +114,16 @@ async function setupTransactionsTable(): Promise<void> {
   const isNew = await ensureTable('transactions', 'Transactions');
   if (!isNew) return;
 
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'user_id', size: 36, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'category_id', size: 36, required: true });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'user_id', size: 36, required: true });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'category_id', size: 36, required: true });
   await tablesDb.createFloatColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'amount', required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'vendor', size: 255, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'description', size: 500, required: false, xdefault: '' });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'vendor', size: 255, required: true });
+  await tablesDb.createTextColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'description', required: false, xdefault: '' });
   await tablesDb.createDatetimeColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'transaction_date', required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'resend_email_id', size: 100, required: false });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'raw_email_subject', size: 500, required: false, xdefault: '' });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'confidence', size: 10, required: true, xdefault: 'high' });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'source', size: 10, required: true, xdefault: 'email' });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'resend_email_id', size: 100, required: false });
+  await tablesDb.createTextColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'raw_email_subject', required: false, xdefault: '' });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'confidence', size: 10, required: true });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'transactions', key: 'source', size: 10, required: true });
 
   await delay(2000);
 
@@ -141,8 +141,8 @@ async function setupBudgetsTable(): Promise<void> {
   const isNew = await ensureTable('budgets', 'Budgets');
   if (!isNew) return;
 
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'budgets', key: 'user_id', size: 36, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'budgets', key: 'category_id', size: 36, required: true });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'budgets', key: 'user_id', size: 36, required: true });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'budgets', key: 'category_id', size: 36, required: true });
   await tablesDb.createFloatColumn({ databaseId: DB_ID, tableId: 'budgets', key: 'amount', required: true });
   await tablesDb.createIntegerColumn({ databaseId: DB_ID, tableId: 'budgets', key: 'year', required: true, min: 2020, max: 2100 });
   await tablesDb.createIntegerColumn({ databaseId: DB_ID, tableId: 'budgets', key: 'month', required: true, min: 1, max: 12 });
@@ -160,10 +160,10 @@ async function setupVendorCacheTable(): Promise<void> {
   const isNew = await ensureTable('vendor_cache', 'Vendor Cache');
   if (!isNew) return;
 
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'vendor_cache', key: 'user_id', size: 36, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'vendor_cache', key: 'vendor_name', size: 255, required: true });
-  await tablesDb.createStringColumn({ databaseId: DB_ID, tableId: 'vendor_cache', key: 'category_id', size: 36, required: true });
-  await tablesDb.createIntegerColumn({ databaseId: DB_ID, tableId: 'vendor_cache', key: 'hit_count', required: true, min: 0, max: 1000000, xdefault: 1 });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'vendor_cache', key: 'user_id', size: 36, required: true });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'vendor_cache', key: 'vendor_name', size: 255, required: true });
+  await tablesDb.createVarcharColumn({ databaseId: DB_ID, tableId: 'vendor_cache', key: 'category_id', size: 36, required: true });
+  await tablesDb.createIntegerColumn({ databaseId: DB_ID, tableId: 'vendor_cache', key: 'hit_count', required: true, min: 0, max: 1000000 });
 
   await delay(2000);
 

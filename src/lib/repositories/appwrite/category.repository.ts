@@ -2,6 +2,7 @@ import type { TablesDB } from 'node-appwrite';
 import { ID, Query } from 'node-appwrite';
 import type { ICategoryRepository } from '../interfaces';
 import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category';
+import type { CategoryRow } from '@/types/appwrite/rows';
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import {
   mapRowToCategory,
@@ -32,7 +33,7 @@ export class AppwriteCategoryRepository implements ICategoryRepository {
 
   async findById(id: string): Promise<Category | null> {
     try {
-      const row = await this.tablesDb.getRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
+      const row = await this.tablesDb.getRow<CategoryRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
       return mapRowToCategory(row);
     } catch (err: unknown) {
       if (this.isNotFound(err)) return null;
@@ -41,7 +42,7 @@ export class AppwriteCategoryRepository implements ICategoryRepository {
   }
 
   async findByUserId(userId: string): Promise<Category[]> {
-    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
+    const result = await this.tablesDb.listRows<CategoryRow>({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.orderAsc('sort_order'),
       Query.limit(100),
@@ -50,7 +51,7 @@ export class AppwriteCategoryRepository implements ICategoryRepository {
   }
 
   async findByUserIdAndName(userId: string, name: string): Promise<Category | null> {
-    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
+    const result = await this.tablesDb.listRows<CategoryRow>({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.equal('name', name),
       Query.limit(1),
@@ -61,13 +62,13 @@ export class AppwriteCategoryRepository implements ICategoryRepository {
 
   async create(data: CategoryCreate): Promise<Category> {
     const rowData = mapCategoryToRow(data);
-    const row = await this.tablesDb.createRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: ID.unique(), data: rowData });
+    const row = await this.tablesDb.createRow<CategoryRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: ID.unique(), data: rowData });
     return mapRowToCategory(row);
   }
 
   async update(id: string, data: CategoryUpdate): Promise<Category> {
     const rowData = mapCategoryUpdateToRow(data);
-    const row = await this.tablesDb.updateRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
+    const row = await this.tablesDb.updateRow<CategoryRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
     return mapRowToCategory(row);
   }
 

@@ -149,12 +149,27 @@ await tablesDb.updateRow({
 
 ```typescript
 // Column types: string is DEPRECATED → use varchar, text, mediumtext, longtext
-await tablesDb.createStringColumn({
+// Also use createEmailColumn, createUrlColumn for specialized types
+await tablesDb.createVarcharColumn({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  key: 'name',
+  size: 255,
+  required: true,
+});
+
+await tablesDb.createEmailColumn({
   databaseId: DB_ID,
   tableId: TABLE_ID,
   key: 'email',
-  size: 320,
   required: true,
+});
+
+await tablesDb.createTextColumn({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  key: 'description',
+  required: false,
 });
 
 await tablesDb.createIntegerColumn({
@@ -227,6 +242,24 @@ const { transactionService, budgetService } = container;
 
 Snake_case (Appwrite rows) ↔ camelCase (TypeScript types) via mapper functions in `src/lib/appwrite/mappers.ts`.
 
+### Generated Appwrite Types
+
+Row types are **auto-generated** from the live schema via Appwrite CLI:
+
+```bash
+appwrite pull tables-db --all --force   # sync schema to appwrite.config.json
+appwrite types src/types/appwrite --language ts  # generate appwrite.d.ts
+```
+
+Type chain: `appwrite.d.ts` (generated) → `rows.ts` (re-exports as aliases) → `mappers.ts` (typed row↔domain conversion) → repositories (generic SDK calls).
+
+All SDK calls use generic type parameters for end-to-end type safety:
+```typescript
+const row = await tablesDb.getRow<TransactionRow>({ ... });
+const result = await tablesDb.listRows<TransactionRow>({ ... });
+const created = await tablesDb.createRow<TransactionRow>({ ..., data: rowData });
+```
+
 ---
 
 ## Testing
@@ -274,6 +307,8 @@ const { queries } = call[0] as { queries: string[] };
 | `src/lib/factories/repository.factory.ts` | Factory for repo creation |
 | `src/lib/container/container.ts` | DI container wiring |
 | `src/lib/appwrite/mappers.ts` | Row ↔ entity mappers |
+| `src/types/appwrite/appwrite.d.ts` | Auto-generated row types (CLI) |
+| `src/types/appwrite/rows.ts` | Row type aliases for repos/mappers |
 | `src/lib/appwrite/config.ts` | Env-based config constants |
 | `src/lib/appwrite/server.ts` | Server-side Appwrite client singleton |
 | `scripts/setup-appwrite.ts` | Database schema setup (idempotent) |
@@ -289,4 +324,6 @@ pnpm build            # Production build
 pnpm test             # Run all Vitest tests
 pnpm db:setup         # Create database schema
 pnpm db:seed          # Seed test data
+appwrite pull tables-db --all --force  # Sync schema from cloud
+appwrite types src/types/appwrite --language ts  # Regenerate types
 ```

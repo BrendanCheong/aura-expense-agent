@@ -7,6 +7,7 @@ import type {
   CategorySpendingSummary,
 } from '../interfaces';
 import type { Transaction, TransactionCreate, TransactionUpdate } from '@/types/transaction';
+import type { TransactionRow } from '@/types/appwrite/rows';
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import {
   mapRowToTransaction,
@@ -22,7 +23,7 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
 
   async findById(id: string): Promise<Transaction | null> {
     try {
-      const row = await this.tablesDb.getRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
+      const row = await this.tablesDb.getRow<TransactionRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
       return mapRowToTransaction(row);
     } catch (err: unknown) {
       if (this.isNotFound(err)) return null;
@@ -31,7 +32,7 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
   }
 
   async findByResendEmailId(resendEmailId: string): Promise<Transaction | null> {
-    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
+    const result = await this.tablesDb.listRows<TransactionRow>({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('resend_email_id', resendEmailId),
       Query.limit(1),
     ] });
@@ -70,7 +71,7 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
     queries.push(Query.limit(options.limit));
     queries.push(Query.offset((options.page - 1) * options.limit));
 
-    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries });
+    const result = await this.tablesDb.listRows<TransactionRow>({ databaseId: DB_ID, tableId: TABLE_ID, queries });
 
     return {
       data: result.rows.map(mapRowToTransaction),
@@ -86,7 +87,7 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
     start: string,
     end: string,
   ): Promise<Transaction[]> {
-    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
+    const result = await this.tablesDb.listRows<TransactionRow>({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.greaterThanEqual('transaction_date', start),
       Query.lessThan('transaction_date', end),
@@ -101,7 +102,7 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
     start: string,
     end: string,
   ): Promise<Transaction[]> {
-    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
+    const result = await this.tablesDb.listRows<TransactionRow>({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.equal('category_id', categoryId),
       Query.greaterThanEqual('transaction_date', start),
@@ -113,13 +114,13 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
 
   async create(data: TransactionCreate): Promise<Transaction> {
     const rowData = mapTransactionToRow(data);
-    const row = await this.tablesDb.createRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: ID.unique(), data: rowData });
+    const row = await this.tablesDb.createRow<TransactionRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: ID.unique(), data: rowData });
     return mapRowToTransaction(row);
   }
 
   async update(id: string, data: TransactionUpdate): Promise<Transaction> {
     const rowData = mapTransactionUpdateToRow(data);
-    const row = await this.tablesDb.updateRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
+    const row = await this.tablesDb.updateRow<TransactionRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
     return mapRowToTransaction(row);
   }
 

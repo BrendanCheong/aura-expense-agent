@@ -2,6 +2,7 @@ import type { TablesDB } from 'node-appwrite';
 import { Query } from 'node-appwrite';
 import type { IUserRepository } from '../interfaces';
 import type { User, UserCreate, UserUpdate } from '@/types/user';
+import type { UserRow } from '@/types/appwrite/rows';
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import {
   mapRowToUser,
@@ -17,7 +18,7 @@ export class AppwriteUserRepository implements IUserRepository {
 
   async findById(id: string): Promise<User | null> {
     try {
-      const row = await this.tablesDb.getRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
+      const row = await this.tablesDb.getRow<UserRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
       return mapRowToUser(row);
     } catch (err: unknown) {
       if (this.isNotFound(err)) return null;
@@ -26,7 +27,7 @@ export class AppwriteUserRepository implements IUserRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const result = await this.tablesDb.listRows({
+    const result = await this.tablesDb.listRows<UserRow>({
       databaseId: DB_ID,
       tableId: TABLE_ID,
       queries: [
@@ -42,13 +43,13 @@ export class AppwriteUserRepository implements IUserRepository {
   async create(id: string, data: UserCreate): Promise<User> {
     const rowData = mapUserToRow(data);
     rowData.inbound_email = `user-${id}@inbound.aura.app`;
-    const row = await this.tablesDb.createRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
+    const row = await this.tablesDb.createRow<UserRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
     return mapRowToUser(row);
   }
 
   async update(id: string, data: UserUpdate): Promise<User> {
     const rowData = mapUserUpdateToRow(data);
-    const row = await this.tablesDb.updateRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
+    const row = await this.tablesDb.updateRow<UserRow>({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
     return mapRowToUser(row);
   }
 

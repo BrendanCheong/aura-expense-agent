@@ -2,6 +2,7 @@ import type { Transaction, TransactionCreate, TransactionUpdate } from '@/types/
 import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category';
 import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
 import type { VendorCacheEntry } from '@/types/vendor-cache';
+import type { User, UserCreate, UserUpdate } from '@/types/user';
 
 // --- Shared Types ---
 
@@ -77,4 +78,13 @@ export interface IVendorCacheRepository {
   updateCategoryId(id: string, categoryId: string): Promise<void>;
   incrementHitCount(id: string, currentCount: number): Promise<void>;
   deleteByCategoryId(categoryId: string): Promise<void>;
+}
+
+// --- User Repository ---
+
+export interface IUserRepository {
+  findById(id: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
+  create(id: string, data: UserCreate): Promise<User>;
+  update(id: string, data: UserUpdate): Promise<User>;
 }

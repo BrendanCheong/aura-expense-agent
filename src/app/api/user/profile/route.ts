@@ -1,5 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { createContainer } from '@/lib/container/container';
+import { getSessionUser } from '@/lib/appwrite/session';
 
 /**
  * GET /api/user/profile
@@ -7,33 +9,50 @@ import { NextResponse } from 'next/server';
  * Get the authenticated user's profile including their unique inbound email address.
  * Auth required.
  */
-export async function GET(_request: NextRequest) {
-  // TODO: Implement in FEAT-001
-  // 1. Authenticate user
-  // 2. Fetch user profile from database
-  // 3. Return profile with inboundEmail, oauthProvider, etc.
-  return NextResponse.json(
-    { error: 'Not implemented' },
-    { status: 501 },
-  );
+export async function GET(request: NextRequest) {
+  const session = await getSessionUser(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const container = await createContainer();
+    const user = await container.authService.getUserById(session.accountId);
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ user });
+  } catch (err) {
+    console.error('GET /api/user/profile error:', err);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }
 
 /**
  * PATCH /api/user/profile
  *
- * Update user profile fields (monthly_salary, budget_mode).
+ * Update user profile fields (monthlySalary, budgetMode, name).
  * Auth required.
- *
- * Body: { monthly_salary?, budget_mode? }
  */
-export async function PATCH(_request: NextRequest) {
-  // TODO: Implement in FEAT-001
-  // 1. Authenticate user
-  // 2. Parse & validate request body
-  // 3. Update user document in database
-  // 4. Return updated profile
-  return NextResponse.json(
-    { error: 'Not implemented' },
-    { status: 501 },
-  );
+export async function PATCH(request: NextRequest) {
+  const session = await getSessionUser(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const body = await request.json();
+    const container = await createContainer();
+    const updated = await container.authService.updateUserProfile(
+      session.accountId,
+      body,
+    );
+
+    return NextResponse.json({ user: updated });
+  } catch (err) {
+    console.error('PATCH /api/user/profile error:', err);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }

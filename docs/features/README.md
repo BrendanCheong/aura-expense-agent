@@ -18,8 +18,8 @@
 | # | ID | Feature | Sprint | Blocked By | Est. | Status |
 |---|-----|---------|--------|------------|------|--------|
 | 1 | [FEAT-003](FEAT-003-project-scaffolding.md) | Project Scaffolding & Configuration | 1 | — | 1d | � |
-| 2 | [FEAT-002](FEAT-002-database-setup.md) | Appwrite Database Schema & Setup | 1 | FEAT-003 | 0.5d | 🔴 |
-| 3 | [FEAT-001](FEAT-001-auth-oauth.md) | OAuth Authentication (Google + GitHub) | 1 | FEAT-003, FEAT-002 | 1d | 🔴 |
+| 2 | [FEAT-002](FEAT-002-database-setup.md) | Appwrite Database Schema & Setup | 1 | FEAT-003 | 0.5d | � |
+| 3 | [FEAT-001](FEAT-001-auth-oauth.md) | OAuth Authentication (Google + GitHub) | 1 | FEAT-003, FEAT-002 | 1d | � |
 | 4 | [FEAT-010](FEAT-010-category-management.md) | Category Management (CRUD) | 2 | FEAT-001, FEAT-002 | 1d | 🔴 |
 | 5 | [FEAT-006](FEAT-006-vendor-cache.md) | Vendor Cache (Agent Memory) | 2 | FEAT-003, FEAT-002 | 0.5d | 🔴 |
 | 6 | [FEAT-005](FEAT-005-ai-agent.md) | LangGraph.js Expense Agent | 3 | FEAT-010, FEAT-006 | 2d | 🔴 |

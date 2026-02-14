@@ -8,6 +8,7 @@ import type { Transaction, TransactionCreate, TransactionUpdate } from '@/types/
 import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category';
 import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
 import type { VendorCacheEntry } from '@/types/vendor-cache';
+import type { User, UserCreate, UserUpdate } from '@/types/user';
 
 // ---------------------------------------------------------------------------
 // Row → Domain
@@ -138,5 +139,45 @@ export function mapBudgetToRow(data: BudgetCreate): Record<string, unknown> {
 export function mapBudgetUpdateToRow(data: BudgetUpdate): Record<string, unknown> {
   const row: Record<string, unknown> = {};
   if (data.amount !== undefined) row.amount = data.amount;
+  return row;
+}
+
+// ---------------------------------------------------------------------------
+// User mappers
+// ---------------------------------------------------------------------------
+
+export function mapRowToUser(row: any): User {
+  return {
+    id: row.$id,
+    email: row.email,
+    name: row.name,
+    avatarUrl: row.avatar_url ?? '',
+    inboundEmail: row.inbound_email ?? '',
+    oauthProvider: row.oauth_provider,
+    monthlySalary: row.monthly_salary ?? null,
+    budgetMode: row.budget_mode ?? 'direct',
+    createdAt: row.$createdAt,
+    updatedAt: row.$updatedAt,
+  };
+}
+
+export function mapUserToRow(data: UserCreate): Record<string, unknown> {
+  return {
+    email: data.email,
+    name: data.name,
+    avatar_url: data.avatarUrl,
+    oauth_provider: data.oauthProvider,
+    inbound_email: '',
+    monthly_salary: 0,
+    budget_mode: 'direct',
+  };
+}
+
+export function mapUserUpdateToRow(data: UserUpdate): Record<string, unknown> {
+  const row: Record<string, unknown> = {};
+  if (data.name !== undefined) row.name = data.name;
+  if (data.avatarUrl !== undefined) row.avatar_url = data.avatarUrl;
+  if (data.monthlySalary !== undefined) row.monthly_salary = data.monthlySalary ?? 0;
+  if (data.budgetMode !== undefined) row.budget_mode = data.budgetMode;
   return row;
 }

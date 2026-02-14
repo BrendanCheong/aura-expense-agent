@@ -12,6 +12,7 @@ import { CategoryService } from '@/lib/services/category.service';
 import { BudgetService } from '@/lib/services/budget.service';
 import { DashboardService } from '@/lib/services/dashboard.service';
 import { WebhookService } from '@/lib/services/webhook.service';
+import { AuthService } from '@/lib/services/auth.service';
 import { getAppwriteServer } from '@/lib/appwrite/server';
 
 export interface ServiceContainer {
@@ -20,6 +21,7 @@ export interface ServiceContainer {
   budgetService: BudgetService;
   dashboardService: DashboardService;
   webhookService: WebhookService;
+  authService: AuthService;
 }
 
 /** Cached container instance (singleton per server lifetime). */
@@ -31,6 +33,7 @@ function buildContainer(repos: Repositories): ServiceContainer {
   const budgetService = new BudgetService(repos.budgets, repos.transactions);
   const dashboardService = new DashboardService(repos.transactions, repos.budgets, repos.categories);
   const webhookService = new WebhookService(repos.transactions, repos.vendorCache, null);
+  const authService = new AuthService(repos.users, repos.categories);
 
   return {
     transactionService,
@@ -38,6 +41,7 @@ function buildContainer(repos: Repositories): ServiceContainer {
     budgetService,
     dashboardService,
     webhookService,
+    authService,
   };
 }
 

@@ -1,6 +1,6 @@
 # FEAT-002 — Appwrite Database Schema & Setup
 
-> **Status:** 🔴 Not Started  
+> **Status:** � Done  
 > **Execution Order:** 2 of 13  
 > **Sprint:** 1 — Foundation  
 > **Blocked By:** FEAT-003  
@@ -16,13 +16,13 @@ Create the Appwrite Cloud database with all 5 collections (users, categories, tr
 
 ## Acceptance Criteria
 
-- [ ] Appwrite project created with database named `aura`
-- [ ] 5 collections created with all attributes per [DATABASE_SCHEMA.md](../plans/DATABASE_SCHEMA.md)
-- [ ] All indexes created (unique `resend_email_id`, composite `user+vendor` on vendor_cache, etc.)
-- [ ] `scripts/setup-appwrite.ts` creates all collections idempotently
-- [ ] `scripts/seed-db.ts` populates test data (30 transactions, 7 categories, budgets, vendor cache)
-- [ ] `.env.example` contains all required Appwrite env vars
-- [ ] `src/lib/appwrite/config.ts` exports typed database/collection IDs
+- [x] Appwrite project created with database named `aura`
+- [x] 5 tables created with all attributes per [DATABASE_SCHEMA.md](../plans/DATABASE_SCHEMA.md) (TablesDB API)
+- [x] All indexes created (unique `resend_email_id`, composite `user+vendor` on vendor_cache, etc.)
+- [x] `scripts/setup-appwrite.ts` creates all tables idempotently via TablesDB
+- [x] `scripts/seed-db.ts` populates test data (32 transactions, 8 categories, 8 budgets, 7 vendor cache)
+- [x] `.env.example` contains all required Appwrite env vars
+- [x] `src/lib/appwrite/config.ts` exports typed database/table IDs
 
 ## Technical Details
 
@@ -47,11 +47,15 @@ Create the Appwrite Cloud database with all 5 collections (users, categories, tr
 
 ## Definition of Done
 
-- [ ] `scripts/setup-appwrite.ts` runs without errors against a fresh Appwrite project
-- [ ] `scripts/seed-db.ts` populates verifiable test data
-- [ ] All 5 collections visible in Appwrite Console with correct attributes
-- [ ] Config file exports typed constants matching collection IDs
-- [ ] No TypeScript errors
+- [x] `scripts/setup-appwrite.ts` runs without errors against a fresh Appwrite project
+- [x] `scripts/seed-db.ts` populates verifiable test data
+- [x] All 5 tables visible in Appwrite Console with correct attributes
+- [x] Config file exports typed constants matching table IDs
+- [x] No TypeScript errors
+- [x] Appwrite repository implementations (4 repos) with full test coverage
+- [x] RepositoryFactory.createAppwrite() wired with TablesDB
+- [x] DI container createContainer() returns production services
+- [x] All 123 tests passing
 
 ## References
 

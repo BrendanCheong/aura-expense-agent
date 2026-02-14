@@ -329,7 +329,7 @@ vi.mock('@langchain/openai', () => ({
 
 describe('Webhook Pipeline', () => {
   it('processes a valid email.received webhook', async () => {
-    const request = new NextRequest('http://localhost:3000/api/webhooks/resend', {
+    const request = new NextRequest('http://localhost:4321/api/webhooks/resend', {
       method: 'POST',
       body: JSON.stringify({
         type: 'email.received',
@@ -346,7 +346,7 @@ describe('Webhook Pipeline', () => {
 
   it('deduplicates repeated webhook deliveries', async () => {
     // First call processes
-    const request1 = new NextRequest('http://localhost:3000/api/webhooks/resend', {
+    const request1 = new NextRequest('http://localhost:4321/api/webhooks/resend', {
       method: 'POST',
       body: JSON.stringify({
         type: 'email.received',
@@ -356,7 +356,7 @@ describe('Webhook Pipeline', () => {
     await POST(request1);
 
     // Second call with same email_id is deduplicated
-    const request2 = new NextRequest('http://localhost:3000/api/webhooks/resend', {
+    const request2 = new NextRequest('http://localhost:4321/api/webhooks/resend', {
       method: 'POST',
       body: JSON.stringify({
         type: 'email.received',
@@ -370,7 +370,7 @@ describe('Webhook Pipeline', () => {
   });
 
   it('ignores non email.received event types', async () => {
-    const request = new NextRequest('http://localhost:3000/api/webhooks/resend', {
+    const request = new NextRequest('http://localhost:4321/api/webhooks/resend', {
       method: 'POST',
       body: JSON.stringify({
         type: 'email.sent',
@@ -471,13 +471,13 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
   testDir: './__tests__/e2e',
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:4321',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
   webServer: {
     command: 'npm run dev',
-    port: 3000,
+    port: 4321,
     reuseExistingServer: !process.env.CI,
   },
   projects: [
@@ -676,7 +676,7 @@ async function sendMockWebhook(emailIndex: number = 0) {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/api/webhooks/resend', {
+    const response = await fetch('http://localhost:4321/api/webhooks/resend', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(webhookPayload),

@@ -1,0 +1,76 @@
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+import { createTestContainer } from '@/lib/container/container';
+import {
+  createTransactionBodySchema,
+  listTransactionsQuerySchema,
+} from '@/lib/validation/transactions.schemas';
+import {
+  parseQueryObject,
+  serverErrorResponse,
+  unauthorizedResponse,
+  validationErrorResponse,
+} from '@/lib/validation/http';
+
+function getUserIdFromRequest(request: NextRequest): string | null {
+  return request.headers.get('x-user-id');
+}
+
+/**
+ * GET /api/transactions
+ *
+ * List transactions with pagination, date range, category, and source filters.
+ * Auth required.
+ *
+ * Query params: page, limit, startDate, endDate, categoryId, source, sortBy, sortOrder
+ */
+export async function GET(request: NextRequest) {
+  const userId = getUserIdFromRequest(request);
+  if (!userId) return unauthorizedResponse();
+
+  const queryResult = listTransactionsQuerySchema.safeParse(
+    parseQueryObject(request.nextUrl.searchParams),
+  );
+  if (!queryResult.success) {
+    return validationErrorResponse(queryResult.error);
+  }
+
+  try {
+    const { transactionService } = await createTestContainer();
+    const result = await transactionService.listTransactions(userId, queryResult.data);
+    return NextResponse.json(result, { status: 200 });
+  } catch {
+    return serverErrorResponse();
+  }
+}
+
+/**
+ * POST /api/transactions
+ *
+ * Create a manual transaction (user-entered, not from email).
+ * Auth required.
+ *
+ * Body: { amount, vendor, categoryId, transactionDate, description? }
+ */
+export async function POST(request: NextRequest) {
+  const userId = getUserIdFromRequest(request);
+  if (!userId) return unauthorizedResponse();
+
+  const body = await request.json().catch(() => null);
+  if (!body) {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+
+  const bodyResult = createTransactionBodySchema.safeParse(body);
+  if (!bodyResult.success) {
+    return validationErrorResponse(bodyResult.error);
+  }
+
+  try {
+    const { transactionService } = await createTestContainer();
+    const created = await transactionService.createManualTransaction(userId, bodyResult.data);
+    return NextResponse.json(created, { status: 201 });
+  } catch {
+    return serverErrorResponse();
+  }
+}

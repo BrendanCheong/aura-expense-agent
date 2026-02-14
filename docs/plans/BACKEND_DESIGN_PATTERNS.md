@@ -577,7 +577,7 @@ export class RepositoryFactory {
 The injector is a lightweight DI container that wires together repositories, services, and the agent. Each API route calls the injector to get fully initialized service instances.
 
 ```typescript
-// src/lib/di/container.ts
+// src/lib/container/container.ts
 
 import { getServerAppwrite } from '@/lib/appwrite/server';
 import { RepositoryFactory, type Repositories } from '@/lib/factories/repository.factory';
@@ -665,7 +665,7 @@ export function createTestContainer(): ServiceContainer & { repos: Repositories 
 // src/app/api/transactions/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createContainer } from '@/lib/di/container';
+import { createContainer } from '@/lib/container/container';
 import { getAuthenticatedUser } from '@/lib/auth/middleware';
 
 export async function GET(request: NextRequest) {
@@ -1255,7 +1255,7 @@ src/lib/
 ├── factories/
 │   ├── agent.factory.ts
 │   └── repository.factory.ts
-├── di/
+├── container/
 │   └── container.ts               ← DI container / injector
 ├── agent/
 │   ├── graph.ts                   ← LangGraph.js agent definition
@@ -1280,6 +1280,74 @@ src/lib/
     └── vendor.ts
 ```
 
+### API Route Files
+
+All API routes live under `src/app/api/` following Next.js App Router conventions. Each `route.ts` exports named HTTP method handlers (`GET`, `POST`, `PATCH`, `DELETE`).
+
+```
+src/app/api/
+├── webhooks/
+│   └── resend/
+│       └── route.ts               ← POST  (webhook signature auth)
+├── transactions/
+│   ├── route.ts                   ← GET, POST
+│   └── [id]/
+│       └── route.ts               ← PATCH, DELETE
+├── categories/
+│   ├── route.ts                   ← GET, POST
+│   └── [id]/
+│       └── route.ts               ← PATCH, DELETE
+├── budgets/
+│   ├── route.ts                   ← GET, POST
+│   └── [id]/
+│       └── route.ts               ← DELETE
+├── dashboard/
+│   ├── summary/
+│   │   └── route.ts               ← GET
+│   └── alerts/
+│       └── route.ts               ← GET
+├── user/
+│   └── profile/
+│       └── route.ts               ← GET, PATCH
+└── feedback/
+    ├── route.ts                   ← POST
+    └── approve/
+        └── route.ts               ← POST
+```
+
+**Convention:** Each route handler is a thin controller — authenticate, parse request, delegate to service, format response. All business logic lives in services.
+
+### API Validation (Zod)
+
+Per [ADR-011](../ADR/ADR-011-typescript-language.md) and [ADR-002](../ADR/ADR-002-appwrite-backend.md), API boundaries use Zod for runtime validation. Schemas live in `src/lib/validation/` and are organized by route group:
+
+```
+src/lib/validation/
+├── common.schemas.ts
+├── transactions.schemas.ts
+├── categories.schemas.ts
+├── budgets.schemas.ts
+├── dashboard.schemas.ts
+├── user.schemas.ts
+├── feedback.schemas.ts
+├── webhooks.schemas.ts
+└── index.ts
+```
+
+**Usage pattern in each API route:**
+1. Parse raw input (`request.json()`, `searchParams`, `params`)
+2. Validate with schema (`schema.safeParse(...)`)
+3. Return `400` with flattened issues on validation failure
+4. Pass validated data to services/repositories
+
+This keeps route handlers thin while guaranteeing runtime input safety before business logic executes.
+
+**Concrete reference implementation:** `src/app/api/transactions/route.ts` shows the complete pattern with:
+- user auth gate (temporary header-based scaffold)
+- query/body validation via `safeParse`
+- standardized `400` response shape from `src/lib/validation/http.ts`
+- service delegation after validation success
+
 ---
 
 ## 📊 Pattern Summary
@@ -1289,7 +1357,7 @@ src/lib/
 | **Repository** | `src/lib/repositories/` | Abstracts data access. Appwrite production, InMemory for tests. |
 | **Service** | `src/lib/services/` | Business logic layer. Depends on repository interfaces only. |
 | **Factory** | `src/lib/factories/` | Creates complex objects (agents, repository sets). |
-| **Dependency Injection** | `src/lib/di/container.ts` | Wires dependencies per-request. API routes call `createContainer()`. |
+| **Dependency Injection** | `src/lib/container/container.ts` | Wires dependencies per-request. API routes call `createContainer()`. |
 | **Strategy** | `src/lib/agent/strategies/` | 5-tier categorization escalation chain (Vendor Cache → Mem0 → LLM → Brave Search → Fallback). |
 | **Command** | `src/lib/agent/commands/` | Encapsulates multi-step AI workflows as discrete, testable units. |
 | **Configuration** | `src/lib/config/app.config.ts` | Typed, centralized config with env var validation. |
@@ -1313,17 +1381,6 @@ src/lib/
 | **2-tier models** | ✅ Domain types + API response types | **Validated.** Simpler than tcs-core's 3-tier (Route → DB → Web) without sacrificing type safety. |
 
 ### Recommendations Critically Rejected
-
-#### ❌ FastAPI as Framework
-
-The report recommends FastAPI for AI agent backends. **Rejected for Aura.**
-
-- Aura is **TypeScript end-to-end** ([ADR-011](../ADR/ADR-011-typescript-language.md)). Introducing Python (FastAPI) creates a polyglot codebase with separate type systems, separate toolchains, separate deploy pipelines — for a single-developer project.
-- Next.js API Routes provide the same key benefits: async handlers, request validation (via Zod), and OpenAPI generation (via `next-swagger-doc` or `zod-to-openapi`).
-- The AI agent (LangGraph.js) runs in the **same TypeScript runtime** as the API routes. No cross-language serialization, no gRPC bridge, no separate Python microservice.
-- FastAPI's advantages (Depends, Pydantic, OpenAPI auto-gen) are replicated in TypeScript via Zod schemas, custom DI container, and Next.js's built-in request handling.
-
-**Verdict:** FastAPI is a strong choice for Python-native AI backends. For Aura's full-stack TypeScript architecture, Next.js API Routes are the correct choice.
 
 #### ❌ Mixin Composition at API Layer
 

@@ -4,6 +4,8 @@
 > **Auth:** Appwrite OAuth2 (Google + GitHub)  
 > **Base Path:** All routes under `/api/`
 
+> **Validation:** API request/query/params schemas are scaffolded under `src/lib/validation/` and should be applied at every route boundary via `safeParse` before calling services.
+
 ---
 
 ## 📋 Route Overview

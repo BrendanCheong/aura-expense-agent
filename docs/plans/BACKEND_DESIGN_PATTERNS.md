@@ -3,8 +3,10 @@
 > **Principles:** SOLID + Clean Architecture  
 > **Patterns:** Repository, Service, Factory, Strategy, Dependency Injection  
 > **Language:** TypeScript (strict mode)  
-> **Runtime:** Next.js 19 API Routes (App Router)  
-> **References:** [ADR-007](../ADR/ADR-007-dependency-injection.md), [ADR-008](../ADR/ADR-008-service-layer-pattern.md), [ADR-009](../ADR/ADR-009-repository-pattern.md)
+> **Runtime:** Next.js 16 API Routes (App Router)  
+> **Database API:** TablesDB (`node-appwrite@22`) — named parameter objects only  
+> **References:** [ADR-007](../ADR/ADR-007-dependency-injection.md), [ADR-008](../ADR/ADR-008-service-layer-pattern.md), [ADR-009](../ADR/ADR-009-repository-pattern.md)  
+> **Note:** Some code examples below may use the older `Databases` class. Actual code uses `TablesDB`. See `AGENTS.md` for current API usage.
 
 ---
 

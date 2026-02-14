@@ -138,14 +138,15 @@ describe('AppwriteCategoryRepository', () => {
 
       await repo.delete('cat-1');
 
-      expect(tablesDb.deleteRow).toHaveBeenCalledWith(DB_ID, TABLE_ID, 'cat-1');
+      expect(tablesDb.deleteRow).toHaveBeenCalledWith({ databaseId: DB_ID, tableId: TABLE_ID, rowId: 'cat-1' });
     });
   });
 
   describe('seedDefaults', () => {
     it('creates 8 default categories per DATABASE_SCHEMA.md', async () => {
       let callCount = 0;
-      tablesDb.createRow.mockImplementation((_db: string, _tbl: string, _id: string, data: Record<string, unknown>) => {
+      tablesDb.createRow.mockImplementation((params: { data: Record<string, unknown>, [key: string]: unknown }) => {
+        const data = params.data;
         callCount++;
         return Promise.resolve({
           $id: `cat-${callCount}`,

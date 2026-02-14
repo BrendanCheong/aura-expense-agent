@@ -1,9 +1,11 @@
 # Aura Expense Agent — Database Schema
 
 > **Backend:** Appwrite Cloud (MariaDB under the hood)  
+> **API:** TablesDB (`node-appwrite@22`) — use named parameter objects, not positional args  
 > **Terminology:** Appwrite uses "Database → Tables → Rows → Columns"  
 > **Currency:** SGD only (V1)  
-> **Timezone:** Asia/Singapore (UTC+8)
+> **Timezone:** Asia/Singapore (UTC+8)  
+> **Note:** Code examples below may use the older `Databases` API style. See `AGENTS.md` for current API usage.
 
 ---
 

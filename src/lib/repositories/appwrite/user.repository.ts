@@ -17,7 +17,7 @@ export class AppwriteUserRepository implements IUserRepository {
 
   async findById(id: string): Promise<User | null> {
     try {
-      const row = await this.tablesDb.getRow(DB_ID, TABLE_ID, id);
+      const row = await this.tablesDb.getRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
       return mapRowToUser(row);
     } catch (err: unknown) {
       if (this.isNotFound(err)) return null;
@@ -26,10 +26,14 @@ export class AppwriteUserRepository implements IUserRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const result = await this.tablesDb.listRows(DB_ID, TABLE_ID, [
-      Query.equal('email', email),
-      Query.limit(1),
-    ]);
+    const result = await this.tablesDb.listRows({
+      databaseId: DB_ID,
+      tableId: TABLE_ID,
+      queries: [
+        Query.equal('email', email),
+        Query.limit(1),
+      ],
+    });
 
     if (result.rows.length === 0) return null;
     return mapRowToUser(result.rows[0]);
@@ -38,13 +42,13 @@ export class AppwriteUserRepository implements IUserRepository {
   async create(id: string, data: UserCreate): Promise<User> {
     const rowData = mapUserToRow(data);
     rowData.inbound_email = `user-${id}@inbound.aura.app`;
-    const row = await this.tablesDb.createRow(DB_ID, TABLE_ID, id, rowData);
+    const row = await this.tablesDb.createRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
     return mapRowToUser(row);
   }
 
   async update(id: string, data: UserUpdate): Promise<User> {
     const rowData = mapUserUpdateToRow(data);
-    const row = await this.tablesDb.updateRow(DB_ID, TABLE_ID, id, rowData);
+    const row = await this.tablesDb.updateRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
     return mapRowToUser(row);
   }
 

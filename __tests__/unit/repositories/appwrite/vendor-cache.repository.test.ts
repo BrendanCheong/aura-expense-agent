@@ -62,7 +62,7 @@ describe('AppwriteVendorCacheRepository', () => {
       await repo.findByUserAndVendor('user-1', '  grab *grabfood  ');
 
       const call = tablesDb.listRows.mock.calls[0];
-      const queries = call[2] as string[];
+      const queries = (call[0] as { queries: string[] }).queries;
       // Should contain normalized name (uppercased, trimmed)
       expect(queries.some((q: string) => q.includes('GRAB *GRABFOOD'))).toBe(true);
     });
@@ -98,7 +98,7 @@ describe('AppwriteVendorCacheRepository', () => {
 
       // Verify the data passed to createRow has normalized vendor name
       const callArgs = tablesDb.createRow.mock.calls[0];
-      const data = callArgs[3] as Record<string, unknown>;
+      const data = (callArgs[0] as { data: Record<string, unknown> }).data;
       expect(data.vendor_name).toBe('GRAB *GRABFOOD');
     });
   });
@@ -109,10 +109,12 @@ describe('AppwriteVendorCacheRepository', () => {
 
       await repo.updateCategoryId('vc-1', 'cat-transport');
 
-      expect(tablesDb.updateRow).toHaveBeenCalledWith(
-        DB_ID, TABLE_ID, 'vc-1',
-        { category_id: 'cat-transport' },
-      );
+      expect(tablesDb.updateRow).toHaveBeenCalledWith({
+        databaseId: DB_ID,
+        tableId: TABLE_ID,
+        rowId: 'vc-1',
+        data: { category_id: 'cat-transport' },
+      });
     });
   });
 
@@ -122,9 +124,13 @@ describe('AppwriteVendorCacheRepository', () => {
 
       await repo.incrementHitCount('vc-1', 15);
 
-      expect(tablesDb.incrementRowColumn).toHaveBeenCalledWith(
-        DB_ID, TABLE_ID, 'vc-1', 'hit_count', 1,
-      );
+      expect(tablesDb.incrementRowColumn).toHaveBeenCalledWith({
+        databaseId: DB_ID,
+        tableId: TABLE_ID,
+        rowId: 'vc-1',
+        column: 'hit_count',
+        value: 1,
+      });
     });
   });
 

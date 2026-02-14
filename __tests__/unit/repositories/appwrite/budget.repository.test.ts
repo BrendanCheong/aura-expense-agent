@@ -129,7 +129,7 @@ describe('AppwriteBudgetRepository', () => {
 
       await repo.delete('bgt-1');
 
-      expect(tablesDb.deleteRow).toHaveBeenCalledWith(DB_ID, TABLE_ID, 'bgt-1');
+      expect(tablesDb.deleteRow).toHaveBeenCalledWith({ databaseId: DB_ID, tableId: TABLE_ID, rowId: 'bgt-1' });
     });
   });
 

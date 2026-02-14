@@ -22,7 +22,7 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
 
   async findById(id: string): Promise<Transaction | null> {
     try {
-      const row = await this.tablesDb.getRow(DB_ID, TABLE_ID, id);
+      const row = await this.tablesDb.getRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
       return mapRowToTransaction(row);
     } catch (err: unknown) {
       if (this.isNotFound(err)) return null;
@@ -31,10 +31,10 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
   }
 
   async findByResendEmailId(resendEmailId: string): Promise<Transaction | null> {
-    const result = await this.tablesDb.listRows(DB_ID, TABLE_ID, [
+    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('resend_email_id', resendEmailId),
       Query.limit(1),
-    ]);
+    ] });
     if (result.rows.length === 0) return null;
     return mapRowToTransaction(result.rows[0]);
   }
@@ -70,7 +70,7 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
     queries.push(Query.limit(options.limit));
     queries.push(Query.offset((options.page - 1) * options.limit));
 
-    const result = await this.tablesDb.listRows(DB_ID, TABLE_ID, queries);
+    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries });
 
     return {
       data: result.rows.map(mapRowToTransaction),
@@ -86,12 +86,12 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
     start: string,
     end: string,
   ): Promise<Transaction[]> {
-    const result = await this.tablesDb.listRows(DB_ID, TABLE_ID, [
+    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.greaterThanEqual('transaction_date', start),
       Query.lessThan('transaction_date', end),
       Query.limit(5000),
-    ]);
+    ] });
     return result.rows.map(mapRowToTransaction);
   }
 
@@ -101,30 +101,30 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
     start: string,
     end: string,
   ): Promise<Transaction[]> {
-    const result = await this.tablesDb.listRows(DB_ID, TABLE_ID, [
+    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.equal('category_id', categoryId),
       Query.greaterThanEqual('transaction_date', start),
       Query.lessThan('transaction_date', end),
       Query.limit(5000),
-    ]);
+    ] });
     return result.rows.map(mapRowToTransaction);
   }
 
   async create(data: TransactionCreate): Promise<Transaction> {
     const rowData = mapTransactionToRow(data);
-    const row = await this.tablesDb.createRow(DB_ID, TABLE_ID, ID.unique(), rowData);
+    const row = await this.tablesDb.createRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: ID.unique(), data: rowData });
     return mapRowToTransaction(row);
   }
 
   async update(id: string, data: TransactionUpdate): Promise<Transaction> {
     const rowData = mapTransactionUpdateToRow(data);
-    const row = await this.tablesDb.updateRow(DB_ID, TABLE_ID, id, rowData);
+    const row = await this.tablesDb.updateRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
     return mapRowToTransaction(row);
   }
 
   async delete(id: string): Promise<void> {
-    await this.tablesDb.deleteRow(DB_ID, TABLE_ID, id);
+    await this.tablesDb.deleteRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
   }
 
   async sumByUserCategoryDateRange(

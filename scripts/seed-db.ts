@@ -102,7 +102,7 @@ async function seed(): Promise<void> {
   console.log('🌱 Seeding test database...\n');
 
   // Seed user
-  await tablesDb.createRow(DB_ID, 'users', TEST_USER_ID, {
+  await tablesDb.createRow({ databaseId: DB_ID, tableId: 'users', rowId: TEST_USER_ID, data: {
     email: 'testuser@example.com',
     name: 'Test User',
     avatar_url: 'https://lh3.googleusercontent.com/a/default-user',
@@ -110,12 +110,12 @@ async function seed(): Promise<void> {
     oauth_provider: 'google',
     monthly_salary: 6000.00,
     budget_mode: 'direct',
-  });
+  }});
   console.log('✅ Test user created');
 
   // Seed categories
   for (const cat of DEFAULT_CATEGORIES) {
-    await tablesDb.createRow(DB_ID, 'categories', cat.id, {
+    await tablesDb.createRow({ databaseId: DB_ID, tableId: 'categories', rowId: cat.id, data: {
       user_id: TEST_USER_ID,
       name: cat.name,
       description: cat.description,
@@ -123,13 +123,13 @@ async function seed(): Promise<void> {
       color: cat.color,
       is_default: true,
       sort_order: cat.sort_order,
-    });
+    }});
   }
   console.log(`✅ ${DEFAULT_CATEGORIES.length} categories seeded`);
 
   // Seed transactions
   for (const tx of MOCK_TRANSACTIONS) {
-    await tablesDb.createRow(DB_ID, 'transactions', ID.unique(), {
+    await tablesDb.createRow({ databaseId: DB_ID, tableId: 'transactions', rowId: ID.unique(), data: {
       user_id: TEST_USER_ID,
       category_id: tx.category,
       amount: tx.amount,
@@ -140,30 +140,30 @@ async function seed(): Promise<void> {
       raw_email_subject: `Transaction alert: ${tx.vendor}`,
       confidence: tx.confidence,
       source: 'email',
-    });
+    }});
   }
   console.log(`✅ ${MOCK_TRANSACTIONS.length} transactions seeded`);
 
   // Seed budgets
   for (const budget of MOCK_BUDGETS) {
-    await tablesDb.createRow(DB_ID, 'budgets', ID.unique(), {
+    await tablesDb.createRow({ databaseId: DB_ID, tableId: 'budgets', rowId: ID.unique(), data: {
       user_id: TEST_USER_ID,
       category_id: budget.category,
       amount: budget.amount,
       year: 2026,
       month: 2,
-    });
+    }});
   }
   console.log(`✅ ${MOCK_BUDGETS.length} budgets seeded`);
 
   // Seed vendor cache
   for (const vc of MOCK_VENDOR_CACHE) {
-    await tablesDb.createRow(DB_ID, 'vendor_cache', ID.unique(), {
+    await tablesDb.createRow({ databaseId: DB_ID, tableId: 'vendor_cache', rowId: ID.unique(), data: {
       user_id: TEST_USER_ID,
       vendor_name: vc.vendor_name,
       category_id: vc.category,
       hit_count: vc.hit_count,
-    });
+    }});
   }
   console.log(`✅ ${MOCK_VENDOR_CACHE.length} vendor cache entries seeded`);
 

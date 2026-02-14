@@ -55,7 +55,7 @@ describe('AppwriteTransactionRepository', () => {
 
       const result = await repo.findById('tx-1');
 
-      expect(tablesDb.getRow).toHaveBeenCalledWith(DB_ID, TABLE_ID, 'tx-1');
+      expect(tablesDb.getRow).toHaveBeenCalledWith({ databaseId: DB_ID, tableId: TABLE_ID, rowId: 'tx-1' });
       expect(result).not.toBeNull();
       expect(result!.id).toBe('tx-1');
       expect(result!.userId).toBe('user-1');
@@ -135,7 +135,7 @@ describe('AppwriteTransactionRepository', () => {
 
       await repo.delete('tx-1');
 
-      expect(tablesDb.deleteRow).toHaveBeenCalledWith(DB_ID, TABLE_ID, 'tx-1');
+      expect(tablesDb.deleteRow).toHaveBeenCalledWith({ databaseId: DB_ID, tableId: TABLE_ID, rowId: 'tx-1' });
     });
   });
 
@@ -169,7 +169,8 @@ describe('AppwriteTransactionRepository', () => {
       });
 
       const call = tablesDb.listRows.mock.calls[0];
-      const queries = call[2] as string[];
+      const args = call[0] as { queries: string[] };
+      const queries = args.queries;
       expect(queries.some((q: string) => q.includes('transaction_date'))).toBe(true);
     });
   });

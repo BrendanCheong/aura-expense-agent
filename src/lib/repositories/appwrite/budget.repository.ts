@@ -17,7 +17,7 @@ export class AppwriteBudgetRepository implements IBudgetRepository {
 
   async findById(id: string): Promise<Budget | null> {
     try {
-      const row = await this.tablesDb.getRow(DB_ID, TABLE_ID, id);
+      const row = await this.tablesDb.getRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
       return mapRowToBudget(row);
     } catch (err: unknown) {
       if (this.isNotFound(err)) return null;
@@ -30,12 +30,12 @@ export class AppwriteBudgetRepository implements IBudgetRepository {
     year: number,
     month: number,
   ): Promise<Budget[]> {
-    const result = await this.tablesDb.listRows(DB_ID, TABLE_ID, [
+    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.equal('year', year),
       Query.equal('month', month),
       Query.limit(100),
-    ]);
+    ] });
     return result.rows.map(mapRowToBudget);
   }
 
@@ -45,41 +45,41 @@ export class AppwriteBudgetRepository implements IBudgetRepository {
     year: number,
     month: number,
   ): Promise<Budget | null> {
-    const result = await this.tablesDb.listRows(DB_ID, TABLE_ID, [
+    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.equal('category_id', categoryId),
       Query.equal('year', year),
       Query.equal('month', month),
       Query.limit(1),
-    ]);
+    ] });
     if (result.rows.length === 0) return null;
     return mapRowToBudget(result.rows[0]);
   }
 
   async create(data: BudgetCreate): Promise<Budget> {
     const rowData = mapBudgetToRow(data);
-    const row = await this.tablesDb.createRow(DB_ID, TABLE_ID, ID.unique(), rowData);
+    const row = await this.tablesDb.createRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: ID.unique(), data: rowData });
     return mapRowToBudget(row);
   }
 
   async update(id: string, data: BudgetUpdate): Promise<Budget> {
     const rowData = mapBudgetUpdateToRow(data);
-    const row = await this.tablesDb.updateRow(DB_ID, TABLE_ID, id, rowData);
+    const row = await this.tablesDb.updateRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
     return mapRowToBudget(row);
   }
 
   async delete(id: string): Promise<void> {
-    await this.tablesDb.deleteRow(DB_ID, TABLE_ID, id);
+    await this.tablesDb.deleteRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
   }
 
   async deleteByCategoryId(categoryId: string): Promise<void> {
-    const result = await this.tablesDb.listRows(DB_ID, TABLE_ID, [
+    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('category_id', categoryId),
       Query.limit(5000),
-    ]);
+    ] });
 
     for (const row of result.rows) {
-      await this.tablesDb.deleteRow(DB_ID, TABLE_ID, row.$id);
+      await this.tablesDb.deleteRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: row.$id });
     }
   }
 

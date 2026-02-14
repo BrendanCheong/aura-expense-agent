@@ -32,7 +32,7 @@ export class AppwriteCategoryRepository implements ICategoryRepository {
 
   async findById(id: string): Promise<Category | null> {
     try {
-      const row = await this.tablesDb.getRow(DB_ID, TABLE_ID, id);
+      const row = await this.tablesDb.getRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
       return mapRowToCategory(row);
     } catch (err: unknown) {
       if (this.isNotFound(err)) return null;
@@ -41,38 +41,38 @@ export class AppwriteCategoryRepository implements ICategoryRepository {
   }
 
   async findByUserId(userId: string): Promise<Category[]> {
-    const result = await this.tablesDb.listRows(DB_ID, TABLE_ID, [
+    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.orderAsc('sort_order'),
       Query.limit(100),
-    ]);
+    ] });
     return result.rows.map(mapRowToCategory);
   }
 
   async findByUserIdAndName(userId: string, name: string): Promise<Category | null> {
-    const result = await this.tablesDb.listRows(DB_ID, TABLE_ID, [
+    const result = await this.tablesDb.listRows({ databaseId: DB_ID, tableId: TABLE_ID, queries: [
       Query.equal('user_id', userId),
       Query.equal('name', name),
       Query.limit(1),
-    ]);
+    ] });
     if (result.rows.length === 0) return null;
     return mapRowToCategory(result.rows[0]);
   }
 
   async create(data: CategoryCreate): Promise<Category> {
     const rowData = mapCategoryToRow(data);
-    const row = await this.tablesDb.createRow(DB_ID, TABLE_ID, ID.unique(), rowData);
+    const row = await this.tablesDb.createRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: ID.unique(), data: rowData });
     return mapRowToCategory(row);
   }
 
   async update(id: string, data: CategoryUpdate): Promise<Category> {
     const rowData = mapCategoryUpdateToRow(data);
-    const row = await this.tablesDb.updateRow(DB_ID, TABLE_ID, id, rowData);
+    const row = await this.tablesDb.updateRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id, data: rowData });
     return mapRowToCategory(row);
   }
 
   async delete(id: string): Promise<void> {
-    await this.tablesDb.deleteRow(DB_ID, TABLE_ID, id);
+    await this.tablesDb.deleteRow({ databaseId: DB_ID, tableId: TABLE_ID, rowId: id });
   }
 
   async seedDefaults(userId: string): Promise<Category[]> {

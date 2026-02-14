@@ -106,15 +106,15 @@ describe('AppwriteUserRepository', () => {
       });
 
       expect(user.id).toBe('user-1');
-      expect(mockDb.createRow).toHaveBeenCalledWith(
-        TEST_DB,
-        expect.any(String),
-        'user-1',
-        expect.objectContaining({
+      expect(mockDb.createRow).toHaveBeenCalledWith({
+        databaseId: TEST_DB,
+        tableId: expect.any(String),
+        rowId: 'user-1',
+        data: expect.objectContaining({
           email: 'new@example.com',
           name: 'New User',
         }),
-      );
+      });
     });
   });
 

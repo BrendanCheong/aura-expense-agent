@@ -1,0 +1,292 @@
+# AGENTS.md — Aura Expense Agent
+
+> Quick-reference for AI agents and developers working on this codebase.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router, Turbopack), port `4321`
+- **Language:** TypeScript 5.9 strict
+- **Backend:** Appwrite Cloud (TablesDB API), `node-appwrite@22`
+- **Package Manager:** pnpm 10
+- **Testing:** Vitest (unit/integration), Playwright (E2E)
+- **UI:** Tailwind v4, shadcn/ui, Recharts
+- **Currency:** SGD only, timezone `Asia/Singapore`
+
+---
+
+## Appwrite TablesDB API
+
+We use `node-appwrite@22` with the **TablesDB** service (not `Databases`). All method calls **must** use the **named parameter object style** — the positional argument style is deprecated.
+
+### Named Parameter Style (required)
+
+```typescript
+import { TablesDB, ID, Query } from 'node-appwrite';
+
+// Get a row
+const row = await tablesDb.getRow({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  rowId: id,
+});
+
+// List rows with queries
+const result = await tablesDb.listRows({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  queries: [
+    Query.equal('user_id', userId),
+    Query.orderDesc('transaction_date'),
+    Query.limit(25),
+    Query.offset(0),
+  ],
+});
+
+// Create a row
+await tablesDb.createRow({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  rowId: ID.unique(),
+  data: { user_id: userId, amount: 100 },
+});
+
+// Update a row
+await tablesDb.updateRow({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  rowId: id,
+  data: { amount: 200 },
+});
+
+// Upsert a row (create or update)
+await tablesDb.upsertRow({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  rowId: id,
+  data: { amount: 200 },
+});
+
+// Delete a row
+await tablesDb.deleteRow({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  rowId: id,
+});
+
+// Atomic increment
+await tablesDb.incrementRowColumn({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  rowId: id,
+  column: 'hit_count',
+  value: 1,
+});
+```
+
+### Query Operators
+
+```typescript
+Query.equal('field', ['value1', 'value2'])   // OR within same field
+Query.notEqual('field', 'value')
+Query.greaterThan('field', 100)
+Query.lessThan('field', 100)
+Query.greaterThanEqual('field', 100)
+Query.lessThanEqual('field', 100)
+Query.between('field', 5, 10)
+Query.contains('field', 'substring')
+Query.startsWith('field', 'prefix')
+Query.search('field', 'keywords')            // requires fulltext index
+Query.isNull('field')
+Query.isNotNull('field')
+Query.select(['field1', 'field2'])            // select specific columns
+Query.orderAsc('field')
+Query.orderDesc('field')
+Query.limit(25)
+Query.offset(0)
+Query.cursorAfter('rowId')
+
+// Logical operators
+Query.and([Query.greaterThan('a', 5), Query.lessThan('a', 10)])
+Query.or([Query.equal('status', ['draft']), Query.equal('status', ['archived'])])
+```
+
+### Transactions
+
+```typescript
+const tx = await tablesDb.createTransaction();
+
+await tablesDb.createRow({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  rowId: ID.unique(),
+  data: { name: 'Walter' },
+  transactionId: tx.$id,
+});
+
+await tablesDb.updateTransaction({ transactionId: tx.$id, commit: true });
+// or: await tablesDb.updateTransaction({ transactionId: tx.$id, rollback: true });
+```
+
+### Operators (atomic field updates)
+
+```typescript
+import { Operator } from 'node-appwrite';
+
+await tablesDb.updateRow({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  rowId: id,
+  data: {
+    count: Operator.increment(1),
+    tags: Operator.arrayAppend(['new-tag']),
+    lastModified: Operator.dateSetNow(),
+    active: Operator.toggle(),
+  },
+});
+```
+
+### Schema Setup (server SDK)
+
+```typescript
+// Column types: string is DEPRECATED → use varchar, text, mediumtext, longtext
+await tablesDb.createStringColumn({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  key: 'email',
+  size: 320,
+  required: true,
+});
+
+await tablesDb.createIntegerColumn({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  key: 'year',
+  required: true,
+  min: 2020,
+  max: 2100,
+});
+
+await tablesDb.createIndex({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  key: 'idx_email',
+  type: IndexType.Unique,
+  columns: ['email'],
+});
+```
+
+### Performance Tips
+
+- Pass `total: false` to `listRows` when you don't need the total count
+- Use `Query.select([...])` to reduce payload size
+- Index columns used in queries, ordering, and filters
+- Relationships are opt-in — use `Query.select(['*', 'relation.*'])` to load them
+- `$sequence` field available for insertion-order sorting
+
+---
+
+## Architecture Patterns
+
+### Layered Architecture
+
+```
+API Route → Service → Repository → Appwrite TablesDB
+```
+
+- **API Routes** handle HTTP, validation, auth
+- **Services** contain business logic, orchestration
+- **Repositories** abstract data access behind interfaces
+- **No direct DB access from routes or services**
+
+### Repository Pattern (ADR-009)
+
+Interface-driven with two implementations:
+
+| Implementation | Purpose |
+|---|---|
+| `InMemoryXxxRepository` | Unit tests (fast, no network) |
+| `AppwriteXxxRepository` | Production (Appwrite Cloud) |
+
+5 repositories: `Transaction`, `Category`, `Budget`, `VendorCache`, `User`
+
+### Factory Pattern (ADR-010)
+
+```typescript
+RepositoryFactory.createInMemory()     // for tests
+RepositoryFactory.createAppwrite(tablesDb)  // for production
+```
+
+### DI Container (ADR-007)
+
+```typescript
+const container = createContainer();  // singleton, cached
+const { transactionService, budgetService } = container;
+```
+
+### Data Mapping
+
+Snake_case (Appwrite rows) ↔ camelCase (TypeScript types) via mapper functions in `src/lib/appwrite/mappers.ts`.
+
+---
+
+## Testing
+
+- **Runner:** Vitest 4 with `@swc/core` transform
+- **Strategy:** TDD (Red → Green → Refactor)
+- **Fixture data:** `__tests__/fixtures/`
+- **Test structure mirrors source:** `__tests__/unit/repositories/`, `__tests__/unit/services/`, etc.
+
+### Testing Appwrite Repos
+
+Mock `TablesDB` methods — they receive named parameter objects:
+
+```typescript
+const tablesDb = {
+  getRow: vi.fn(),
+  listRows: vi.fn(),
+  createRow: vi.fn(),
+  updateRow: vi.fn(),
+  deleteRow: vi.fn(),
+};
+
+// Assert named params
+expect(tablesDb.deleteRow).toHaveBeenCalledWith({
+  databaseId: DB_ID,
+  tableId: TABLE_ID,
+  rowId: 'tx-1',
+});
+
+// Access mock args
+const call = tablesDb.listRows.mock.calls[0];
+const { queries } = call[0] as { queries: string[] };
+```
+
+---
+
+## Key Files
+
+| Path | Purpose |
+|---|---|
+| `src/lib/repositories/interfaces.ts` | All repository interfaces |
+| `src/lib/repositories/appwrite/` | Appwrite implementations |
+| `src/lib/repositories/in-memory/` | In-memory implementations (tests) |
+| `src/lib/services/` | Business logic services |
+| `src/lib/factories/repository.factory.ts` | Factory for repo creation |
+| `src/lib/container/container.ts` | DI container wiring |
+| `src/lib/appwrite/mappers.ts` | Row ↔ entity mappers |
+| `src/lib/appwrite/config.ts` | Env-based config constants |
+| `src/lib/appwrite/server.ts` | Server-side Appwrite client singleton |
+| `scripts/setup-appwrite.ts` | Database schema setup (idempotent) |
+| `scripts/seed-db.ts` | Test data seeding |
+
+---
+
+## CLI Commands
+
+```bash
+pnpm dev              # Start dev server (port 4321)
+pnpm build            # Production build
+pnpm test             # Run all Vitest tests
+pnpm db:setup         # Create database schema
+pnpm db:seed          # Seed test data
+```

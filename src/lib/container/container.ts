@@ -12,6 +12,7 @@ import { CategoryService } from '@/lib/services/category.service';
 import { BudgetService } from '@/lib/services/budget.service';
 import { DashboardService } from '@/lib/services/dashboard.service';
 import { WebhookService } from '@/lib/services/webhook.service';
+import { getAppwriteServer } from '@/lib/appwrite/server';
 
 export interface ServiceContainer {
   transactionService: TransactionService;
@@ -21,22 +22,10 @@ export interface ServiceContainer {
   webhookService: WebhookService;
 }
 
-/**
- * Create a fully wired service container for the current request.
- * Will use Appwrite repositories once FEAT-002 is implemented.
- */
-export function createContainer(): ServiceContainer {
-  // TODO: Wire with Appwrite in FEAT-002
-  throw new Error('Production container not yet configured. See FEAT-002.');
-}
+/** Cached container instance (singleton per server lifetime). */
+let containerPromise: Promise<ServiceContainer> | null = null;
 
-/**
- * Create a test container with in-memory repositories.
- * No external dependencies (no Appwrite, no OpenAI, no Brave Search).
- */
-export async function createTestContainer(): Promise<ServiceContainer & { repos: Repositories }> {
-  const repos = await RepositoryFactory.createInMemory();
-
+function buildContainer(repos: Repositories): ServiceContainer {
   const transactionService = new TransactionService(repos.transactions, repos.vendorCache);
   const categoryService = new CategoryService(repos.categories, repos.vendorCache, repos.budgets);
   const budgetService = new BudgetService(repos.budgets, repos.transactions);
@@ -49,6 +38,36 @@ export async function createTestContainer(): Promise<ServiceContainer & { repos:
     budgetService,
     dashboardService,
     webhookService,
-    repos,
   };
+}
+
+/**
+ * Create (or return cached) production service container
+ * backed by Appwrite TablesDB repositories.
+ */
+export async function createContainer(): Promise<ServiceContainer> {
+  if (!containerPromise) {
+    containerPromise = (async () => {
+      const { tablesDb } = getAppwriteServer();
+      const repos = await RepositoryFactory.createAppwrite(tablesDb);
+      return buildContainer(repos);
+    })();
+  }
+  return containerPromise;
+}
+
+/**
+ * Reset the cached container (used in tests or hot-reload).
+ */
+export function resetContainer(): void {
+  containerPromise = null;
+}
+
+/**
+ * Create a test container with in-memory repositories.
+ * No external dependencies (no Appwrite, no OpenAI, no Brave Search).
+ */
+export async function createTestContainer(): Promise<ServiceContainer & { repos: Repositories }> {
+  const repos = await RepositoryFactory.createInMemory();
+  return { ...buildContainer(repos), repos };
 }

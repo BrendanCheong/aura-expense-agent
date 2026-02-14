@@ -1,10 +1,11 @@
 /**
  * Repository factory — creates repository instances.
  *
- * Production: Appwrite-backed repositories.
+ * Production: Appwrite-backed repositories (TablesDB).
  * Testing: In-memory repositories.
  */
 
+import type { TablesDB } from 'node-appwrite';
 import type {
   ITransactionRepository,
   ICategoryRepository,
@@ -46,10 +47,25 @@ export class RepositoryFactory {
 
   /**
    * Create production Appwrite-backed repositories.
-   * Will be implemented in FEAT-002 (Database Setup).
    */
-  static create(_databases: unknown): Repositories {
-    // TODO: Implement with Appwrite SDK in FEAT-002
-    throw new Error('Appwrite repositories not yet implemented. See FEAT-002.');
+  static async createAppwrite(tablesDb: TablesDB): Promise<Repositories> {
+    const [
+      { AppwriteTransactionRepository },
+      { AppwriteCategoryRepository },
+      { AppwriteBudgetRepository },
+      { AppwriteVendorCacheRepository },
+    ] = await Promise.all([
+      import('@/lib/repositories/appwrite/transaction.repository'),
+      import('@/lib/repositories/appwrite/category.repository'),
+      import('@/lib/repositories/appwrite/budget.repository'),
+      import('@/lib/repositories/appwrite/vendor-cache.repository'),
+    ]);
+
+    return {
+      transactions: new AppwriteTransactionRepository(tablesDb),
+      categories: new AppwriteCategoryRepository(tablesDb),
+      budgets: new AppwriteBudgetRepository(tablesDb),
+      vendorCache: new AppwriteVendorCacheRepository(tablesDb),
+    };
   }
 }

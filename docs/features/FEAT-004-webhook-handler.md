@@ -35,6 +35,56 @@ Build the webhook endpoint that receives Resend's `email.received` events, verif
 
 ## Technical Details
 
+### Webhook Signature Verification (Resend + Svix)
+
+Use `svix` directly for request verification:
+
+- Install dependency: `pnpm add svix`
+- Read **raw body** with `await request.text()` (do not use `request.json()` before verification)
+- Verify using headers:
+    - `svix-id`
+    - `svix-timestamp`
+    - `svix-signature`
+- Use signing secret: `process.env.RESEND_WEBHOOK_SECRET`
+
+If verification fails, return `400 Invalid webhook`.
+
+```typescript
+import { Webhook } from 'svix';
+
+const payload = await request.text();
+const wh = new Webhook(process.env.RESEND_WEBHOOK_SECRET!);
+
+const event = wh.verify(payload, {
+    'svix-id': request.headers.get('svix-id') ?? '',
+    'svix-timestamp': request.headers.get('svix-timestamp') ?? '',
+    'svix-signature': request.headers.get('svix-signature') ?? '',
+});
+```
+
+### Local Development Webhook URL (ngrok)
+
+Use ngrok to expose local port `4321` to Resend:
+
+```bash
+pnpm dev
+pnpm tunnel:webhook
+```
+
+Then configure this URL in Resend Webhooks:
+
+```text
+https://<your-ngrok-domain>.ngrok-free.app/api/webhooks/resend
+```
+
+If ngrok shows `ERR_NGROK_108` (one agent session limit), reuse the existing local agent by creating an additional tunnel via the local API:
+
+```bash
+curl -X POST http://127.0.0.1:4040/api/tunnels \
+    -H 'Content-Type: application/json' \
+    -d '{"name":"aura-webhook","addr":"localhost:4321","proto":"http"}'
+```
+
 ### Files to Create/Modify
 
 | File | Purpose |

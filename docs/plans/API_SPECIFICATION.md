@@ -38,11 +38,17 @@ The most critical route. Receives Resend's `email.received` webhook, fetches the
 
 **Authentication:** Resend webhook signature verification (not user auth).
 
+**Verification requirements:**
+- Read raw request body with `await request.text()` before parsing JSON
+- Verify with `svix` using `svix-id`, `svix-timestamp`, and `svix-signature`
+- Use `process.env.RESEND_WEBHOOK_SECRET`
+
 ```typescript
 // src/app/api/webhooks/resend/route.ts
 
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { Webhook } from 'svix';
 import { Resend } from 'resend';
 import { Query } from 'node-appwrite';
 import { getServerAppwrite } from '@/lib/appwrite/server';
@@ -54,12 +60,18 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(request: NextRequest) {
   try {
     // 1. Verify webhook signature
-    const webhookSecret = process.env.RESEND_WEBHOOK_SECRET;
-    // TODO: Implement Resend webhook signature verification
-    // https://resend.com/docs/dashboard/webhooks/securing-webhooks
+    const webhookSecret = process.env.RESEND_WEBHOOK_SECRET!;
+    const payload = await request.text(); // must be raw body
+    const wh = new Webhook(webhookSecret);
 
-    // 2. Parse webhook payload
-    const event = await request.json();
+    const event = wh.verify(payload, {
+      'svix-id': request.headers.get('svix-id') ?? '',
+      'svix-timestamp': request.headers.get('svix-timestamp') ?? '',
+      'svix-signature': request.headers.get('svix-signature') ?? '',
+    }) as {
+      type: string;
+      data: { email_id: string };
+    };
 
     if (event.type !== 'email.received') {
       return NextResponse.json({ status: 'ignored' }, { status: 200 });

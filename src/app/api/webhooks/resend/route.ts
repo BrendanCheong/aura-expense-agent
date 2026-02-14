@@ -11,13 +11,18 @@ import { NextResponse } from 'next/server';
  */
 export async function POST(_request: NextRequest) {
   // TODO: Implement in FEAT-004
-  // 1. Verify Resend webhook signature
-  // 2. Parse webhook payload (reject non-email.received events)
-  // 3. Fetch full email via Resend API
-  // 4. Resolve user from inbound email address
-  // 5. Dedup check (resendEmailId)
-  // 6. Vendor cache fast path
-  // 7. Invoke LangGraph agent pipeline
+  // 1. Read RAW request body via `await request.text()`
+  // 2. Verify Resend webhook signature with `svix` using:
+  //    - `svix-id`
+  //    - `svix-timestamp`
+  //    - `svix-signature`
+  //    and `process.env.RESEND_WEBHOOK_SECRET`
+  // 3. Parse verified webhook payload (reject non-email.received events)
+  // 4. Fetch full email via Resend API
+  // 5. Resolve user from inbound email address
+  // 6. Dedup check (resendEmailId)
+  // 7. Vendor cache fast path
+  // 8. Invoke LangGraph agent pipeline
   return NextResponse.json(
     { error: 'Not implemented' },
     { status: 501 },

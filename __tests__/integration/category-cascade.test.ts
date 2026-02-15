@@ -6,19 +6,23 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { CategoryService } from '@/lib/services/category.service';
-import { TransactionService } from '@/lib/services/transaction.service';
-import { BudgetService } from '@/lib/services/budget.service';
-import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
-import { InMemoryVendorCacheRepository } from '@/lib/repositories/in-memory/vendor-cache.repository';
-import { InMemoryBudgetRepository } from '@/lib/repositories/in-memory/budget.repository';
-import { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
+
+import budgetsFixture from '../fixtures/budgets.json';
+import categoriesFixture from '../fixtures/categories.json';
+import transactionsFixture from '../fixtures/transactions.json';
+import vendorCacheFixture from '../fixtures/vendor-cache.json';
+
 import type { Transaction } from '@/types/transaction';
 
-import categoriesFixture from '../fixtures/categories.json';
-import vendorCacheFixture from '../fixtures/vendor-cache.json';
-import budgetsFixture from '../fixtures/budgets.json';
-import transactionsFixture from '../fixtures/transactions.json';
+import { InMemoryBudgetRepository } from '@/lib/repositories/in-memory/budget.repository';
+import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
+import { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
+import { InMemoryVendorCacheRepository } from '@/lib/repositories/in-memory/vendor-cache.repository';
+import { BudgetService } from '@/lib/services/budget.service';
+import { CategoryService } from '@/lib/services/category.service';
+import { TransactionService } from '@/lib/services/transaction.service';
+
+
 
 const USER_ID = 'test-user-001';
 
@@ -37,7 +41,12 @@ describe('Integration: Category Cascade', () => {
     budgetRepo = new InMemoryBudgetRepository();
     transactionRepo = new InMemoryTransactionRepository();
 
-    categoryService = new CategoryService(categoryRepo, vendorCacheRepo, budgetRepo, transactionRepo);
+    categoryService = new CategoryService(
+      categoryRepo,
+      vendorCacheRepo,
+      budgetRepo,
+      transactionRepo
+    );
     transactionService = new TransactionService(transactionRepo, vendorCacheRepo);
     budgetService = new BudgetService(budgetRepo, transactionRepo);
 
@@ -126,7 +135,7 @@ describe('Integration: Category Cascade', () => {
     await categoryService.deleteCategory(USER_ID, 'cat-transport');
 
     const vendorEntries = await vendorCacheRepo.findByUserId(USER_ID);
-    const transportVendors = vendorEntries.filter(v => v.categoryId === 'cat-transport');
+    const transportVendors = vendorEntries.filter((v) => v.categoryId === 'cat-transport');
     expect(transportVendors).toHaveLength(0);
 
     // Other vendor cache entries should remain
@@ -138,7 +147,7 @@ describe('Integration: Category Cascade', () => {
     await categoryService.deleteCategory(USER_ID, 'cat-transport');
 
     const budgets = await budgetService.listBudgets(USER_ID, 2026, 2);
-    const transportBudgets = budgets.filter(b => b.categoryId === 'cat-transport');
+    const transportBudgets = budgets.filter((b) => b.categoryId === 'cat-transport');
     expect(transportBudgets).toHaveLength(0);
 
     // Other budgets remain
@@ -146,9 +155,9 @@ describe('Integration: Category Cascade', () => {
   });
 
   it('Test #19: Cannot delete "Other" category', async () => {
-    await expect(
-      categoryService.deleteCategory(USER_ID, 'cat-other'),
-    ).rejects.toThrow('Cannot delete');
+    await expect(categoryService.deleteCategory(USER_ID, 'cat-other')).rejects.toThrow(
+      'Cannot delete'
+    );
 
     // Verify category still exists
     const other = await categoryRepo.findById('cat-other');
@@ -157,10 +166,10 @@ describe('Integration: Category Cascade', () => {
   });
 
   it('Full cascade: delete category with transactions, vendor cache, and budgets', async () => {
-    // Food has: 4 transactions (tx-001, tx-004, tx-009, tx-014, tx-016), 
+    // Food has: 4 transactions (tx-001, tx-004, tx-009, tx-014, tx-016),
     //           1 vendor cache entry (vc-001 GRAB *GRABFOOD),
     //           1 budget (budget-001)
-    const foodTxBefore = transactionsFixture.filter(tx => tx.category_id === 'cat-food');
+    const foodTxBefore = transactionsFixture.filter((tx) => tx.category_id === 'cat-food');
 
     await categoryService.deleteCategory(USER_ID, 'cat-food');
 
@@ -175,11 +184,11 @@ describe('Integration: Category Cascade', () => {
 
     // Vendor cache cleaned
     const allVendors = await vendorCacheRepo.findByUserId(USER_ID);
-    expect(allVendors.filter(v => v.categoryId === 'cat-food')).toHaveLength(0);
+    expect(allVendors.filter((v) => v.categoryId === 'cat-food')).toHaveLength(0);
 
     // Budget removed
     const budgets = await budgetService.listBudgets(USER_ID, 2026, 2);
-    expect(budgets.filter(b => b.categoryId === 'cat-food')).toHaveLength(0);
+    expect(budgets.filter((b) => b.categoryId === 'cat-food')).toHaveLength(0);
   });
 
   it('Re-categorize transaction → vendor cache updated', async () => {
@@ -198,7 +207,7 @@ describe('Integration: Category Cascade', () => {
 
   it('Create manual transaction → vendor cache entry created', async () => {
     const tx = await transactionService.createManualTransaction(USER_ID, {
-      amount: 25.50,
+      amount: 25.5,
       vendor: 'Hawker Centre',
       categoryId: 'cat-food',
       transactionDate: '2026-02-14T12:00:00+08:00',

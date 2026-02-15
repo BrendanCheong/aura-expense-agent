@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+
 import {
   mapRowToTransaction,
   mapRowToCategory,
@@ -23,7 +24,7 @@ describe('Appwrite Row Mappers', () => {
         $sequence: 1,
         user_id: 'user-1',
         category_id: 'cat-food',
-        amount: 18.50,
+        amount: 18.5,
         vendor: 'GRAB *GRABFOOD',
         description: 'Lunch delivery',
         transaction_date: '2026-02-01T12:30:00+08:00',
@@ -39,7 +40,7 @@ describe('Appwrite Row Mappers', () => {
         id: 'tx-123',
         userId: 'user-1',
         categoryId: 'cat-food',
-        amount: 18.50,
+        amount: 18.5,
         vendor: 'GRAB *GRABFOOD',
         description: 'Lunch delivery',
         transactionDate: '2026-02-01T12:30:00+08:00',
@@ -63,7 +64,7 @@ describe('Appwrite Row Mappers', () => {
         $sequence: 2,
         user_id: 'user-1',
         category_id: 'cat-food',
-        amount: 10.00,
+        amount: 10.0,
         vendor: 'Test',
         description: '',
         transaction_date: '2026-02-01T00:00:00.000Z',
@@ -127,7 +128,7 @@ describe('Appwrite Row Mappers', () => {
         $sequence: 1,
         user_id: 'user-1',
         category_id: 'cat-food',
-        amount: 400.00,
+        amount: 400.0,
         year: 2026,
         month: 2,
       };
@@ -138,7 +139,7 @@ describe('Appwrite Row Mappers', () => {
         id: 'bgt-1',
         userId: 'user-1',
         categoryId: 'cat-food',
-        amount: 400.00,
+        amount: 400.0,
         year: 2026,
         month: 2,
         createdAt: '2026-02-01T00:00:00.000Z',
@@ -182,7 +183,7 @@ describe('Appwrite Row Mappers', () => {
       const data = {
         userId: 'user-1',
         categoryId: 'cat-food',
-        amount: 18.50,
+        amount: 18.5,
         vendor: 'GRAB *GRABFOOD',
         description: 'Lunch',
         transactionDate: '2026-02-01T12:30:00+08:00',
@@ -197,7 +198,7 @@ describe('Appwrite Row Mappers', () => {
       expect(result).toEqual({
         user_id: 'user-1',
         category_id: 'cat-food',
-        amount: 18.50,
+        amount: 18.5,
         vendor: 'GRAB *GRABFOOD',
         description: 'Lunch',
         transaction_date: '2026-02-01T12:30:00+08:00',
@@ -240,7 +241,7 @@ describe('Appwrite Row Mappers', () => {
       const data = {
         userId: 'user-1',
         categoryId: 'cat-food',
-        amount: 400.00,
+        amount: 400.0,
         year: 2026,
         month: 2,
       };
@@ -250,7 +251,7 @@ describe('Appwrite Row Mappers', () => {
       expect(result).toEqual({
         user_id: 'user-1',
         category_id: 'cat-food',
-        amount: 400.00,
+        amount: 400.0,
         year: 2026,
         month: 2,
       });

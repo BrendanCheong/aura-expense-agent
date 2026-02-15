@@ -1,6 +1,7 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+
 import { getAuthenticatedUser } from '@/lib/auth/middleware';
+import { HttpStatus } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
 import { createCategoryBodySchema } from '@/lib/validation/categories.schemas';
 import {
@@ -10,7 +11,6 @@ import {
   invalidJsonResponse,
   conflictResponse,
 } from '@/lib/validation/http';
-import { HttpStatus } from '@/lib/constants';
 
 /**
  * GET /api/categories
@@ -20,7 +20,7 @@ import { HttpStatus } from '@/lib/constants';
  */
 export async function GET(request: NextRequest) {
   const user = await getAuthenticatedUser(request);
-  if (!user) return unauthorizedResponse();
+  if (!user) {return unauthorizedResponse();}
 
   try {
     const { categoryService } = await createContainer();
@@ -42,10 +42,10 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   const user = await getAuthenticatedUser(request);
-  if (!user) return unauthorizedResponse();
+  if (!user) {return unauthorizedResponse();}
 
   const body = await request.json().catch(() => null);
-  if (!body) return invalidJsonResponse();
+  if (!body) {return invalidJsonResponse();}
 
   const bodyResult = createCategoryBodySchema.safeParse(body);
   if (!bodyResult.success) {

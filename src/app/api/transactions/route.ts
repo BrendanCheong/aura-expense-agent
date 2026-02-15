@@ -1,10 +1,7 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+
+import { HttpStatus } from '@/lib/constants';
 import { createTestContainer } from '@/lib/container/container';
-import {
-  createTransactionBodySchema,
-  listTransactionsQuerySchema,
-} from '@/lib/validation/transactions.schemas';
 import {
   parseQueryObject,
   serverErrorResponse,
@@ -12,7 +9,10 @@ import {
   validationErrorResponse,
   invalidJsonResponse,
 } from '@/lib/validation/http';
-import { HttpStatus } from '@/lib/constants';
+import {
+  createTransactionBodySchema,
+  listTransactionsQuerySchema,
+} from '@/lib/validation/transactions.schemas';
 
 function getUserIdFromRequest(request: NextRequest): string | null {
   return request.headers.get('x-user-id');
@@ -28,10 +28,10 @@ function getUserIdFromRequest(request: NextRequest): string | null {
  */
 export async function GET(request: NextRequest) {
   const userId = getUserIdFromRequest(request);
-  if (!userId) return unauthorizedResponse();
+  if (!userId) {return unauthorizedResponse();}
 
   const queryResult = listTransactionsQuerySchema.safeParse(
-    parseQueryObject(request.nextUrl.searchParams),
+    parseQueryObject(request.nextUrl.searchParams)
   );
   if (!queryResult.success) {
     return validationErrorResponse(queryResult.error);
@@ -56,10 +56,10 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   const userId = getUserIdFromRequest(request);
-  if (!userId) return unauthorizedResponse();
+  if (!userId) {return unauthorizedResponse();}
 
   const body = await request.json().catch(() => null);
-  if (!body) return invalidJsonResponse();
+  if (!body) {return invalidJsonResponse();}
 
   const bodyResult = createTransactionBodySchema.safeParse(body);
   if (!bodyResult.success) {

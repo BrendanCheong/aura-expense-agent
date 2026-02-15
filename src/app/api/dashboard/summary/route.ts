@@ -1,5 +1,5 @@
 import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+
 import { notImplementedResponse } from '@/lib/validation/http';
 
 /**

@@ -1,8 +1,12 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+
 import { getAuthenticatedUser } from '@/lib/auth/middleware';
+import { HttpStatus } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
-import { updateCategoryBodySchema, deleteCategoryParamsSchema } from '@/lib/validation/categories.schemas';
+import {
+  updateCategoryBodySchema,
+  deleteCategoryParamsSchema,
+} from '@/lib/validation/categories.schemas';
 import {
   unauthorizedResponse,
   validationErrorResponse,
@@ -10,7 +14,6 @@ import {
   invalidJsonResponse,
   notFoundResponse,
 } from '@/lib/validation/http';
-import { HttpStatus } from '@/lib/constants';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -24,7 +27,7 @@ interface RouteParams {
  */
 export async function PATCH(request: NextRequest, context: RouteParams) {
   const user = await getAuthenticatedUser(request);
-  if (!user) return unauthorizedResponse();
+  if (!user) {return unauthorizedResponse();}
 
   const { id } = await context.params;
   const paramResult = deleteCategoryParamsSchema.safeParse({ id });
@@ -33,7 +36,7 @@ export async function PATCH(request: NextRequest, context: RouteParams) {
   }
 
   const body = await request.json().catch(() => null);
-  if (!body) return invalidJsonResponse();
+  if (!body) {return invalidJsonResponse();}
 
   const bodyResult = updateCategoryBodySchema.safeParse(body);
   if (!bodyResult.success) {
@@ -45,7 +48,7 @@ export async function PATCH(request: NextRequest, context: RouteParams) {
     const updated = await categoryService.updateCategory(
       user.accountId,
       paramResult.data.id,
-      bodyResult.data,
+      bodyResult.data
     );
     return NextResponse.json(updated, { status: HttpStatus.OK });
   } catch (error) {
@@ -67,7 +70,7 @@ export async function PATCH(request: NextRequest, context: RouteParams) {
  */
 export async function DELETE(request: NextRequest, context: RouteParams) {
   const user = await getAuthenticatedUser(request);
-  if (!user) return unauthorizedResponse();
+  if (!user) {return unauthorizedResponse();}
 
   const { id } = await context.params;
   const paramResult = deleteCategoryParamsSchema.safeParse({ id });

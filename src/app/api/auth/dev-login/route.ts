@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { createContainer } from '@/lib/container/container';
+
 import { HttpStatus, ErrorMessage } from '@/lib/constants';
+import { createContainer } from '@/lib/container/container';
 import { OAuthProvider } from '@/lib/enums';
 
 /**
@@ -16,7 +17,7 @@ export async function POST() {
   if (process.env.PROJECT_ENV !== 'dev') {
     return NextResponse.json(
       { error: 'Dev login not available in production' },
-      { status: HttpStatus.FORBIDDEN },
+      { status: HttpStatus.FORBIDDEN }
     );
   }
 
@@ -48,7 +49,7 @@ export async function POST() {
     console.error('dev-login error:', err);
     return NextResponse.json(
       { error: ErrorMessage.INTERNAL_SERVER_ERROR },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR },
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }

@@ -1,7 +1,7 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
-import { notImplementedResponse } from '@/lib/validation/http';
+import { NextResponse, type NextRequest } from 'next/server';
+
 import { HttpStatus } from '@/lib/constants';
+import { notImplementedResponse } from '@/lib/validation/http';
 
 interface RouteParams {
   params: Promise<{ id: string }>;

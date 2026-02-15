@@ -1,8 +1,8 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
-import { createContainer } from '@/lib/container/container';
+import { NextResponse, type NextRequest } from 'next/server';
+
 import { getSessionUser } from '@/lib/appwrite/session';
 import { HttpStatus, ErrorMessage } from '@/lib/constants';
+import { createContainer } from '@/lib/container/container';
 
 /**
  * GET /api/user/profile
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   if (!session) {
     return NextResponse.json(
       { error: ErrorMessage.UNAUTHORIZED },
-      { status: HttpStatus.UNAUTHORIZED },
+      { status: HttpStatus.UNAUTHORIZED }
     );
   }
 
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     if (!user) {
       return NextResponse.json(
         { error: ErrorMessage.USER_NOT_FOUND },
-        { status: HttpStatus.NOT_FOUND },
+        { status: HttpStatus.NOT_FOUND }
       );
     }
 
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     console.error('GET /api/user/profile error:', err);
     return NextResponse.json(
       { error: ErrorMessage.INTERNAL_SERVER_ERROR },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR },
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }
@@ -51,24 +51,21 @@ export async function PATCH(request: NextRequest) {
   if (!session) {
     return NextResponse.json(
       { error: ErrorMessage.UNAUTHORIZED },
-      { status: HttpStatus.UNAUTHORIZED },
+      { status: HttpStatus.UNAUTHORIZED }
     );
   }
 
   try {
     const body = await request.json();
     const container = await createContainer();
-    const updated = await container.authService.updateUserProfile(
-      session.accountId,
-      body,
-    );
+    const updated = await container.authService.updateUserProfile(session.accountId, body);
 
     return NextResponse.json({ user: updated });
   } catch (err) {
     console.error('PATCH /api/user/profile error:', err);
     return NextResponse.json(
       { error: ErrorMessage.INTERNAL_SERVER_ERROR },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR },
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 }

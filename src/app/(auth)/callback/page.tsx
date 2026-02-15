@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useState , Suspense } from 'react';
+
 import { getAppwriteAccount } from '@/lib/appwrite/client';
-import { Suspense } from 'react';
+
 
 function CallbackHandler() {
   const searchParams = useSearchParams();
@@ -18,7 +19,7 @@ function CallbackHandler() {
         if (isDev) {
           // Dev mode — call server-side API to register dev user
           const res = await fetch('/api/auth/dev-login', { method: 'POST' });
-          if (!res.ok) throw new Error('Dev login failed');
+          if (!res.ok) {throw new Error('Dev login failed');}
           router.replace(redirect);
           return;
         }
@@ -70,7 +71,9 @@ function CallbackHandler() {
 
 export default function CallbackPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
+    <Suspense
+      fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}
+    >
       <CallbackHandler />
     </Suspense>
   );

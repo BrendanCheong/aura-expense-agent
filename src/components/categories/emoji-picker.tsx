@@ -1,12 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const EMOJI_GROUPS = [
@@ -55,11 +52,7 @@ export function EmojiPicker({ value, onChange }: EmojiPickerProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className="h-10 w-14 text-xl"
-          type="button"
-        >
+        <Button variant="outline" className="h-10 w-14 text-xl" type="button">
           {value || '📦'}
         </Button>
       </PopoverTrigger>

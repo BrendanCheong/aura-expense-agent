@@ -15,26 +15,33 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
 
   async findByResendEmailId(resendEmailId: string): Promise<Transaction | null> {
     for (const tx of this.store.values()) {
-      if (tx.resendEmailId === resendEmailId) return tx;
+      if (tx.resendEmailId === resendEmailId) {return tx;}
     }
     return null;
   }
 
-  async findByUserId(userId: string, options: TransactionQueryOptions): Promise<PaginatedResult<Transaction>> {
-    let data = Array.from(this.store.values()).filter(tx => tx.userId === userId);
+  async findByUserId(
+    userId: string,
+    options: TransactionQueryOptions
+  ): Promise<PaginatedResult<Transaction>> {
+    let data = Array.from(this.store.values()).filter((tx) => tx.userId === userId);
 
-    if (options.startDate) data = data.filter(tx => tx.transactionDate >= options.startDate!);
-    if (options.endDate) data = data.filter(tx => tx.transactionDate < options.endDate!);
-    if (options.categoryId) data = data.filter(tx => tx.categoryId === options.categoryId);
-    if (options.source) data = data.filter(tx => tx.source === options.source);
+    if (options.startDate) {data = data.filter((tx) => tx.transactionDate >= options.startDate!);}
+    if (options.endDate) {data = data.filter((tx) => tx.transactionDate < options.endDate!);}
+    if (options.categoryId) {data = data.filter((tx) => tx.categoryId === options.categoryId);}
+    if (options.source) {data = data.filter((tx) => tx.source === options.source);}
 
     // Sort — validate sortBy against allowed Transaction keys
     const SORTABLE_FIELDS = new Set<string>([
-      'transactionDate', 'amount', 'vendor', 'confidence', 'createdAt', 'updatedAt',
+      'transactionDate',
+      'amount',
+      'vendor',
+      'confidence',
+      'createdAt',
+      'updatedAt',
     ]);
-    const sortBy = (options.sortBy && SORTABLE_FIELDS.has(options.sortBy))
-      ? options.sortBy
-      : 'transactionDate';
+    const sortBy =
+      options.sortBy && SORTABLE_FIELDS.has(options.sortBy) ? options.sortBy : 'transactionDate';
     const sortOrder = options.sortOrder || 'desc';
     data.sort((a, b) => {
       const aVal = String(a[sortBy as keyof Transaction] ?? '');
@@ -58,7 +65,7 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
 
   async findByUserAndDateRange(userId: string, start: string, end: string): Promise<Transaction[]> {
     return Array.from(this.store.values()).filter(
-      tx => tx.userId === userId && tx.transactionDate >= start && tx.transactionDate < end,
+      (tx) => tx.userId === userId && tx.transactionDate >= start && tx.transactionDate < end
     );
   }
 
@@ -66,14 +73,14 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
     userId: string,
     categoryId: string,
     start: string,
-    end: string,
+    end: string
   ): Promise<Transaction[]> {
     return Array.from(this.store.values()).filter(
-      tx =>
+      (tx) =>
         tx.userId === userId &&
         tx.categoryId === categoryId &&
         tx.transactionDate >= start &&
-        tx.transactionDate < end,
+        tx.transactionDate < end
     );
   }
 
@@ -100,7 +107,7 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
 
   async update(id: string, data: TransactionUpdate): Promise<Transaction> {
     const existing = this.store.get(id);
-    if (!existing) throw new Error(`Transaction ${id} not found`);
+    if (!existing) {throw new Error(`Transaction ${id} not found`);}
 
     const updated: Transaction = {
       ...existing,
@@ -128,7 +135,7 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
   async sumByUserCategoryDateRange(
     userId: string,
     start: string,
-    end: string,
+    end: string
   ): Promise<CategorySpendingSummary[]> {
     const transactions = await this.findByUserAndDateRange(userId, start, end);
     const map = new Map<string, CategorySpendingSummary>();

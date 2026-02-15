@@ -1,9 +1,11 @@
 'use client';
 
-import { useSearchParams, useRouter } from 'next/navigation';
 import { OAuthProvider } from 'appwrite';
-import { getAppwriteAccount } from '@/lib/appwrite/client';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense } from 'react';
+
+import { getAppwriteAccount } from '@/lib/appwrite/client';
+
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -33,12 +35,8 @@ function LoginForm() {
     <main className="aurora-bg relative flex min-h-screen items-center justify-center p-4">
       <div className="relative z-10 w-full max-w-sm rounded-xl border border-border bg-card p-8 shadow-sm">
         <div className="mb-8 text-center">
-          <h1 className="font-display text-3xl tracking-[-0.03em]">
-            Aura
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Sign in to your financial cockpit
-          </p>
+          <h1 className="font-display text-3xl tracking-[-0.03em]">Aura</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Sign in to your financial cockpit</p>
         </div>
 
         {error && (
@@ -112,7 +110,9 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
+    <Suspense
+      fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}
+    >
       <LoginForm />
     </Suspense>
   );

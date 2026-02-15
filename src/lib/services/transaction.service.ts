@@ -11,16 +11,20 @@ import type {
   PaginatedResult,
 } from '@/lib/repositories/interfaces';
 import type { Transaction, TransactionUpdate } from '@/types/transaction';
-import { normalizeVendorName } from '@/lib/utils/vendor';
+
 import { Confidence, TransactionSource } from '@/lib/enums';
+import { normalizeVendorName } from '@/lib/utils/vendor';
 
 export class TransactionService {
   constructor(
     private readonly transactionRepo: ITransactionRepository,
-    private readonly vendorCacheRepo: IVendorCacheRepository,
+    private readonly vendorCacheRepo: IVendorCacheRepository
   ) {}
 
-  async listTransactions(userId: string, options: TransactionQueryOptions): Promise<PaginatedResult<Transaction>> {
+  async listTransactions(
+    userId: string,
+    options: TransactionQueryOptions
+  ): Promise<PaginatedResult<Transaction>> {
     return this.transactionRepo.findByUserId(userId, options);
   }
 
@@ -32,13 +36,16 @@ export class TransactionService {
     return tx;
   }
 
-  async createManualTransaction(userId: string, data: {
-    amount: number;
-    vendor: string;
-    categoryId: string;
-    transactionDate: string;
-    description?: string;
-  }): Promise<Transaction> {
+  async createManualTransaction(
+    userId: string,
+    data: {
+      amount: number;
+      vendor: string;
+      categoryId: string;
+      transactionDate: string;
+      description?: string;
+    }
+  ): Promise<Transaction> {
     if (data.amount <= 0) {
       throw new ValidationError('Amount must be greater than 0');
     }
@@ -65,7 +72,11 @@ export class TransactionService {
     return transaction;
   }
 
-  async updateTransaction(userId: string, transactionId: string, data: TransactionUpdate): Promise<Transaction> {
+  async updateTransaction(
+    userId: string,
+    transactionId: string,
+    data: TransactionUpdate
+  ): Promise<Transaction> {
     const existing = await this.getTransaction(userId, transactionId);
 
     if (data.categoryId && data.categoryId !== existing.categoryId) {
@@ -91,9 +102,15 @@ export class TransactionService {
 }
 
 export class NotFoundError extends Error {
-  constructor(message: string) { super(message); this.name = 'NotFoundError'; }
+  constructor(message: string) {
+    super(message);
+    this.name = 'NotFoundError';
+  }
 }
 
 export class ValidationError extends Error {
-  constructor(message: string) { super(message); this.name = 'ValidationError'; }
+  constructor(message: string) {
+    super(message);
+    this.name = 'ValidationError';
+  }
 }

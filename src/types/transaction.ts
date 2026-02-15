@@ -1,4 +1,4 @@
-import { Confidence, TransactionSource } from '@/lib/enums';
+import type { Confidence, TransactionSource } from '@/lib/enums';
 
 export interface Transaction {
   id: string;

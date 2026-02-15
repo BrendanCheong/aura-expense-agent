@@ -26,7 +26,7 @@ export class DashboardService {
   constructor(
     private readonly transactionRepo: ITransactionRepository,
     private readonly budgetRepo: IBudgetRepository,
-    private readonly categoryRepo: ICategoryRepository,
+    private readonly categoryRepo: ICategoryRepository
   ) {}
 
   async getSummary(_userId: string, _year: number, _month: number): Promise<DashboardSummary> {

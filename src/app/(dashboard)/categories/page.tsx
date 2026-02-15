@@ -1,23 +1,19 @@
 'use client';
 
-import { useState } from 'react';
 import { Plus, Loader2, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { CategoryList } from '@/components/categories/category-list';
-import { CategoryForm } from '@/components/categories/category-form';
-import { useCategories } from '@/hooks/use-categories';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
+import { CategoryForm } from '@/components/categories/category-form';
+import { CategoryList } from '@/components/categories/category-list';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { useCategories } from '@/hooks/use-categories';
+
+
 export default function CategoriesPage() {
-  const {
-    categories,
-    isLoading,
-    error,
-    createCategory,
-    updateCategory,
-    deleteCategory,
-  } = useCategories();
+  const { categories, isLoading, error, createCategory, updateCategory, deleteCategory } =
+    useCategories();
   const [createOpen, setCreateOpen] = useState(false);
 
   if (isLoading) {
@@ -42,15 +38,16 @@ export default function CategoriesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-heading text-2xl font-bold tracking-tight">
-            Categories
-          </h1>
+          <h1 className="font-heading text-2xl font-bold tracking-tight">Categories</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Manage your expense categories. Descriptions help the AI agent
-            categorize transactions more accurately.
+            Manage your expense categories. Descriptions help the AI agent categorize transactions
+            more accurately.
           </p>
         </div>
-        <Button onClick={() => setCreateOpen(true)} className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button
+          onClick={() => setCreateOpen(true)}
+          className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90"
+        >
           <Plus className="h-4 w-4" />
           <span className="hidden sm:inline">New Category</span>
         </Button>
@@ -66,11 +63,7 @@ export default function CategoriesPage() {
           <p className="text-sm text-muted-foreground">
             Create your first category to start organizing expenses.
           </p>
-          <Button
-            onClick={() => setCreateOpen(true)}
-            variant="outline"
-            className="mt-2"
-          >
+          <Button onClick={() => setCreateOpen(true)} variant="outline" className="mt-2">
             <Plus className="mr-1.5 h-4 w-4" />
             Add Category
           </Button>

@@ -12,11 +12,7 @@
  * "SP GROUP") don't use them.
  */
 export function normalizeVendorName(name: string): string {
-  return name
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g, ' ')
-    .replace(/[.]+$/, '');
+  return name.trim().toUpperCase().replace(/\s+/g, ' ').replace(/[.]+$/, '');
 }
 
 /**
@@ -27,12 +23,14 @@ export function normalizeVendorName(name: string): string {
  * Returns null if no vendor pattern is found (non-transaction emails).
  */
 export function extractRoughVendor(text: string): string | null {
-  if (!text) return null;
+  if (!text) {return null;}
 
   // Pattern: "at VENDOR_NAME" followed by sentence-ending punctuation, "for", "on", "If", or end of string
   // Vendor names can contain uppercase letters, digits, spaces, dots, asterisks, hyphens
   // We use a greedy match for the vendor name, then trim trailing dots/periods
-  const match = text.match(/\bat\s+([A-Z][A-Z0-9 .*\-]+?)(?:(?:\.\s)|(?:,\s)|\s+(?:for|on|If)\b|$)/i);
+  const match = text.match(
+    /\bat\s+([A-Z][A-Z0-9 .*\-]+?)(?:(?:\.\s)|(?:,\s)|\s+(?:for|on|If)\b|$)/i
+  );
   if (match) {
     return match[1].trim().toUpperCase().replace(/[.]+$/, '');
   }

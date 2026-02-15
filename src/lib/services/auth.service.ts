@@ -1,5 +1,4 @@
-import type { IUserRepository } from '@/lib/repositories/interfaces';
-import type { ICategoryRepository } from '@/lib/repositories/interfaces';
+import type { IUserRepository , ICategoryRepository } from '@/lib/repositories/interfaces';
 import type { User, UserCreate, UserUpdate } from '@/types/user';
 
 /**
@@ -12,7 +11,7 @@ import type { User, UserCreate, UserUpdate } from '@/types/user';
 export class AuthService {
   constructor(
     private readonly userRepo: IUserRepository,
-    private readonly categoryRepo: ICategoryRepository,
+    private readonly categoryRepo: ICategoryRepository
   ) {}
 
   /**

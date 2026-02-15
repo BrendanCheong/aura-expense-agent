@@ -1,17 +1,15 @@
 'use client';
 
-import { useState } from 'react';
 import { Pencil, Trash2, ShieldAlert } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { useState } from 'react';
+
 import { CategoryForm } from './category-form';
 import { DeleteCategoryDialog } from './delete-category-dialog';
+
 import type { Category, CategoryUpdate } from '@/types/category';
+
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface CategoryListProps {
   categories: Category[];
@@ -19,11 +17,7 @@ interface CategoryListProps {
   onDelete: (id: string) => Promise<void>;
 }
 
-export function CategoryList({
-  categories,
-  onUpdate,
-  onDelete,
-}: CategoryListProps) {
+export function CategoryList({ categories, onUpdate, onDelete }: CategoryListProps) {
   const [editCategory, setEditCategory] = useState<Category | null>(null);
   const [deleteCategory, setDeleteCategory] = useState<Category | null>(null);
 
@@ -53,9 +47,7 @@ export function CategoryList({
               <h3 className="font-heading text-sm font-semibold leading-tight tracking-tight">
                 {cat.name}
               </h3>
-              <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
-                {cat.description}
-              </p>
+              <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">{cat.description}</p>
             </div>
 
             {/* Actions */}
@@ -101,11 +93,11 @@ export function CategoryList({
       <CategoryForm
         open={editCategory !== null}
         onOpenChange={(open) => {
-          if (!open) setEditCategory(null);
+          if (!open) {setEditCategory(null);}
         }}
         category={editCategory}
         onSubmit={async (data) => {
-          if (!editCategory) return;
+          if (!editCategory) {return;}
           await onUpdate(editCategory.id, data);
           setEditCategory(null);
         }}
@@ -115,11 +107,11 @@ export function CategoryList({
       <DeleteCategoryDialog
         open={deleteCategory !== null}
         onOpenChange={(open) => {
-          if (!open) setDeleteCategory(null);
+          if (!open) {setDeleteCategory(null);}
         }}
         categoryName={deleteCategory?.name ?? ''}
         onConfirm={async () => {
-          if (!deleteCategory) return;
+          if (!deleteCategory) {return;}
           await onDelete(deleteCategory.id);
           setDeleteCategory(null);
         }}

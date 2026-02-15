@@ -4,16 +4,13 @@
  * Will be fully implemented during feature development.
  */
 
-import type {
-  IBudgetRepository,
-  ITransactionRepository,
-} from '@/lib/repositories/interfaces';
+import type { IBudgetRepository, ITransactionRepository } from '@/lib/repositories/interfaces';
 import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
 
 export class BudgetService {
   constructor(
     private readonly budgetRepo: IBudgetRepository,
-    private readonly transactionRepo: ITransactionRepository,
+    private readonly transactionRepo: ITransactionRepository
   ) {}
 
   async listBudgets(userId: string, year: number, month: number): Promise<Budget[]> {
@@ -22,7 +19,10 @@ export class BudgetService {
 
   async createBudget(userId: string, data: Omit<BudgetCreate, 'userId'>): Promise<Budget> {
     const existing = await this.budgetRepo.findByUserCategoryPeriod(
-      userId, data.categoryId, data.year, data.month,
+      userId,
+      data.categoryId,
+      data.year,
+      data.month
     );
     if (existing) {
       throw new Error('Budget already exists for this category and period');

@@ -1,9 +1,9 @@
-import type { Transaction, TransactionCreate, TransactionUpdate } from '@/types/transaction';
-import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category';
+import type { TransactionSource } from '@/lib/enums';
 import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
-import type { VendorCacheEntry } from '@/types/vendor-cache';
+import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category';
+import type { Transaction, TransactionCreate, TransactionUpdate } from '@/types/transaction';
 import type { User, UserCreate, UserUpdate } from '@/types/user';
-import { TransactionSource } from '@/lib/enums';
+import type { VendorCacheEntry } from '@/types/vendor-cache';
 
 // --- Shared Types ---
 
@@ -34,14 +34,26 @@ export interface CategorySpendingSummary {
 
 export interface ITransactionRepository {
   findById(id: string): Promise<Transaction | null>;
-  findByUserId(userId: string, options: TransactionQueryOptions): Promise<PaginatedResult<Transaction>>;
+  findByUserId(
+    userId: string,
+    options: TransactionQueryOptions
+  ): Promise<PaginatedResult<Transaction>>;
   findByResendEmailId(resendEmailId: string): Promise<Transaction | null>;
   findByUserAndDateRange(userId: string, start: string, end: string): Promise<Transaction[]>;
-  findByUserCategoryDateRange(userId: string, categoryId: string, start: string, end: string): Promise<Transaction[]>;
+  findByUserCategoryDateRange(
+    userId: string,
+    categoryId: string,
+    start: string,
+    end: string
+  ): Promise<Transaction[]>;
   create(data: TransactionCreate): Promise<Transaction>;
   update(id: string, data: TransactionUpdate): Promise<Transaction>;
   delete(id: string): Promise<void>;
-  sumByUserCategoryDateRange(userId: string, start: string, end: string): Promise<CategorySpendingSummary[]>;
+  sumByUserCategoryDateRange(
+    userId: string,
+    start: string,
+    end: string
+  ): Promise<CategorySpendingSummary[]>;
 }
 
 export interface ICategoryRepository {
@@ -57,7 +69,12 @@ export interface ICategoryRepository {
 export interface IBudgetRepository {
   findById(id: string): Promise<Budget | null>;
   findByUserAndPeriod(userId: string, year: number, month: number): Promise<Budget[]>;
-  findByUserCategoryPeriod(userId: string, categoryId: string, year: number, month: number): Promise<Budget | null>;
+  findByUserCategoryPeriod(
+    userId: string,
+    categoryId: string,
+    year: number,
+    month: number
+  ): Promise<Budget | null>;
   create(data: BudgetCreate): Promise<Budget>;
   update(id: string, data: BudgetUpdate): Promise<Budget>;
   delete(id: string): Promise<void>;

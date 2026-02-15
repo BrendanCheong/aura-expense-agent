@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import {
   amountSchema,
   idSchema,
@@ -6,19 +7,19 @@ import {
   paginationSchema,
   sortOrderSchema,
 } from './common.schemas';
+
 import { TransactionSource, Confidence } from '@/lib/enums';
 
-export const transactionSourceSchema = z.enum([
-  TransactionSource.EMAIL,
-  TransactionSource.MANUAL,
-]);
+export const transactionSourceSchema = z.enum([TransactionSource.EMAIL, TransactionSource.MANUAL]);
 
 export const listTransactionsQuerySchema = paginationSchema.extend({
   startDate: z.string().optional(),
   endDate: z.string().optional(),
   categoryId: idSchema.optional(),
   source: transactionSourceSchema.optional(),
-  sortBy: z.enum(['transactionDate', 'amount', 'vendor', 'confidence', 'createdAt', 'updatedAt']).default('transactionDate'),
+  sortBy: z
+    .enum(['transactionDate', 'amount', 'vendor', 'confidence', 'createdAt', 'updatedAt'])
+    .default('transactionDate'),
   sortOrder: sortOrderSchema,
 });
 
@@ -34,15 +35,17 @@ export const updateTransactionParamsSchema = z.object({
   id: idSchema,
 });
 
-export const updateTransactionBodySchema = z.object({
-  categoryId: idSchema.optional(),
-  amount: amountSchema.optional(),
-  vendor: z.string().min(1).max(200).optional(),
-  description: z.string().max(1000).optional(),
-  transactionDate: isoDateTimeSchema.optional(),
-  confidence: z.enum([Confidence.HIGH, Confidence.MEDIUM, Confidence.LOW]).optional(),
-}).refine((value) => Object.keys(value).length > 0, {
-  message: 'At least one field must be provided',
-});
+export const updateTransactionBodySchema = z
+  .object({
+    categoryId: idSchema.optional(),
+    amount: amountSchema.optional(),
+    vendor: z.string().min(1).max(200).optional(),
+    description: z.string().max(1000).optional(),
+    transactionDate: isoDateTimeSchema.optional(),
+    confidence: z.enum([Confidence.HIGH, Confidence.MEDIUM, Confidence.LOW]).optional(),
+  })
+  .refine((value) => Object.keys(value).length > 0, {
+    message: 'At least one field must be provided',
+  });
 
 export const deleteTransactionParamsSchema = updateTransactionParamsSchema;

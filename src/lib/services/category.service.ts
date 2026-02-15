@@ -18,7 +18,7 @@ export class CategoryService {
     private readonly categoryRepo: ICategoryRepository,
     private readonly vendorCacheRepo: IVendorCacheRepository,
     private readonly budgetRepo: IBudgetRepository,
-    private readonly transactionRepo: ITransactionRepository,
+    private readonly transactionRepo: ITransactionRepository
   ) {}
 
   async listCategories(userId: string): Promise<Category[]> {
@@ -33,7 +33,11 @@ export class CategoryService {
     return this.categoryRepo.create({ ...data, userId: userId });
   }
 
-  async updateCategory(userId: string, categoryId: string, data: CategoryUpdate): Promise<Category> {
+  async updateCategory(
+    userId: string,
+    categoryId: string,
+    data: CategoryUpdate
+  ): Promise<Category> {
     const category = await this.categoryRepo.findById(categoryId);
     if (!category || category.userId !== userId) {
       throw new Error(`Category ${categoryId} not found`);
@@ -63,7 +67,7 @@ export class CategoryService {
       userId,
       categoryId,
       '1970-01-01T00:00:00Z',
-      '2099-12-31T23:59:59Z',
+      '2099-12-31T23:59:59Z'
     );
     for (const tx of transactions) {
       await this.transactionRepo.update(tx.id, { categoryId: otherCategory.id });

@@ -1,8 +1,10 @@
-import type { TablesDB } from 'node-appwrite';
 import { ID, Query } from 'node-appwrite';
+
 import type { IVendorCacheRepository } from '../interfaces';
-import type { VendorCacheEntry } from '@/types/vendor-cache';
 import type { VendorCacheRow } from '@/types/appwrite/rows';
+import type { VendorCacheEntry } from '@/types/vendor-cache';
+import type { TablesDB } from 'node-appwrite';
+
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import { mapRowToVendorCacheEntry } from '@/lib/appwrite/mappers';
 import { normalizeVendorName } from '@/lib/utils/vendor';
@@ -13,10 +15,7 @@ const TABLE_ID = APPWRITE_CONFIG.tables.vendorCache;
 export class AppwriteVendorCacheRepository implements IVendorCacheRepository {
   constructor(private readonly tablesDb: TablesDB) {}
 
-  async findByUserAndVendor(
-    userId: string,
-    vendorName: string,
-  ): Promise<VendorCacheEntry | null> {
+  async findByUserAndVendor(userId: string, vendorName: string): Promise<VendorCacheEntry | null> {
     const normalized = normalizeVendorName(vendorName);
     const result = await this.tablesDb.listRows<VendorCacheRow>({
       databaseId: DB_ID,
@@ -28,7 +27,7 @@ export class AppwriteVendorCacheRepository implements IVendorCacheRepository {
       ],
     });
 
-    if (result.rows.length === 0) return null;
+    if (result.rows.length === 0) {return null;}
     return mapRowToVendorCacheEntry(result.rows[0]);
   }
 
@@ -36,19 +35,12 @@ export class AppwriteVendorCacheRepository implements IVendorCacheRepository {
     const result = await this.tablesDb.listRows<VendorCacheRow>({
       databaseId: DB_ID,
       tableId: TABLE_ID,
-      queries: [
-        Query.equal('user_id', userId),
-        Query.limit(5000),
-      ],
+      queries: [Query.equal('user_id', userId), Query.limit(5000)],
     });
     return result.rows.map(mapRowToVendorCacheEntry);
   }
 
-  async create(
-    userId: string,
-    vendorName: string,
-    categoryId: string,
-  ): Promise<VendorCacheEntry> {
+  async create(userId: string, vendorName: string, categoryId: string): Promise<VendorCacheEntry> {
     const normalized = normalizeVendorName(vendorName);
     const row = await this.tablesDb.createRow<VendorCacheRow>({
       databaseId: DB_ID,
@@ -89,10 +81,7 @@ export class AppwriteVendorCacheRepository implements IVendorCacheRepository {
     const result = await this.tablesDb.listRows<VendorCacheRow>({
       databaseId: DB_ID,
       tableId: TABLE_ID,
-      queries: [
-        Query.equal('category_id', categoryId),
-        Query.limit(5000),
-      ],
+      queries: [Query.equal('category_id', categoryId), Query.limit(5000)],
     });
 
     for (const row of result.rows) {

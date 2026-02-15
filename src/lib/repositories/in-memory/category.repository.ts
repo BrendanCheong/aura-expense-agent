@@ -6,14 +6,59 @@ import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category'
  * Seeded for each new user on first login.
  */
 const DEFAULT_CATEGORIES = [
-  { name: 'Food & Beverage', description: 'Restaurants, cafes, coffee shops, bubble tea, hawker centres, food delivery (GrabFood, Foodpanda, Deliveroo)', icon: '🍔', color: '#ef4444' },
-  { name: 'Transportation', description: 'Public transit (MRT, bus), ride-hailing (Grab, Gojek), fuel, parking, ERP charges', icon: '🚗', color: '#f97316' },
-  { name: 'Shopping', description: 'Retail purchases, clothing, electronics, online shopping (Shopee, Lazada, Amazon)', icon: '🛍️', color: '#eab308' },
-  { name: 'Entertainment', description: 'Movies, concerts, streaming subscriptions (Netflix, Spotify), games, nightlife', icon: '🎬', color: '#22c55e' },
-  { name: 'Bills & Utilities', description: 'Electricity, water, gas, internet, phone bill, insurance premiums, loan repayments', icon: '💡', color: '#3b82f6' },
-  { name: 'Travel', description: 'Flights, hotels, travel insurance, overseas purchases, airport transfers', icon: '✈️', color: '#8b5cf6' },
-  { name: 'Investment', description: 'Stocks, crypto, ETFs, robo-advisors (StashAway, Syfe, Endowus), fixed deposits, bonds', icon: '📈', color: '#a78bfa' },
-  { name: 'Other', description: 'Anything that doesn\'t fit — miscellaneous or one-off expenses', icon: '📦', color: '#6b7280' },
+  {
+    name: 'Food & Beverage',
+    description:
+      'Restaurants, cafes, coffee shops, bubble tea, hawker centres, food delivery (GrabFood, Foodpanda, Deliveroo)',
+    icon: '🍔',
+    color: '#ef4444',
+  },
+  {
+    name: 'Transportation',
+    description:
+      'Public transit (MRT, bus), ride-hailing (Grab, Gojek), fuel, parking, ERP charges',
+    icon: '🚗',
+    color: '#f97316',
+  },
+  {
+    name: 'Shopping',
+    description:
+      'Retail purchases, clothing, electronics, online shopping (Shopee, Lazada, Amazon)',
+    icon: '🛍️',
+    color: '#eab308',
+  },
+  {
+    name: 'Entertainment',
+    description: 'Movies, concerts, streaming subscriptions (Netflix, Spotify), games, nightlife',
+    icon: '🎬',
+    color: '#22c55e',
+  },
+  {
+    name: 'Bills & Utilities',
+    description:
+      'Electricity, water, gas, internet, phone bill, insurance premiums, loan repayments',
+    icon: '💡',
+    color: '#3b82f6',
+  },
+  {
+    name: 'Travel',
+    description: 'Flights, hotels, travel insurance, overseas purchases, airport transfers',
+    icon: '✈️',
+    color: '#8b5cf6',
+  },
+  {
+    name: 'Investment',
+    description:
+      'Stocks, crypto, ETFs, robo-advisors (StashAway, Syfe, Endowus), fixed deposits, bonds',
+    icon: '📈',
+    color: '#a78bfa',
+  },
+  {
+    name: 'Other',
+    description: "Anything that doesn't fit — miscellaneous or one-off expenses",
+    icon: '📦',
+    color: '#6b7280',
+  },
 ];
 
 export class InMemoryCategoryRepository implements ICategoryRepository {
@@ -25,14 +70,14 @@ export class InMemoryCategoryRepository implements ICategoryRepository {
 
   async findByUserId(userId: string): Promise<Category[]> {
     return Array.from(this.store.values())
-      .filter(c => c.userId === userId)
+      .filter((c) => c.userId === userId)
       .sort((a, b) => a.sortOrder - b.sortOrder);
   }
 
   async findByUserIdAndName(userId: string, name: string): Promise<Category | null> {
     const lower = name.toLowerCase();
     for (const c of this.store.values()) {
-      if (c.userId === userId && c.name.toLowerCase() === lower) return c;
+      if (c.userId === userId && c.name.toLowerCase() === lower) {return c;}
     }
     return null;
   }
@@ -57,7 +102,7 @@ export class InMemoryCategoryRepository implements ICategoryRepository {
 
   async update(id: string, data: CategoryUpdate): Promise<Category> {
     const existing = this.store.get(id);
-    if (!existing) throw new Error(`Category ${id} not found`);
+    if (!existing) {throw new Error(`Category ${id} not found`);}
 
     const updated: Category = {
       ...existing,

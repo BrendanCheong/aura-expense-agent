@@ -6,13 +6,7 @@ import { NextResponse, type NextRequest } from 'next/server';
  * In dev mode (PROJECT_ENV=dev), all routes are accessible.
  */
 
-const PROTECTED_PREFIXES = [
-  '/dashboard',
-  '/transactions',
-  '/categories',
-  '/budgets',
-  '/settings',
-];
+const PROTECTED_PREFIXES = ['/dashboard', '/transactions', '/categories', '/budgets', '/settings'];
 
 const PUBLIC_PATHS = ['/', '/login', '/callback'];
 
@@ -25,9 +19,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Check if this is a protected route
-  const isProtected = PROTECTED_PREFIXES.some((prefix) =>
-    pathname.startsWith(prefix),
-  );
+  const isProtected = PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 
   if (!isProtected) {
     return NextResponse.next();

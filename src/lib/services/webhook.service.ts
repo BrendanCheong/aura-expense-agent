@@ -10,7 +10,7 @@ export class WebhookService {
   constructor(
     private readonly transactionRepo: ITransactionRepository,
     private readonly vendorCacheRepo: IVendorCacheRepository,
-    private readonly agent: unknown, // Will be typed to ExpenseAgent in FEAT-005
+    private readonly agent: unknown // Will be typed to ExpenseAgent in FEAT-005
   ) {}
 
   async processInboundEmail(_params: {

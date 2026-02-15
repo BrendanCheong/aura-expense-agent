@@ -4,49 +4,49 @@ import type { Models } from 'appwrite';
 // You can regenerate it by running `appwrite types src/types/appwrite --language ts`.
 
 export type Users = Models.Row & {
-    email: string;
-    name: string;
-    inbound_email: string;
-    oauth_provider: string;
-    avatar_url: string | null;
-    monthly_salary: number | null;
-    budget_mode: string;
-}
+  email: string;
+  name: string;
+  inbound_email: string;
+  oauth_provider: string;
+  avatar_url: string | null;
+  monthly_salary: number | null;
+  budget_mode: string;
+};
 
 export type Categories = Models.Row & {
-    user_id: string;
-    name: string;
-    description: string;
-    icon: string;
-    color: string;
-    is_default: boolean;
-    sort_order: number;
-}
+  user_id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  is_default: boolean;
+  sort_order: number;
+};
 
 export type Transactions = Models.Row & {
-    user_id: string;
-    category_id: string;
-    amount: number;
-    vendor: string;
-    description: string;
-    transaction_date: string;
-    resend_email_id: string | null;
-    raw_email_subject: string;
-    confidence: string;
-    source: string;
-}
+  user_id: string;
+  category_id: string;
+  amount: number;
+  vendor: string;
+  description: string;
+  transaction_date: string;
+  resend_email_id: string | null;
+  raw_email_subject: string;
+  confidence: string;
+  source: string;
+};
 
 export type Budgets = Models.Row & {
-    user_id: string;
-    category_id: string;
-    amount: number;
-    year: number;
-    month: number;
-}
+  user_id: string;
+  category_id: string;
+  amount: number;
+  year: number;
+  month: number;
+};
 
 export type VendorCache = Models.Row & {
-    user_id: string;
-    vendor_name: string;
-    category_id: string;
-    hit_count: number;
-}
+  user_id: string;
+  vendor_name: string;
+  category_id: string;
+  hit_count: number;
+};

@@ -1,5 +1,6 @@
 import type { IUserRepository } from '../interfaces';
 import type { User, UserCreate, UserUpdate } from '@/types/user';
+
 import { BudgetMode } from '@/lib/enums';
 
 export class InMemoryUserRepository implements IUserRepository {
@@ -11,7 +12,7 @@ export class InMemoryUserRepository implements IUserRepository {
 
   async findByEmail(email: string): Promise<User | null> {
     for (const user of this.users.values()) {
-      if (user.email === email) return user;
+      if (user.email === email) {return user;}
     }
     return null;
   }
@@ -36,7 +37,7 @@ export class InMemoryUserRepository implements IUserRepository {
 
   async update(id: string, data: UserUpdate): Promise<User> {
     const existing = this.users.get(id);
-    if (!existing) throw new Error(`User not found: ${id}`);
+    if (!existing) {throw new Error(`User not found: ${id}`);}
 
     const updated: User = {
       ...existing,

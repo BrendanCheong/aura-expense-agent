@@ -10,7 +10,7 @@ export class InMemoryBudgetRepository implements IBudgetRepository {
 
   async findByUserAndPeriod(userId: string, year: number, month: number): Promise<Budget[]> {
     return Array.from(this.store.values()).filter(
-      b => b.userId === userId && b.year === year && b.month === month,
+      (b) => b.userId === userId && b.year === year && b.month === month
     );
   }
 
@@ -18,7 +18,7 @@ export class InMemoryBudgetRepository implements IBudgetRepository {
     userId: string,
     categoryId: string,
     year: number,
-    month: number,
+    month: number
   ): Promise<Budget | null> {
     for (const b of this.store.values()) {
       if (
@@ -51,7 +51,7 @@ export class InMemoryBudgetRepository implements IBudgetRepository {
 
   async update(id: string, data: BudgetUpdate): Promise<Budget> {
     const existing = this.store.get(id);
-    if (!existing) throw new Error(`Budget ${id} not found`);
+    if (!existing) {throw new Error(`Budget ${id} not found`);}
 
     const updated: Budget = {
       ...existing,

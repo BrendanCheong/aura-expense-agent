@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { amountSchema, idSchema, monthSchema, yearSchema } from './common.schemas';
 
 export const listBudgetsQuerySchema = z.object({

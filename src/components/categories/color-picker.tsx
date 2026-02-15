@@ -1,12 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 
 /**
@@ -45,11 +42,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className="h-10 w-14 p-2"
-          type="button"
-        >
+        <Button variant="outline" className="h-10 w-14 p-2" type="button">
           <span
             className="block h-full w-full rounded-sm"
             style={{ backgroundColor: value || '#94A3B8' }}
@@ -67,7 +60,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
                 'h-8 w-8 rounded-md border-2 transition-all',
                 value === hex
                   ? 'border-foreground scale-110'
-                  : 'border-transparent hover:border-muted-foreground/50 hover:scale-105',
+                  : 'border-transparent hover:border-muted-foreground/50 hover:scale-105'
               )}
               style={{ backgroundColor: hex }}
               onClick={() => {

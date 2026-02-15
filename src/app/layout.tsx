@@ -1,6 +1,7 @@
-import type { Metadata } from 'next';
 import { Instrument_Serif, Syne, Outfit, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
+
+import type { Metadata } from 'next';
 import './globals.css';
 
 const instrumentSerif = Instrument_Serif({
@@ -46,12 +47,7 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${syne.variable} ${outfit.variable} ${jetbrainsMono.variable}`}
     >
       <body className="font-body antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           {children}
         </ThemeProvider>
       </body>

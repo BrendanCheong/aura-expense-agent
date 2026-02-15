@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { monthSchema, yearSchema } from './common.schemas';
 
 export const dashboardPeriodSchema = z.enum(['week', 'month', 'year']).default('month');

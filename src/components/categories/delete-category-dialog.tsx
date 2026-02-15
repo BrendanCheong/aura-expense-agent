@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 
 interface DeleteCategoryDialogProps {
   open: boolean;
@@ -42,32 +43,22 @@ export function DeleteCategoryDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-heading text-xl tracking-tight">
-            Delete Category
-          </DialogTitle>
+          <DialogTitle className="font-heading text-xl tracking-tight">Delete Category</DialogTitle>
           <DialogDescription className="space-y-2">
             <span className="block">
               Are you sure you want to delete <strong>{categoryName}</strong>?
             </span>
             <span className="block text-muted-foreground">
-              All transactions in this category will be moved to &quot;Other&quot;.
-              Associated budgets and vendor cache entries will be removed.
+              All transactions in this category will be moved to &quot;Other&quot;. Associated
+              budgets and vendor cache entries will be removed.
             </span>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button
-            variant="ghost"
-            onClick={() => onOpenChange(false)}
-            disabled={isDeleting}
-          >
+          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={isDeleting}>
             Cancel
           </Button>
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
+          <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
             {isDeleting ? 'Deleting…' : 'Delete Category'}
           </Button>
         </DialogFooter>

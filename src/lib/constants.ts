@@ -55,3 +55,6 @@ export const ErrorMessage = {
 } as const;
 
 export type ErrorMessageKey = keyof typeof ErrorMessage;
+
+export const SMITHERY_BRAVE_URL = 'https://server.smithery.ai/brave';
+export const BRAVE_WEB_SEARCH_TOOL = 'brave_web_search';;

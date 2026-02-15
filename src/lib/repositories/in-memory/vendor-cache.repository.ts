@@ -1,5 +1,6 @@
 import type { IVendorCacheRepository } from '../interfaces';
 import type { VendorCacheEntry } from '@/types/vendor-cache';
+
 import { normalizeVendorName } from '@/lib/utils/vendor';
 
 export class InMemoryVendorCacheRepository implements IVendorCacheRepository {
@@ -16,7 +17,7 @@ export class InMemoryVendorCacheRepository implements IVendorCacheRepository {
   }
 
   async findByUserId(userId: string): Promise<VendorCacheEntry[]> {
-    return Array.from(this.store.values()).filter(e => e.userId === userId);
+    return Array.from(this.store.values()).filter((e) => e.userId === userId);
   }
 
   async create(userId: string, vendorName: string, categoryId: string): Promise<VendorCacheEntry> {
@@ -36,14 +37,14 @@ export class InMemoryVendorCacheRepository implements IVendorCacheRepository {
 
   async updateCategoryId(id: string, categoryId: string): Promise<void> {
     const entry = this.store.get(id);
-    if (!entry) throw new Error(`Vendor cache entry ${id} not found`);
+    if (!entry) {throw new Error(`Vendor cache entry ${id} not found`);}
     entry.categoryId = categoryId;
     entry.updatedAt = new Date().toISOString();
   }
 
   async incrementHitCount(id: string, currentCount: number): Promise<void> {
     const entry = this.store.get(id);
-    if (!entry) throw new Error(`Vendor cache entry ${id} not found`);
+    if (!entry) {throw new Error(`Vendor cache entry ${id} not found`);}
     entry.hitCount = currentCount + 1;
     entry.updatedAt = new Date().toISOString();
   }

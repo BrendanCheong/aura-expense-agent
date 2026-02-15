@@ -1,6 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
+import { ColorPicker } from './color-picker';
+import { EmojiPicker } from './emoji-picker';
+
+import type { Category, CategoryUpdate } from '@/types/category';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,12 +16,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { EmojiPicker } from './emoji-picker';
-import { ColorPicker } from './color-picker';
-import type { Category, CategoryUpdate } from '@/types/category';
+
+
 
 interface CategoryFormProps {
   open: boolean;
@@ -28,12 +33,7 @@ interface CategoryFormProps {
   }) => Promise<void>;
 }
 
-export function CategoryForm({
-  open,
-  onOpenChange,
-  category,
-  onSubmit,
-}: CategoryFormProps) {
+export function CategoryForm({ open, onOpenChange, category, onSubmit }: CategoryFormProps) {
   const isEditing = Boolean(category);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -92,9 +92,7 @@ export function CategoryForm({
           {/* Emoji + Color row */}
           <div className="flex items-end gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-wider text-muted-foreground">
-                Icon
-              </Label>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Icon</Label>
               <EmojiPicker value={icon} onChange={setIcon} />
             </div>
             <div className="space-y-1.5">
@@ -104,7 +102,10 @@ export function CategoryForm({
               <ColorPicker value={color} onChange={setColor} />
             </div>
             <div className="flex-1 space-y-1.5">
-              <Label htmlFor="cat-name" className="text-xs uppercase tracking-wider text-muted-foreground">
+              <Label
+                htmlFor="cat-name"
+                className="text-xs uppercase tracking-wider text-muted-foreground"
+              >
                 Name
               </Label>
               <Input
@@ -120,7 +121,10 @@ export function CategoryForm({
 
           {/* Description */}
           <div className="space-y-1.5">
-            <Label htmlFor="cat-desc" className="text-xs uppercase tracking-wider text-muted-foreground">
+            <Label
+              htmlFor="cat-desc"
+              className="text-xs uppercase tracking-wider text-muted-foreground"
+            >
               Description
             </Label>
             <textarea
@@ -137,9 +141,7 @@ export function CategoryForm({
             </p>
           </div>
 
-          {error && (
-            <p className="text-sm text-destructive">{error}</p>
-          )}
+          {error && <p className="text-sm text-destructive">{error}</p>}
 
           <DialogFooter>
             <Button
@@ -151,11 +153,7 @@ export function CategoryForm({
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting
-                ? 'Saving…'
-                : isEditing
-                  ? 'Save Changes'
-                  : 'Create Category'}
+              {isSubmitting ? 'Saving…' : isEditing ? 'Save Changes' : 'Create Category'}
             </Button>
           </DialogFooter>
         </form>

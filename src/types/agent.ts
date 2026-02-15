@@ -1,4 +1,4 @@
-import { Confidence } from '@/lib/enums';
+import type { Confidence } from '@/lib/enums';
 
 export interface AgentInput {
   emailHtml: string;

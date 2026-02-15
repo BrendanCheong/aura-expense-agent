@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+
 import type { Category, CategoryUpdate } from '@/types/category';
 
 interface UseCategoriesReturn {
@@ -64,7 +65,7 @@ export function useCategories(): UseCategoriesReturn {
       setCategories((prev) => [...prev, created]);
       return created;
     },
-    [],
+    []
   );
 
   const updateCategory = useCallback(
@@ -79,27 +80,22 @@ export function useCategories(): UseCategoriesReturn {
         throw new Error(body.error || `Failed to update category: ${res.status}`);
       }
       const updated: Category = await res.json();
-      setCategories((prev) =>
-        prev.map((c) => (c.id === id ? updated : c)),
-      );
+      setCategories((prev) => prev.map((c) => (c.id === id ? updated : c)));
       return updated;
     },
-    [],
+    []
   );
 
-  const deleteCategory = useCallback(
-    async (id: string): Promise<void> => {
-      const res = await fetch(`/api/categories/${id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Failed to delete category: ${res.status}`);
-      }
-      setCategories((prev) => prev.filter((c) => c.id !== id));
-    },
-    [],
-  );
+  const deleteCategory = useCallback(async (id: string): Promise<void> => {
+    const res = await fetch(`/api/categories/${id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || `Failed to delete category: ${res.status}`);
+    }
+    setCategories((prev) => prev.filter((c) => c.id !== id));
+  }, []);
 
   return {
     categories,

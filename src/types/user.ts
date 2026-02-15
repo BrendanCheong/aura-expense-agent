@@ -1,4 +1,4 @@
-import { OAuthProvider, BudgetMode } from '@/lib/enums';
+import type { OAuthProvider, BudgetMode } from '@/lib/enums';
 
 export interface User {
   id: string;

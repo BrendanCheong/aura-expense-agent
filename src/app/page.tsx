@@ -5,15 +5,13 @@ export default function Home() {
     <main className="aurora-bg relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-8">
       {/* Content */}
       <div className="relative z-10 text-center">
-        <h1 className="font-display text-5xl tracking-[-0.03em] sm:text-6xl">
-          Aura
-        </h1>
+        <h1 className="font-display text-5xl tracking-[-0.03em] sm:text-6xl">Aura</h1>
         <p className="mt-3 font-heading text-lg font-medium tracking-tight text-muted-foreground sm:text-xl">
           Zero-touch financial intelligence
         </p>
         <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted-foreground/80">
-          Forward your bank emails. Aura categorizes, tracks, and learns your
-          spending patterns — so you never have to.
+          Forward your bank emails. Aura categorizes, tracks, and learns your spending patterns — so
+          you never have to.
         </p>
         <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Link

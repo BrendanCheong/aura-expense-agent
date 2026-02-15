@@ -1,14 +1,9 @@
 'use client';
 
+import { LayoutDashboard, Receipt, Tags, Wallet, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  LayoutDashboard,
-  Receipt,
-  Tags,
-  Wallet,
-  Settings,
-} from 'lucide-react';
+
 import { cn } from '@/lib/utils';
 
 const NAV_ITEMS = [
@@ -23,7 +18,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   function isActive(href: string) {
-    if (href === '/') return pathname === '/';
+    if (href === '/') {return pathname === '/';}
     return pathname.startsWith(href);
   }
 
@@ -46,7 +41,7 @@ export function Sidebar() {
               'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
               isActive(href)
                 ? 'bg-primary/10 text-primary'
-                : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+                : 'text-muted-foreground hover:bg-accent hover:text-foreground'
             )}
           >
             <Icon className="h-4 w-4 shrink-0" />

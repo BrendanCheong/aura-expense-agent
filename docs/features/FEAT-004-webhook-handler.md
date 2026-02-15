@@ -42,9 +42,9 @@ Use `svix` directly for request verification:
 - Install dependency: `pnpm add svix`
 - Read **raw body** with `await request.text()` (do not use `request.json()` before verification)
 - Verify using headers:
-    - `svix-id`
-    - `svix-timestamp`
-    - `svix-signature`
+  - `svix-id`
+  - `svix-timestamp`
+  - `svix-signature`
 - Use signing secret: `process.env.RESEND_WEBHOOK_SECRET`
 
 If verification fails, return `400 Invalid webhook`.
@@ -56,9 +56,9 @@ const payload = await request.text();
 const wh = new Webhook(process.env.RESEND_WEBHOOK_SECRET!);
 
 const event = wh.verify(payload, {
-    'svix-id': request.headers.get('svix-id') ?? '',
-    'svix-timestamp': request.headers.get('svix-timestamp') ?? '',
-    'svix-signature': request.headers.get('svix-signature') ?? '',
+  'svix-id': request.headers.get('svix-id') ?? '',
+  'svix-timestamp': request.headers.get('svix-timestamp') ?? '',
+  'svix-signature': request.headers.get('svix-signature') ?? '',
 });
 ```
 
@@ -87,12 +87,12 @@ curl -X POST http://127.0.0.1:4040/api/tunnels \
 
 ### Files to Create/Modify
 
-| File | Purpose |
-|------|---------|
-| `src/app/api/webhooks/resend/route.ts` | Webhook handler |
-| `src/lib/services/webhook.service.ts` | Business logic (dedup, cache, agent) |
-| `src/lib/resend/client.ts` | Resend SDK singleton |
-| `src/lib/utils/vendor.ts` | Vendor name normalization |
+| File                                   | Purpose                              |
+| -------------------------------------- | ------------------------------------ |
+| `src/app/api/webhooks/resend/route.ts` | Webhook handler                      |
+| `src/lib/services/webhook.service.ts`  | Business logic (dedup, cache, agent) |
+| `src/lib/resend/client.ts`             | Resend SDK singleton                 |
+| `src/lib/utils/vendor.ts`              | Vendor name normalization            |
 
 ### Flow
 

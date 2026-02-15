@@ -86,28 +86,28 @@ await tablesDb.incrementRowColumn({
 ### Query Operators
 
 ```typescript
-Query.equal('field', ['value1', 'value2'])   // OR within same field
-Query.notEqual('field', 'value')
-Query.greaterThan('field', 100)
-Query.lessThan('field', 100)
-Query.greaterThanEqual('field', 100)
-Query.lessThanEqual('field', 100)
-Query.between('field', 5, 10)
-Query.contains('field', 'substring')
-Query.startsWith('field', 'prefix')
-Query.search('field', 'keywords')            // requires fulltext index
-Query.isNull('field')
-Query.isNotNull('field')
-Query.select(['field1', 'field2'])            // select specific columns
-Query.orderAsc('field')
-Query.orderDesc('field')
-Query.limit(25)
-Query.offset(0)
-Query.cursorAfter('rowId')
+Query.equal('field', ['value1', 'value2']); // OR within same field
+Query.notEqual('field', 'value');
+Query.greaterThan('field', 100);
+Query.lessThan('field', 100);
+Query.greaterThanEqual('field', 100);
+Query.lessThanEqual('field', 100);
+Query.between('field', 5, 10);
+Query.contains('field', 'substring');
+Query.startsWith('field', 'prefix');
+Query.search('field', 'keywords'); // requires fulltext index
+Query.isNull('field');
+Query.isNotNull('field');
+Query.select(['field1', 'field2']); // select specific columns
+Query.orderAsc('field');
+Query.orderDesc('field');
+Query.limit(25);
+Query.offset(0);
+Query.cursorAfter('rowId');
 
 // Logical operators
-Query.and([Query.greaterThan('a', 5), Query.lessThan('a', 10)])
-Query.or([Query.equal('status', ['draft']), Query.equal('status', ['archived'])])
+Query.and([Query.greaterThan('a', 5), Query.lessThan('a', 10)]);
+Query.or([Query.equal('status', ['draft']), Query.equal('status', ['archived'])]);
 ```
 
 ### Transactions
@@ -217,24 +217,24 @@ API Route → Service → Repository → Appwrite TablesDB
 
 Interface-driven with two implementations:
 
-| Implementation | Purpose |
-|---|---|
+| Implementation          | Purpose                       |
+| ----------------------- | ----------------------------- |
 | `InMemoryXxxRepository` | Unit tests (fast, no network) |
-| `AppwriteXxxRepository` | Production (Appwrite Cloud) |
+| `AppwriteXxxRepository` | Production (Appwrite Cloud)   |
 
 5 repositories: `Transaction`, `Category`, `Budget`, `VendorCache`, `User`
 
 ### Factory Pattern (ADR-010)
 
 ```typescript
-RepositoryFactory.createInMemory()     // for tests
-RepositoryFactory.createAppwrite(tablesDb)  // for production
+RepositoryFactory.createInMemory(); // for tests
+RepositoryFactory.createAppwrite(tablesDb); // for production
 ```
 
 ### DI Container (ADR-007)
 
 ```typescript
-const container = createContainer();  // singleton, cached
+const container = createContainer(); // singleton, cached
 const { transactionService, budgetService } = container;
 ```
 
@@ -254,6 +254,7 @@ appwrite types src/types/appwrite --language ts  # generate appwrite.d.ts
 Type chain: `appwrite.d.ts` (generated) → `rows.ts` (re-exports as aliases) → `mappers.ts` (typed row↔domain conversion) → repositories (generic SDK calls).
 
 All SDK calls use generic type parameters for end-to-end type safety:
+
 ```typescript
 const row = await tablesDb.getRow<TransactionRow>({ ... });
 const result = await tablesDb.listRows<TransactionRow>({ ... });
@@ -298,21 +299,21 @@ const { queries } = call[0] as { queries: string[] };
 
 ## Key Files
 
-| Path | Purpose |
-|---|---|
-| `src/lib/repositories/interfaces.ts` | All repository interfaces |
-| `src/lib/repositories/appwrite/` | Appwrite implementations |
-| `src/lib/repositories/in-memory/` | In-memory implementations (tests) |
-| `src/lib/services/` | Business logic services |
-| `src/lib/factories/repository.factory.ts` | Factory for repo creation |
-| `src/lib/container/container.ts` | DI container wiring |
-| `src/lib/appwrite/mappers.ts` | Row ↔ entity mappers |
-| `src/types/appwrite/appwrite.d.ts` | Auto-generated row types (CLI) |
-| `src/types/appwrite/rows.ts` | Row type aliases for repos/mappers |
-| `src/lib/appwrite/config.ts` | Env-based config constants |
-| `src/lib/appwrite/server.ts` | Server-side Appwrite client singleton |
-| `scripts/setup-appwrite.ts` | Database schema setup (idempotent) |
-| `scripts/seed-db.ts` | Test data seeding |
+| Path                                      | Purpose                               |
+| ----------------------------------------- | ------------------------------------- |
+| `src/lib/repositories/interfaces.ts`      | All repository interfaces             |
+| `src/lib/repositories/appwrite/`          | Appwrite implementations              |
+| `src/lib/repositories/in-memory/`         | In-memory implementations (tests)     |
+| `src/lib/services/`                       | Business logic services               |
+| `src/lib/factories/repository.factory.ts` | Factory for repo creation             |
+| `src/lib/container/container.ts`          | DI container wiring                   |
+| `src/lib/appwrite/mappers.ts`             | Row ↔ entity mappers                  |
+| `src/types/appwrite/appwrite.d.ts`        | Auto-generated row types (CLI)        |
+| `src/types/appwrite/rows.ts`              | Row type aliases for repos/mappers    |
+| `src/lib/appwrite/config.ts`              | Env-based config constants            |
+| `src/lib/appwrite/server.ts`              | Server-side Appwrite client singleton |
+| `scripts/setup-appwrite.ts`               | Database schema setup (idempotent)    |
+| `scripts/seed-db.ts`                      | Test data seeding                     |
 
 ---
 

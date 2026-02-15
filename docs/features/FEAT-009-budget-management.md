@@ -22,6 +22,7 @@ Build the budget management page with two modes: Direct Amount entry per categor
 ## Acceptance Criteria
 
 ### Mode A: Direct Amount
+
 - [ ] `/budgets` shows all categories with inline editable budget amounts
 - [ ] Progress bar per category showing `$spent / $budget`
 - [ ] Total budget shown at bottom (sum of all categories)
@@ -29,6 +30,7 @@ Build the budget management page with two modes: Direct Amount entry per categor
 - [ ] Budget amounts saved per category per month
 
 ### Mode B: Salary Allocation
+
 - [ ] Toggle button switches to "% Allocate" mode
 - [ ] Monthly salary input field at top (stored in user profile)
 - [ ] Percentage input per category, dollar amounts auto-calculate
@@ -38,6 +40,7 @@ Build the budget management page with two modes: Direct Amount entry per categor
 - [ ] Percentages do NOT need to sum to 100%
 
 ### Shared
+
 - [ ] Month/year selector for viewing and editing different months
 - [ ] Budgets are month-specific (can differ month to month)
 - [ ] Empty state when no budgets set for selected month
@@ -47,14 +50,14 @@ Build the budget management page with two modes: Direct Amount entry per categor
 
 ### Files to Create/Modify
 
-| File | Purpose |
-|------|---------|
-| `src/app/(dashboard)/budgets/page.tsx` | Budget page |
-| `src/components/budgets/budget-list.tsx` | Direct amount mode |
+| File                                           | Purpose                    |
+| ---------------------------------------------- | -------------------------- |
+| `src/app/(dashboard)/budgets/page.tsx`         | Budget page                |
+| `src/components/budgets/budget-list.tsx`       | Direct amount mode         |
 | `src/components/budgets/salary-allocation.tsx` | Percentage allocation mode |
-| `src/components/budgets/allocation-bar.tsx` | Visual allocation bar |
-| `src/components/budgets/month-selector.tsx` | Month/year navigation |
-| `src/hooks/use-budgets.ts` | Data fetching hook |
+| `src/components/budgets/allocation-bar.tsx`    | Visual allocation bar      |
+| `src/components/budgets/month-selector.tsx`    | Month/year navigation      |
+| `src/hooks/use-budgets.ts`                     | Data fetching hook         |
 
 ### API Routes Used
 
@@ -67,7 +70,7 @@ Build the budget management page with two modes: Direct Amount entry per categor
 
 ```typescript
 // User profile additions
-monthly_salary: number | null;  // e.g., 5000.00
+monthly_salary: number | null; // e.g., 5000.00
 budget_mode: 'direct' | 'percentage';
 
 // Budget amounts always stored as absolute dollars

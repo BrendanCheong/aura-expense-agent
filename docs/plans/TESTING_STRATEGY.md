@@ -25,11 +25,11 @@
 └────────────────────────────────────────────────────────────┘
 ```
 
-| Layer | Tool | Scope | Count (est.) |
-|-------|------|-------|-------------|
-| **Unit** | Vitest | Pure functions, utils, parsers | ~30 tests |
-| **Integration** | Vitest | API routes, agent pipeline, DB operations | ~15 tests |
-| **E2E** | Playwright | Full user flows in browser | ~8 tests |
+| Layer           | Tool       | Scope                                     | Count (est.) |
+| --------------- | ---------- | ----------------------------------------- | ------------ |
+| **Unit**        | Vitest     | Pure functions, utils, parsers            | ~30 tests    |
+| **Integration** | Vitest     | API routes, agent pipeline, DB operations | ~15 tests    |
+| **E2E**         | Playwright | Full user flows in browser                | ~8 tests     |
 
 ---
 
@@ -106,10 +106,7 @@ describe('formatDisplayDate', () => {
 
 ```typescript
 import { describe, it, expect } from 'vitest';
-import {
-  parseAmountFromText,
-  formatSGD,
-} from '@/lib/utils/currency';
+import { parseAmountFromText, formatSGD } from '@/lib/utils/currency';
 
 describe('parseAmountFromText', () => {
   it('extracts SGD amount from bank alert text', () => {
@@ -178,7 +175,7 @@ import { extractExpenseFromText } from '@/lib/agent/tools/extract-expense';
 describe('extractExpenseFromText (regex fast path)', () => {
   it('extracts from UOB bank alert', () => {
     const text = `A transaction of SGD 16.23 was made with your UOB Card ending 8909 on 08/02/26 at DIGITALOCEAN.COM. If unauthorised, call 24/7 Fraud Hotline now`;
-    
+
     const result = extractExpenseFromText(text);
     expect(result).toEqual({
       amount: 16.23,
@@ -189,15 +186,15 @@ describe('extractExpenseFromText (regex fast path)', () => {
 
   it('extracts from DBS bank alert', () => {
     const text = `DBS: SGD 25.50 was charged to your card ending 1234 at GRAB *GRABFOOD on 09 Feb 2026`;
-    
+
     const result = extractExpenseFromText(text);
-    expect(result.amount).toBe(25.50);
+    expect(result.amount).toBe(25.5);
     expect(result.vendor).toContain('GRAB');
   });
 
   it('returns null for non-transaction emails', () => {
     const text = `Welcome to our newsletter! Check out our latest deals.`;
-    
+
     const result = extractExpenseFromText(text);
     expect(result).toBeNull();
   });
@@ -254,9 +251,7 @@ describe('getBudgetAlerts', () => {
   });
 
   it('returns empty array when all on track', () => {
-    const budgets = [
-      { categoryName: 'Food', spent: 100, budget: 400, icon: '🍔' },
-    ];
+    const budgets = [{ categoryName: 'Food', spent: 100, budget: 400, icon: '🍔' }];
     expect(getBudgetAlerts(budgets)).toHaveLength(0);
   });
 });
@@ -396,28 +391,32 @@ describe('Agent Categorization Accuracy', () => {
   const testCases = [
     {
       name: 'UOB bank alert — DigitalOcean (Bills & Utilities)',
-      email: 'A transaction of SGD 16.23 was made with your UOB Card ending 8909 on 08/02/26 at DIGITALOCEAN.COM.',
+      email:
+        'A transaction of SGD 16.23 was made with your UOB Card ending 8909 on 08/02/26 at DIGITALOCEAN.COM.',
       expectedCategory: 'Bills & Utilities',
       expectedAmount: 16.23,
       expectedVendor: 'DIGITALOCEAN.COM',
     },
     {
       name: 'Grab ride — Transportation',
-      email: 'Your Grab ride from Bedok to Raffles Place on 09/02/26. Total: SGD 12.30. Paid with UOB Card ending 8909.',
+      email:
+        'Your Grab ride from Bedok to Raffles Place on 09/02/26. Total: SGD 12.30. Paid with UOB Card ending 8909.',
       expectedCategory: 'Transportation',
-      expectedAmount: 12.30,
+      expectedAmount: 12.3,
     },
     {
       name: 'Netflix subscription — Entertainment',
-      email: 'Your Netflix subscription of SGD 15.98 has been charged to your card ending 8909 on 01/02/26.',
+      email:
+        'Your Netflix subscription of SGD 15.98 has been charged to your card ending 8909 on 01/02/26.',
       expectedCategory: 'Entertainment',
       expectedAmount: 15.98,
     },
     {
       name: 'Unknown vendor — should use web search or fallback to Other',
-      email: 'A transaction of SGD 42.00 was made with your UOB Card ending 8909 on 10/02/26 at XTREMELY_OBSCURE_VENDOR_XYZ.',
+      email:
+        'A transaction of SGD 42.00 was made with your UOB Card ending 8909 on 10/02/26 at XTREMELY_OBSCURE_VENDOR_XYZ.',
       expectedCategory: 'Other',
-      expectedAmount: 42.00,
+      expectedAmount: 42.0,
     },
   ];
 
@@ -498,20 +497,22 @@ import { test, expect } from '@playwright/test';
 test.describe('Dashboard', () => {
   test.beforeEach(async ({ page }) => {
     // Set pre-authenticated session cookie for test user
-    await page.context().addCookies([{
-      name: 'a_session',
-      value: process.env.TEST_SESSION_COOKIE!,
-      domain: 'localhost',
-      path: '/',
-    }]);
+    await page.context().addCookies([
+      {
+        name: 'a_session',
+        value: process.env.TEST_SESSION_COOKIE!,
+        domain: 'localhost',
+        path: '/',
+      },
+    ]);
   });
 
   test('displays spending donut chart with correct categories', async ({ page }) => {
     await page.goto('/');
-    
+
     // Wait for chart to render
     await expect(page.locator('[data-testid="spending-donut"]')).toBeVisible();
-    
+
     // Check total is displayed
     await expect(page.getByText(/Total Spent/)).toBeVisible();
     await expect(page.getByText(/\$1,023/)).toBeVisible();
@@ -519,7 +520,7 @@ test.describe('Dashboard', () => {
 
   test('displays budget progress bars', async ({ page }) => {
     await page.goto('/');
-    
+
     // Check budget bars exist for each category
     await expect(page.getByText('Food & Beverage')).toBeVisible();
     await expect(page.getByText('Transportation')).toBeVisible();
@@ -527,7 +528,7 @@ test.describe('Dashboard', () => {
 
   test('shows budget alert banner when over budget', async ({ page }) => {
     await page.goto('/');
-    
+
     // Check for over-budget alert
     await expect(page.getByText(/Over Budget/)).toBeVisible();
     await expect(page.getByText(/Shopping/)).toBeVisible();
@@ -535,10 +536,10 @@ test.describe('Dashboard', () => {
 
   test('shows recent transactions table', async ({ page }) => {
     await page.goto('/');
-    
+
     const table = page.locator('[data-testid="recent-transactions"]');
     await expect(table).toBeVisible();
-    
+
     // Should show at least some transactions
     const rows = table.locator('tbody tr');
     await expect(rows).toHaveCount(5); // Shows last 5
@@ -546,13 +547,13 @@ test.describe('Dashboard', () => {
 
   test('time range selector changes displayed data', async ({ page }) => {
     await page.goto('/');
-    
+
     // Default is "Month"
     await expect(page.getByRole('tab', { name: 'Month' })).toHaveAttribute('data-state', 'active');
-    
+
     // Switch to "Week"
     await page.getByRole('tab', { name: 'Week' }).click();
-    
+
     // Total should change (fewer transactions)
     // Exact assertion depends on test data and current week
   });
@@ -567,42 +568,42 @@ import { test, expect } from '@playwright/test';
 test.describe('Transactions', () => {
   test('lists all transactions with pagination', async ({ page }) => {
     await page.goto('/transactions');
-    
+
     // Check table headers
     await expect(page.getByText('Date')).toBeVisible();
     await expect(page.getByText('Vendor')).toBeVisible();
     await expect(page.getByText('Category')).toBeVisible();
     await expect(page.getByText('Amount')).toBeVisible();
-    
+
     // Check pagination
     await expect(page.getByText('Showing 1')).toBeVisible();
   });
 
   test('creates a manual transaction', async ({ page }) => {
     await page.goto('/transactions');
-    
+
     await page.getByRole('button', { name: /Add Transaction/ }).click();
-    
+
     // Fill form
     await page.getByLabel('Vendor').fill('Cash - Hawker Centre');
     await page.getByLabel('Amount').fill('5.50');
     // Select category
     await page.getByLabel('Category').click();
     await page.getByText('Food & Beverage').click();
-    
+
     await page.getByRole('button', { name: /Save/ }).click();
-    
+
     // Should appear in table
     await expect(page.getByText('Cash - Hawker Centre')).toBeVisible();
   });
 
   test('filters by category', async ({ page }) => {
     await page.goto('/transactions');
-    
+
     // Select category filter
     await page.getByLabel('Category').click();
     await page.getByText('Bills & Utilities').click();
-    
+
     // All visible transactions should be Bills category
     const rows = page.locator('tbody tr');
     for (const row of await rows.all()) {
@@ -638,8 +639,8 @@ const MOCK_EMAILS = [
   {
     id: 'mock-grab-001',
     subject: 'Your Grab Receipt',
-    text: 'Your GrabFood order from McDonald\'s Bedok. Total: SGD 18.50. Paid with Visa ending 8909.',
-    html: '<div>Your GrabFood order from McDonald\'s Bedok.<br/>Total: SGD 18.50<br/>Paid with Visa ending 8909.</div>',
+    text: "Your GrabFood order from McDonald's Bedok. Total: SGD 18.50. Paid with Visa ending 8909.",
+    html: "<div>Your GrabFood order from McDonald's Bedok.<br/>Total: SGD 18.50<br/>Paid with Visa ending 8909.</div>",
     from: 'receipts@grab.com',
     to: ['user-test-001@inbound.yourdomain.com'],
     created_at: '2026-02-09T04:30:00.000000+00:00',
@@ -657,7 +658,7 @@ const MOCK_EMAILS = [
 
 async function sendMockWebhook(emailIndex: number = 0) {
   const email = MOCK_EMAILS[emailIndex];
-  
+
   console.log(`\n📧 Sending mock webhook for: ${email.subject}`);
   console.log(`   From: ${email.from}`);
   console.log(`   Amount: (embedded in email body)`);
@@ -695,6 +696,7 @@ sendMockWebhook(emailIndex);
 ```
 
 **Usage:**
+
 ```bash
 # Send UOB transaction alert
 npx tsx scripts/mock-webhook.ts 0
@@ -707,6 +709,7 @@ npx tsx scripts/mock-webhook.ts 2
 ```
 
 > **Note:** The mock webhook script sends the webhook event to your local server, but the server still calls `resend.emails.receiving.get()` to fetch the full email. For local development, you'll need to either:
+>
 > 1. Mock the Resend API response in your webhook handler when `NODE_ENV=development`
 > 2. Use a `.env.development` override that returns mock email data
 
@@ -776,12 +779,12 @@ export default defineConfig({
 
 ## 📊 Coverage Targets
 
-| Area | Target | Critical Files |
-|------|--------|---------------|
-| **Utils** | 90%+ | `date.ts`, `currency.ts`, `vendor.ts`, `budget.ts` |
-| **Agent Tools** | 80%+ | `extract-expense.ts`, `lookup-categories.ts`, `log-expense.ts` |
-| **API Routes** | 75%+ | `webhooks/resend/route.ts`, `transactions/route.ts` |
-| **Components** | 60%+ | Charts and forms (visual testing via Playwright) |
+| Area            | Target | Critical Files                                                 |
+| --------------- | ------ | -------------------------------------------------------------- |
+| **Utils**       | 90%+   | `date.ts`, `currency.ts`, `vendor.ts`, `budget.ts`             |
+| **Agent Tools** | 80%+   | `extract-expense.ts`, `lookup-categories.ts`, `log-expense.ts` |
+| **API Routes**  | 75%+   | `webhooks/resend/route.ts`, `transactions/route.ts`            |
+| **Components**  | 60%+   | Charts and forms (visual testing via Playwright)               |
 
 ---
 

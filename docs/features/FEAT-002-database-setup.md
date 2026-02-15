@@ -28,22 +28,22 @@ Create the Appwrite Cloud database with all 5 collections (users, categories, tr
 
 ### Files to Create/Modify
 
-| File | Purpose |
-|------|---------|
-| `scripts/setup-appwrite.ts` | Create collections, attributes, indexes |
-| `scripts/seed-db.ts` | Seed mock data for development |
-| `src/lib/appwrite/config.ts` | Database and collection ID constants |
-| `.env.example` | Template env vars |
+| File                         | Purpose                                 |
+| ---------------------------- | --------------------------------------- |
+| `scripts/setup-appwrite.ts`  | Create collections, attributes, indexes |
+| `scripts/seed-db.ts`         | Seed mock data for development          |
+| `src/lib/appwrite/config.ts` | Database and collection ID constants    |
+| `.env.example`               | Template env vars                       |
 
 ### Collections
 
-| Collection | Key Attributes | Key Indexes |
-|------------|---------------|-------------|
-| `users` | name, email, avatar_url, provider, inbound_email, monthly_salary, budget_mode | unique(email), unique(inbound_email) |
-| `categories` | user_id, name, emoji, color, description, sort_order, is_system | composite(user_id, name) |
+| Collection     | Key Attributes                                                                                               | Key Indexes                                   |
+| -------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| `users`        | name, email, avatar_url, provider, inbound_email, monthly_salary, budget_mode                                | unique(email), unique(inbound_email)          |
+| `categories`   | user_id, name, emoji, color, description, sort_order, is_system                                              | composite(user_id, name)                      |
 | `transactions` | user_id, category_id, vendor, amount, currency, date, source, confidence, resend_email_id, raw_email_subject | unique(resend_email_id), index(user_id, date) |
-| `budgets` | user_id, category_id, year, month, amount | composite(user_id, category_id, year, month) |
-| `vendor_cache` | user_id, vendor_name, category_id, hit_count | composite(user_id, vendor_name) |
+| `budgets`      | user_id, category_id, year, month, amount                                                                    | composite(user_id, category_id, year, month)  |
+| `vendor_cache` | user_id, vendor_name, category_id, hit_count                                                                 | composite(user_id, vendor_name)               |
 
 ## Definition of Done
 

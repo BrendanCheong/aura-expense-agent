@@ -46,16 +46,16 @@ Build the transactions page with a filterable, paginated table. Users can view a
 
 ### Files to Create/Modify
 
-| File | Purpose |
-|------|---------|
-| `src/app/(dashboard)/transactions/page.tsx` | Transactions page |
-| `src/components/transactions/transaction-table.tsx` | Data table (desktop) |
-| `src/components/transactions/transaction-card.tsx` | Card list (mobile) |
-| `src/components/transactions/transaction-sheet.tsx` | Detail sheet (full CRUD) |
-| `src/components/transactions/add-transaction-sheet.tsx` | Quick add sheet |
-| `src/components/transactions/transaction-filters.tsx` | Filter controls |
-| `src/components/feedback/feedback-sheet.tsx` | AI feedback conversation (shared from FEAT-013) |
-| `src/hooks/use-transactions.ts` | Data fetching hook |
+| File                                                    | Purpose                                         |
+| ------------------------------------------------------- | ----------------------------------------------- |
+| `src/app/(dashboard)/transactions/page.tsx`             | Transactions page                               |
+| `src/components/transactions/transaction-table.tsx`     | Data table (desktop)                            |
+| `src/components/transactions/transaction-card.tsx`      | Card list (mobile)                              |
+| `src/components/transactions/transaction-sheet.tsx`     | Detail sheet (full CRUD)                        |
+| `src/components/transactions/add-transaction-sheet.tsx` | Quick add sheet                                 |
+| `src/components/transactions/transaction-filters.tsx`   | Filter controls                                 |
+| `src/components/feedback/feedback-sheet.tsx`            | AI feedback conversation (shared from FEAT-013) |
+| `src/hooks/use-transactions.ts`                         | Data fetching hook                              |
 
 ### API Routes Used
 

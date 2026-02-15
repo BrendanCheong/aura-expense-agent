@@ -27,13 +27,13 @@
 
 ## 1. Design Principles
 
-| Principle | Description | Example |
-|-----------|-------------|---------|
-| **Zero-Touch** | The system works without user intervention for 90%+ of expenses | Bank email → auto-categorized in dashboard |
-| **Glanceable** | Critical info visible in < 3 seconds | Budget progress bars show % at a glance |
-| **Progressive Disclosure** | Show summary first, details on demand | Dashboard → click category → drilldown |
-| **Forgiveness** | Every user action is reversible | Undo re-categorization, restore deleted transaction |
-| **Minimal Input** | Forms pre-fill where possible, dropdowns over free text | Manual transaction → vendor autocomplete from cache |
+| Principle                  | Description                                                     | Example                                             |
+| -------------------------- | --------------------------------------------------------------- | --------------------------------------------------- |
+| **Zero-Touch**             | The system works without user intervention for 90%+ of expenses | Bank email → auto-categorized in dashboard          |
+| **Glanceable**             | Critical info visible in < 3 seconds                            | Budget progress bars show % at a glance             |
+| **Progressive Disclosure** | Show summary first, details on demand                           | Dashboard → click category → drilldown              |
+| **Forgiveness**            | Every user action is reversible                                 | Undo re-categorization, restore deleted transaction |
+| **Minimal Input**          | Forms pre-fill where possible, dropdowns over free text         | Manual transaction → vendor autocomplete from cache |
 
 ---
 
@@ -41,25 +41,25 @@
 
 ### Primary: **Sarah — Working Professional (Singapore)**
 
-| Attribute | Detail |
-|-----------|--------|
-| Age | 28 |
-| Income | SGD $5,000/month |
-| Bank | UOB / DBS |
-| Pain Point | Spends 2 hours/month categorizing expenses in spreadsheets |
-| Goal | "I want to know where my money goes without lifting a finger" |
-| Devices | iPhone 15 (primary), MacBook Pro (secondary) |
+| Attribute  | Detail                                                        |
+| ---------- | ------------------------------------------------------------- |
+| Age        | 28                                                            |
+| Income     | SGD $5,000/month                                              |
+| Bank       | UOB / DBS                                                     |
+| Pain Point | Spends 2 hours/month categorizing expenses in spreadsheets    |
+| Goal       | "I want to know where my money goes without lifting a finger" |
+| Devices    | iPhone 15 (primary), MacBook Pro (secondary)                  |
 
 ### Secondary: **James — Freelance Developer (Singapore)**
 
-| Attribute | Detail |
-|-----------|--------|
-| Age | 32 |
-| Income | Variable, ~SGD $7,000/month |
-| Bank | OCBC |
+| Attribute  | Detail                                               |
+| ---------- | ---------------------------------------------------- |
+| Age        | 32                                                   |
+| Income     | Variable, ~SGD $7,000/month                          |
+| Bank       | OCBC                                                 |
 | Pain Point | No separation between personal and business expenses |
-| Goal | "I want custom categories for business deductions" |
-| Devices | Android (primary), ThinkPad (secondary) |
+| Goal       | "I want custom categories for business deductions"   |
+| Devices    | Android (primary), ThinkPad (secondary)              |
 
 ---
 
@@ -183,6 +183,7 @@ Users think in terms of their monthly salary, not absolute dollar amounts per ca
 ```
 
 **Behavior:**
+
 - Inline editable number inputs
 - Tab through categories to quickly set all
 - Total shown at bottom (informational, not enforced)
@@ -224,6 +225,7 @@ Activated by clicking `[% Allocate]` button:
 ```
 
 **Behavior:**
+
 - User enters monthly salary at top
 - Percentages are editable per category
 - Dollar amounts auto-calculate: `salary × percentage`
@@ -240,7 +242,7 @@ Activated by clicking `[% Allocate]` button:
 // users table — add salary field
 interface UserProfile {
   // ... existing fields
-  monthly_salary: number | null;       // e.g., 5000.00
+  monthly_salary: number | null; // e.g., 5000.00
   budget_mode: 'direct' | 'percentage'; // last used mode
 }
 
@@ -258,31 +260,31 @@ interface UserProfile {
 
 **Decision:** Three preset ranges — Week, Month, Year — with Month as default. No custom range picker in V1 (80/20 rule).
 
-| Range | Data Shown |
-|-------|------------|
-| Week | Current ISO week (Mon-Sun), SGT timezone |
-| Month | Current calendar month (default) |
-| Year | Current calendar year |
+| Range | Data Shown                               |
+| ----- | ---------------------------------------- |
+| Week  | Current ISO week (Mon-Sun), SGT timezone |
+| Month | Current calendar month (default)         |
+| Year  | Current calendar year                    |
 
 **Interaction:** Tabs (not dropdown). Active tab is visually highlighted. Clicking a tab re-fetches dashboard data.
 
 ### Donut Chart Decisions
 
-| Decision | Rationale |
-|----------|-----------|
+| Decision        | Rationale                                                    |
+| --------------- | ------------------------------------------------------------ |
 | Donut (not pie) | Center label shows total spent — more useful than a full pie |
-| Max 7 segments | Matches max categories. No "Others" aggregation needed |
-| Color coding | Each category has a fixed color across all views |
+| Max 7 segments  | Matches max categories. No "Others" aggregation needed       |
+| Color coding    | Each category has a fixed color across all views             |
 | Click-to-filter | Clicking a donut segment filters the transaction table below |
 
 ### Budget Progress Bar Decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| Horizontal bars | Easier to compare across categories than circular gauges |
-| Color thresholds | Green (< 80%), Amber (80-99%), Red (≥ 100%) |
-| Show "$X of $Y" | Dollar amount more useful than bare percentage |
-| Over-budget overflow | Bar extends past 100% with red overflow section |
+| Decision             | Rationale                                                |
+| -------------------- | -------------------------------------------------------- |
+| Horizontal bars      | Easier to compare across categories than circular gauges |
+| Color thresholds     | Green (< 80%), Amber (80-99%), Red (≥ 100%)              |
+| Show "$X of $Y"      | Dollar amount more useful than bare percentage           |
+| Over-budget overflow | Bar extends past 100% with red overflow section          |
 
 ---
 
@@ -300,11 +302,11 @@ Mobile Card:           Vendor          $16.23
 
 ### Confidence Indicator
 
-| Icon | Meaning | Trigger |
-|------|---------|---------|
-| 🟢 Green dot | High confidence | Vendor cache hit or manual entry |
-| 🟡 Amber dot | Medium confidence | LLM matched to category |
-| 🔴 Red dot | Low confidence | Fallback to "Other" |
+| Icon         | Meaning           | Trigger                          |
+| ------------ | ----------------- | -------------------------------- |
+| 🟢 Green dot | High confidence   | Vendor cache hit or manual entry |
+| 🟡 Amber dot | Medium confidence | LLM matched to category          |
+| 🔴 Red dot   | Low confidence    | Fallback to "Other"              |
 
 **Decision:** Dots (not text labels) to save space. Tooltip on hover explains the level. Low-confidence transactions subtly highlight to encourage user correction.
 
@@ -334,6 +336,7 @@ When a user clicks a transaction row, a sheet slides in from the right (desktop)
 ```
 
 **Decisions:**
+
 - Sheet (not full page) keeps the transaction list visible behind the overlay
 - All fields are editable inline (vendor, amount, date, notes, category)
 - Changing the category dropdown saves immediately + updates vendor cache
@@ -360,6 +363,7 @@ Click "+" to add a manual transaction:
 ```
 
 **Decisions:**
+
 - Vendor field has autocomplete from vendor cache — type "GR" and see "GRAB *GRABFOOD", "GRAB *RIDE"
 - If a known vendor is selected, category auto-fills from vendor cache
 - Date defaults to today (SGT)
@@ -374,16 +378,16 @@ Click "+" to add a manual transaction:
 
 The system creates 8 default categories per user. "Other" is the system fallback and cannot be deleted.
 
-| Category | Emoji | Color | Description (Fed to Agent) |
-|----------|-------|-------|---------------------------|
-| Food & Beverage | 🍔 | `#FF6B6B` | Restaurants, groceries, food delivery, cafes, hawker |
-| Transport | 🚗 | `#2DD4BF` | Grab, taxi, MRT, bus, parking, fuel |
-| Shopping | 🛍️ | `#38BDF8` | E-commerce, retail stores, fashion, electronics |
-| Entertainment | 🎬 | `#A3E635` | Movies, streaming, games, concerts, books |
-| Bills & Utilities | 💡 | `#FBBF24` | Phone, internet, electricity, water, insurance |
-| Travel | ✈️ | `#FB7185` | Flights, hotels, attractions, travel insurance |
-| Investment | 📈 | `#A78BFA` | Stocks, crypto, ETFs, robo-advisors, fixed deposits |
-| Other | 📦 | `#94A3B8` | Uncategorized or miscellaneous |
+| Category          | Emoji | Color     | Description (Fed to Agent)                           |
+| ----------------- | ----- | --------- | ---------------------------------------------------- |
+| Food & Beverage   | 🍔    | `#FF6B6B` | Restaurants, groceries, food delivery, cafes, hawker |
+| Transport         | 🚗    | `#2DD4BF` | Grab, taxi, MRT, bus, parking, fuel                  |
+| Shopping          | 🛍️    | `#38BDF8` | E-commerce, retail stores, fashion, electronics      |
+| Entertainment     | 🎬    | `#A3E635` | Movies, streaming, games, concerts, books            |
+| Bills & Utilities | 💡    | `#FBBF24` | Phone, internet, electricity, water, insurance       |
+| Travel            | ✈️    | `#FB7185` | Flights, hotels, attractions, travel insurance       |
+| Investment        | 📈    | `#A78BFA` | Stocks, crypto, ETFs, robo-advisors, fixed deposits  |
+| Other             | 📦    | `#94A3B8` | Uncategorized or miscellaneous                       |
 
 **Decision:** Emoji + color is set per category to ensure visual consistency in charts and badges. Users can create custom categories with their own emoji and color.
 
@@ -422,6 +426,7 @@ Shown at the top of the dashboard when any category exceeds thresholds:
 ```
 
 **Decisions:**
+
 - Banner is orange for warnings (80-99%), red for over-budget (≥100%)
 - Shows the most critical category first (over-budget before warning)
 - "Dismiss" hides banner until next page visit (not persisted)
@@ -429,16 +434,16 @@ Shown at the top of the dashboard when any category exceeds thresholds:
 
 ### Toast Notifications
 
-| Event | Toast Message | Duration |
-|-------|---------------|----------|
-| Expense auto-logged | "New expense: $16.23 at DIGITALOCEAN.COM" | 5s |
-| Manual expense added | "Expense added successfully" | 3s |
-| Transaction updated | "Transaction updated." | 3s |
-| Category changed | "Category updated. Future VENDOR transactions will be categorized as CATEGORY." | 5s |
-| Transaction deleted | "Transaction deleted. [Undo]" | 8s (with undo) |
-| Budget exceeded | "⚠️ Shopping budget exceeded!" | 8s |
-| Feedback approved | "Category updated. I'll remember this for next time." | 5s |
-| Feedback rejected (refine) | "Got it — tell me more so I can get it right." | 3s |
+| Event                      | Toast Message                                                                   | Duration       |
+| -------------------------- | ------------------------------------------------------------------------------- | -------------- |
+| Expense auto-logged        | "New expense: $16.23 at DIGITALOCEAN.COM"                                       | 5s             |
+| Manual expense added       | "Expense added successfully"                                                    | 3s             |
+| Transaction updated        | "Transaction updated."                                                          | 3s             |
+| Category changed           | "Category updated. Future VENDOR transactions will be categorized as CATEGORY." | 5s             |
+| Transaction deleted        | "Transaction deleted. [Undo]"                                                   | 8s (with undo) |
+| Budget exceeded            | "⚠️ Shopping budget exceeded!"                                                  | 8s             |
+| Feedback approved          | "Category updated. I'll remember this for next time."                           | 5s             |
+| Feedback rejected (refine) | "Got it — tell me more so I can get it right."                                  | 3s             |
 
 **Decision:** Undo action available for 8 seconds after deletion. This is the primary "forgiveness" mechanism.
 
@@ -504,21 +509,21 @@ User clicks "Give AI Feedback" on transaction
 
 ### Interaction Rules
 
-| Rule | Detail |
-|------|--------|
-| Max rounds | 3 reject/refine loops before fallback to manual dropdown |
-| Loading state | "Thinking..." with aurora shimmer animation while agent processes |
-| Approve action | Transaction re-categorized + vendor cache updated + Mem0 memory stored |
-| Reject action | Feedback box reappears pre-filled with previous text |
-| Timeout | 15 seconds per agent response, then show "Agent took too long — pick manually" |
-| Offline | Just show the category dropdown, hide feedback option |
+| Rule           | Detail                                                                         |
+| -------------- | ------------------------------------------------------------------------------ |
+| Max rounds     | 3 reject/refine loops before fallback to manual dropdown                       |
+| Loading state  | "Thinking..." with aurora shimmer animation while agent processes              |
+| Approve action | Transaction re-categorized + vendor cache updated + Mem0 memory stored         |
+| Reject action  | Feedback box reappears pre-filled with previous text                           |
+| Timeout        | 15 seconds per agent response, then show "Agent took too long — pick manually" |
+| Offline        | Just show the category dropdown, hide feedback option                          |
 
 ### Two Correction Paths
 
-| Path | When | What Happens |
-|------|------|-------------|
-| **Quick fix** (category dropdown) | User knows the right category, doesn't need AI | Dropdown change → vendor cache updated. No Mem0, no AI. |
-| **AI feedback** (conversation) | User wants AI to learn nuanced preferences | Feedback → Agent → Approve → vendor cache + Mem0 updated. |
+| Path                              | When                                           | What Happens                                              |
+| --------------------------------- | ---------------------------------------------- | --------------------------------------------------------- |
+| **Quick fix** (category dropdown) | User knows the right category, doesn't need AI | Dropdown change → vendor cache updated. No Mem0, no AI.   |
+| **AI feedback** (conversation)    | User wants AI to learn nuanced preferences     | Feedback → Agent → Approve → vendor cache + Mem0 updated. |
 
 **Decision:** Both paths coexist. The dropdown is always visible for speed. The feedback button is for users who want the AI to truly learn. Neither path blocks the other.
 
@@ -535,6 +540,7 @@ Tier 5: Fallback to "Other"              → confidence: "low"
 ```
 
 Mem0 enables nuanced rules that vendor cache can't express. For example:
+
 - "All cloud/hosting services should be under Bills" (not just DIGITALOCEAN.COM)
 - "Grab rides after 10pm are usually from nights out — Entertainment, not Transport"
 
@@ -596,34 +602,34 @@ Set your monthly budgets to start tracking spending.
 
 ### Breakpoints
 
-| Name | Width | Layout |
-|------|-------|--------|
-| Mobile | < 640px | Single column, bottom nav, card list |
-| Tablet | 640-1024px | Collapsible sidebar, 2-column grid |
-| Desktop | > 1024px | Fixed sidebar, 3-column dashboard |
+| Name    | Width      | Layout                               |
+| ------- | ---------- | ------------------------------------ |
+| Mobile  | < 640px    | Single column, bottom nav, card list |
+| Tablet  | 640-1024px | Collapsible sidebar, 2-column grid   |
+| Desktop | > 1024px   | Fixed sidebar, 3-column dashboard    |
 
 ### Key Responsive Decisions
 
-| Component | Mobile | Desktop |
-|-----------|--------|---------|
-| Navigation | Bottom tab bar (5 tabs) | Left sidebar |
-| Transaction list | Card list (swipe to delete) | Data table |
-| Donut chart | Full width, legend below | Side by side with budget bars |
-| Budget bars | Stacked vertically | 2-column grid |
-| Transaction detail | Bottom sheet (full height) | Right sheet (400px wide) |
-| Manual add | Bottom sheet | Right sheet |
+| Component          | Mobile                      | Desktop                       |
+| ------------------ | --------------------------- | ----------------------------- |
+| Navigation         | Bottom tab bar (5 tabs)     | Left sidebar                  |
+| Transaction list   | Card list (swipe to delete) | Data table                    |
+| Donut chart        | Full width, legend below    | Side by side with budget bars |
+| Budget bars        | Stacked vertically          | 2-column grid                 |
+| Transaction detail | Bottom sheet (full height)  | Right sheet (400px wide)      |
+| Manual add         | Bottom sheet                | Right sheet                   |
 
 ---
 
 ## 13. Accessibility
 
-| Requirement | Implementation |
-|-------------|---------------|
-| Color contrast | WCAG AA minimum (4.5:1 for text) |
-| Focus management | Visible focus rings on all interactive elements |
-| Screen reader | ARIA labels on charts, badges, icons |
-| Keyboard nav | Tab through all controls, Enter to submit, Escape to close sheets |
-| Motion | `prefers-reduced-motion` disables chart animations |
-| Font size | Base 16px, scales with user preference |
+| Requirement      | Implementation                                                    |
+| ---------------- | ----------------------------------------------------------------- |
+| Color contrast   | WCAG AA minimum (4.5:1 for text)                                  |
+| Focus management | Visible focus rings on all interactive elements                   |
+| Screen reader    | ARIA labels on charts, badges, icons                              |
+| Keyboard nav     | Tab through all controls, Enter to submit, Escape to close sheets |
+| Motion           | `prefers-reduced-motion` disables chart animations                |
+| Font size        | Base 16px, scales with user preference                            |
 
 **Decision:** Chart data always has a text alternative (table below chart or tooltip). Color is never the sole indicator — dots also have tooltips, bars show numeric values.

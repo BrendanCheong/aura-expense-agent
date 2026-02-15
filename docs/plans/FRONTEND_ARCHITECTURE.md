@@ -283,36 +283,36 @@ src/components/
 
 ### Color Palette
 
-| Purpose | Color | Hex | Usage |
-|---------|-------|-----|-------|
-| Background | Zinc 950 | `#09090b` | Dark mode background |
-| Card | Zinc 900 | `#18181b` | Card surfaces |
-| Border | Zinc 800 | `#27272a` | Dividers, borders |
-| Text Primary | Zinc 50 | `#fafafa` | Main text |
-| Text Secondary | Zinc 400 | `#a1a1aa` | Muted text |
-| Accent | Indigo 500 | `#6366f1` | Primary actions |
-| Success | Green 500 | `#22c55e` | On track / under budget |
-| Warning | Amber 500 | `#f59e0b` | Approaching budget |
-| Danger | Red 500 | `#ef4444` | Over budget |
+| Purpose        | Color      | Hex       | Usage                   |
+| -------------- | ---------- | --------- | ----------------------- |
+| Background     | Zinc 950   | `#09090b` | Dark mode background    |
+| Card           | Zinc 900   | `#18181b` | Card surfaces           |
+| Border         | Zinc 800   | `#27272a` | Dividers, borders       |
+| Text Primary   | Zinc 50    | `#fafafa` | Main text               |
+| Text Secondary | Zinc 400   | `#a1a1aa` | Muted text              |
+| Accent         | Indigo 500 | `#6366f1` | Primary actions         |
+| Success        | Green 500  | `#22c55e` | On track / under budget |
+| Warning        | Amber 500  | `#f59e0b` | Approaching budget      |
+| Danger         | Red 500    | `#ef4444` | Over budget             |
 
 ### Typography (via Tailwind)
 
-| Element | Class |
-|---------|-------|
-| Page Title | `text-2xl font-bold tracking-tight` |
-| Section Header | `text-lg font-semibold` |
-| Card Title | `text-sm font-medium` |
-| Body | `text-sm text-muted-foreground` |
-| Amount (large) | `text-3xl font-bold tabular-nums` |
-| Amount (table) | `text-sm font-medium tabular-nums` |
+| Element        | Class                               |
+| -------------- | ----------------------------------- |
+| Page Title     | `text-2xl font-bold tracking-tight` |
+| Section Header | `text-lg font-semibold`             |
+| Card Title     | `text-sm font-medium`               |
+| Body           | `text-sm text-muted-foreground`     |
+| Amount (large) | `text-3xl font-bold tabular-nums`   |
+| Amount (table) | `text-sm font-medium tabular-nums`  |
 
 ### Responsive Breakpoints
 
-| Breakpoint | Behavior |
-|------------|----------|
-| < 640px (mobile) | Sidebar collapses to sheet/drawer. Charts stack vertically. Table scrolls horizontally. |
-| 640–1024px (tablet) | Sidebar as overlay. Charts in 1-column grid. |
-| > 1024px (desktop) | Sidebar permanently visible. Charts in 2-column grid. |
+| Breakpoint          | Behavior                                                                                |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| < 640px (mobile)    | Sidebar collapses to sheet/drawer. Charts stack vertically. Table scrolls horizontally. |
+| 640–1024px (tablet) | Sidebar as overlay. Charts in 1-column grid.                                            |
+| > 1024px (desktop)  | Sidebar permanently visible. Charts in 2-column grid.                                   |
 
 ---
 

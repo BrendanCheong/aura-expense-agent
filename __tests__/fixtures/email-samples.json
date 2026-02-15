@@ -14,7 +14,7 @@
     "text": "DBS: SGD 25.50 was charged to your card ending 1234 at GRAB *GRABFOOD on 09 Feb 2026. Ref: 0209GRAB01.",
     "html": "<p>DBS: SGD 25.50 was charged to your card ending 1234 at GRAB *GRABFOOD on 09 Feb 2026. Ref: 0209GRAB01.</p>",
     "expected": {
-      "amount": 25.50,
+      "amount": 25.5,
       "vendor": "GRAB *GRABFOOD",
       "date_raw": "09 Feb 2026"
     }
@@ -34,7 +34,7 @@
     "text": "Thank you for your order! Order Total: SGD 18.50. Restaurant: Boon Tong Kee. Delivery Fee: SGD 3.00. Platform Fee: SGD 0.30.",
     "html": "<div><h2>Your GrabFood Receipt</h2><table><tr><td>Order Total</td><td>SGD 18.50</td></tr><tr><td>Restaurant</td><td>Boon Tong Kee</td></tr><tr><td>Delivery Fee</td><td>SGD 3.00</td></tr><tr><td>Platform Fee</td><td>SGD 0.30</td></tr></table></div>",
     "expected": {
-      "amount": 18.50,
+      "amount": 18.5,
       "vendor": "GRAB *GRABFOOD",
       "date_raw": null
     }
@@ -60,7 +60,7 @@
     "text": "Payment of S$48.00 was made to SINGTEL MOBILE on 07/02/26.",
     "html": "<p>Payment of S$48.00 was made to SINGTEL MOBILE on 07/02/26.</p>",
     "expected": {
-      "amount": 48.00,
+      "amount": 48.0,
       "vendor": "SINGTEL MOBILE",
       "date_raw": "07/02/26"
     }

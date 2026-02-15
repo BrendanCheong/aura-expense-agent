@@ -29,15 +29,15 @@ Implement the full TDD testing suite: Vitest unit tests (~95 tests), Vitest inte
 
 ## Test Breakdown
 
-| Layer | Test Plan | Test Count |
-|-------|-----------|-----------|
-| Utils | [01-utils](../testing-plan/01-utils.test-plan.md) | 30 |
-| Repositories | [02-repositories](../testing-plan/02-repositories.test-plan.md) | 39 |
-| Services | [03-services](../testing-plan/03-services.test-plan.md) | 50 |
-| Agent | [04-agent](../testing-plan/04-agent.test-plan.md) | 23 |
-| Integration | [05-integration](../testing-plan/05-integration.test-plan.md) | 23 |
-| E2E | [06-e2e](../testing-plan/06-e2e.test-plan.md) | 27 |
-| **Total** | | **~192** |
+| Layer        | Test Plan                                                       | Test Count |
+| ------------ | --------------------------------------------------------------- | ---------- |
+| Utils        | [01-utils](../testing-plan/01-utils.test-plan.md)               | 30         |
+| Repositories | [02-repositories](../testing-plan/02-repositories.test-plan.md) | 39         |
+| Services     | [03-services](../testing-plan/03-services.test-plan.md)         | 50         |
+| Agent        | [04-agent](../testing-plan/04-agent.test-plan.md)               | 23         |
+| Integration  | [05-integration](../testing-plan/05-integration.test-plan.md)   | 23         |
+| E2E          | [06-e2e](../testing-plan/06-e2e.test-plan.md)                   | 27         |
+| **Total**    |                                                                 | **~192**   |
 
 ## Technical Details
 

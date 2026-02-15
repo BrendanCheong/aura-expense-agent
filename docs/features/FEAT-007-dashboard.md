@@ -40,14 +40,14 @@ Build the main dashboard page showing a spending donut chart, per-category budge
 
 ### Files to Create/Modify
 
-| File | Purpose |
-|------|---------|
-| `src/app/(dashboard)/page.tsx` | Dashboard page (Server Component) |
-| `src/components/dashboard/spending-donut.tsx` | Recharts donut chart |
-| `src/components/dashboard/budget-progress.tsx` | Budget progress bars |
-| `src/components/dashboard/recent-transactions.tsx` | Transaction list |
-| `src/components/dashboard/alert-banner.tsx` | Budget alert banner |
-| `src/components/dashboard/time-range-tabs.tsx` | Week/Month/Year tabs |
+| File                                               | Purpose                           |
+| -------------------------------------------------- | --------------------------------- |
+| `src/app/(dashboard)/page.tsx`                     | Dashboard page (Server Component) |
+| `src/components/dashboard/spending-donut.tsx`      | Recharts donut chart              |
+| `src/components/dashboard/budget-progress.tsx`     | Budget progress bars              |
+| `src/components/dashboard/recent-transactions.tsx` | Transaction list                  |
+| `src/components/dashboard/alert-banner.tsx`        | Budget alert banner               |
+| `src/components/dashboard/time-range-tabs.tsx`     | Week/Month/Year tabs              |
 
 ### API Routes Used
 

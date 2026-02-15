@@ -1,11 +1,11 @@
 # ADR-011: TypeScript as End-to-End Language
 
-| Field | Value |
-|-------|-------|
-| **Status** | Accepted |
-| **Date** | 2026-02-09 |
-| **Decision Makers** | Solutions Architect |
-| **References** | [PLAN.md](../plans/PLAN.md) |
+| Field               | Value                       |
+| ------------------- | --------------------------- |
+| **Status**          | Accepted                    |
+| **Date**            | 2026-02-09                  |
+| **Decision Makers** | Solutions Architect         |
+| **References**      | [PLAN.md](../plans/PLAN.md) |
 
 ---
 
@@ -26,6 +26,7 @@ Aura spans frontend (React), backend (Next.js API routes), and AI agent (LangGra
 ### Option A: TypeScript end-to-end — **CHOSEN**
 
 **Pros:**
+
 - **Shared types** — `Transaction`, `Category`, `Budget` types used by frontend, API, and agent
 - **Zero serialization overhead** — Agent returns typed objects directly to the API route
 - **Single toolchain** — One `tsconfig.json`, one linter, one formatter
@@ -35,6 +36,7 @@ Aura spans frontend (React), backend (Next.js API routes), and AI agent (LangGra
 - **Strict mode** catches null/undefined issues at compile time
 
 **Cons:**
+
 - Python LangGraph has more examples and community support
 - TypeScript builds are slower than JavaScript (mitigated by SWC in Next.js)
 - Some npm packages lack TypeScript definitions
@@ -42,10 +44,12 @@ Aura spans frontend (React), backend (Next.js API routes), and AI agent (LangGra
 ### Option B: TypeScript frontend + Python backend (agent)
 
 **Pros:**
+
 - Python LangGraph is more mature
 - Access to Python ML ecosystem
 
 **Cons:**
+
 - Two languages, two runtimes, two deployment targets
 - HTTP bridge between Next.js and Python — latency, error surfaces, serialization
 - Duplicate type definitions (TypeScript interfaces + Python Pydantic models)
@@ -56,11 +60,13 @@ Aura spans frontend (React), backend (Next.js API routes), and AI agent (LangGra
 ## Consequences
 
 ### Positive
+
 - Single `package.json` — all dependencies managed in one place
 - Types flow from database schema → API response → frontend component without manual mapping
 - Refactoring a field name (e.g., `category_id` → `categoryId`) is caught everywhere by the compiler
 - Agent tool schemas (Zod) generate both runtime validation and TypeScript types
 
 ### Negative
+
 - Missing some Python LangGraph features that haven't been ported to TypeScript yet
 - TypeScript compile errors can be cryptic (complex generics in LangGraph types)

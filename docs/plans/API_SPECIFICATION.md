@@ -10,23 +10,23 @@
 
 ## 📋 Route Overview
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| POST | `/api/webhooks/resend` | Webhook Secret | Resend inbound email webhook handler |
-| GET | `/api/transactions` | ✅ | List transactions (paginated, filterable) |
-| POST | `/api/transactions` | ✅ | Create manual transaction |
-| PATCH | `/api/transactions/[id]` | ✅ | Update transaction (re-categorize, edit) |
-| DELETE | `/api/transactions/[id]` | ✅ | Delete transaction |
-| GET | `/api/categories` | ✅ | List user's categories |
-| POST | `/api/categories` | ✅ | Create new category |
-| PATCH | `/api/categories/[id]` | ✅ | Update category |
-| DELETE | `/api/categories/[id]` | ✅ | Delete category |
-| GET | `/api/budgets` | ✅ | List budgets for a given month/year |
-| POST | `/api/budgets` | ✅ | Create/update budget for a category |
-| DELETE | `/api/budgets/[id]` | ✅ | Delete budget |
-| GET | `/api/dashboard/summary` | ✅ | Aggregated spending data for charts |
-| GET | `/api/dashboard/alerts` | ✅ | Budget alert status (approaching/over) |
-| GET | `/api/user/profile` | ✅ | Get current user profile + inbound email |\n| PATCH | `/api/user/profile` | ✅ | Update user profile (monthly_salary, budget_mode) |\n| POST | `/api/feedback` | ✅ | Process AI feedback on a transaction |\n| POST | `/api/feedback/approve` | ✅ | Approve AI feedback proposal (updates tx + cache + Mem0) |
+| Method | Route                    | Auth           | Description                               |
+| ------ | ------------------------ | -------------- | ----------------------------------------- | --- | ----- | ------------------- | --- | ------------------------------------------------- | --- | ---- | --------------- | --- | ------------------------------------ | --- | ---- | ----------------------- | --- | -------------------------------------------------------- |
+| POST   | `/api/webhooks/resend`   | Webhook Secret | Resend inbound email webhook handler      |
+| GET    | `/api/transactions`      | ✅             | List transactions (paginated, filterable) |
+| POST   | `/api/transactions`      | ✅             | Create manual transaction                 |
+| PATCH  | `/api/transactions/[id]` | ✅             | Update transaction (re-categorize, edit)  |
+| DELETE | `/api/transactions/[id]` | ✅             | Delete transaction                        |
+| GET    | `/api/categories`        | ✅             | List user's categories                    |
+| POST   | `/api/categories`        | ✅             | Create new category                       |
+| PATCH  | `/api/categories/[id]`   | ✅             | Update category                           |
+| DELETE | `/api/categories/[id]`   | ✅             | Delete category                           |
+| GET    | `/api/budgets`           | ✅             | List budgets for a given month/year       |
+| POST   | `/api/budgets`           | ✅             | Create/update budget for a category       |
+| DELETE | `/api/budgets/[id]`      | ✅             | Delete budget                             |
+| GET    | `/api/dashboard/summary` | ✅             | Aggregated spending data for charts       |
+| GET    | `/api/dashboard/alerts`  | ✅             | Budget alert status (approaching/over)    |
+| GET    | `/api/user/profile`      | ✅             | Get current user profile + inbound email  | \n  | PATCH | `/api/user/profile` | ✅  | Update user profile (monthly_salary, budget_mode) | \n  | POST | `/api/feedback` | ✅  | Process AI feedback on a transaction | \n  | POST | `/api/feedback/approve` | ✅  | Approve AI feedback proposal (updates tx + cache + Mem0) |
 
 ---
 
@@ -39,6 +39,7 @@ The most critical route. Receives Resend's `email.received` webhook, fetches the
 **Authentication:** Resend webhook signature verification (not user auth).
 
 **Verification requirements:**
+
 - Read raw request body with `await request.text()` before parsing JSON
 - Verify with `svix` using `svix-id`, `svix-timestamp`, and `svix-signature`
 - Use `process.env.RESEND_WEBHOOK_SECRET`
@@ -127,11 +128,13 @@ export async function POST(request: NextRequest) {
       userId,
     });
 
-    return NextResponse.json({ 
-      status: 'processed',
-      transactionId: result.transactionId 
-    }, { status: 200 });
-
+    return NextResponse.json(
+      {
+        status: 'processed',
+        transactionId: result.transactionId,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Webhook processing error:', error);
     // Return 500 so Resend retries the webhook
@@ -141,6 +144,7 @@ export async function POST(request: NextRequest) {
 ```
 
 **Resend Webhook Payload (`email.received`):**
+
 ```json
 {
   "type": "email.received",
@@ -155,6 +159,7 @@ export async function POST(request: NextRequest) {
 ```
 
 **Resend Retrieved Email (full content):**
+
 ```json
 {
   "id": "4ef9a417-02e9-4d39-ad75-9611e0fcc33c",
@@ -178,18 +183,19 @@ List transactions with pagination, date range filtering, and category filtering.
 
 **Query Parameters:**
 
-| Param | Type | Default | Description |
-|-------|------|---------|-------------|
-| `page` | int | 1 | Page number |
-| `limit` | int | 25 | Items per page (max 100) |
-| `startDate` | string | — | ISO 8601 date (inclusive) |
-| `endDate` | string | — | ISO 8601 date (exclusive) |
-| `categoryId` | string | — | Filter by category |
-| `source` | string | — | `"email"` or `"manual"` |
-| `sortBy` | string | `"transaction_date"` | Sort field |
-| `sortOrder` | string | `"desc"` | `"asc"` or `"desc"` |
+| Param        | Type   | Default              | Description               |
+| ------------ | ------ | -------------------- | ------------------------- |
+| `page`       | int    | 1                    | Page number               |
+| `limit`      | int    | 25                   | Items per page (max 100)  |
+| `startDate`  | string | —                    | ISO 8601 date (inclusive) |
+| `endDate`    | string | —                    | ISO 8601 date (exclusive) |
+| `categoryId` | string | —                    | Filter by category        |
+| `source`     | string | —                    | `"email"` or `"manual"`   |
+| `sortBy`     | string | `"transaction_date"` | Sort field                |
+| `sortOrder`  | string | `"desc"`             | `"asc"` or `"desc"`       |
 
 **Response:**
+
 ```json
 {
   "transactions": [
@@ -221,9 +227,10 @@ List transactions with pagination, date range filtering, and category filtering.
 Create a manual transaction (user-entered, not from email).
 
 **Request Body:**
+
 ```json
 {
-  "amount": 25.50,
+  "amount": 25.5,
   "vendor": "Cash Payment - Hawker",
   "categoryId": "cat-food",
   "transactionDate": "2026-02-09T12:00:00+08:00",
@@ -238,10 +245,11 @@ Create a manual transaction (user-entered, not from email).
 Update a transaction (e.g., re-categorize, edit amount/vendor).
 
 **Request Body (partial):**
+
 ```json
 {
   "categoryId": "cat-food",
-  "amount": 18.50,
+  "amount": 18.5,
   "vendor": "Updated Vendor Name"
 }
 ```
@@ -259,6 +267,7 @@ Delete a transaction. Returns `204 No Content`.
 List all categories for the authenticated user, ordered by `sort_order`.
 
 **Response:**
+
 ```json
 {
   "categories": [
@@ -280,6 +289,7 @@ List all categories for the authenticated user, ordered by `sort_order`.
 Create a new custom category.
 
 **Request Body:**
+
 ```json
 {
   "name": "Subscriptions",
@@ -290,6 +300,7 @@ Create a new custom category.
 ```
 
 **Validation:**
+
 - `name` must be unique per user (enforced by DB index)
 - `description` is required (this powers the AI categorization)
 - `icon` defaults to `"📦"` if not provided
@@ -306,10 +317,12 @@ Update a category. Can modify name, description, icon, color, sort_order.
 Delete a category.
 
 **Pre-conditions:**
+
 - Cannot delete if transactions exist with this category → return `409 Conflict` with message to re-categorize first
 - Alternatively: move all transactions to "Other" category, then delete
 
 **Cascade behavior:**
+
 1. Delete all `vendor_cache` entries pointing to this category
 2. Delete all `budgets` for this category
 3. Re-assign transactions to "Other" (or require user to re-categorize)
@@ -324,12 +337,13 @@ Get budgets for a specific month/year with actual spending totals.
 
 **Query Parameters:**
 
-| Param | Type | Default | Description |
-|-------|------|---------|-------------|
-| `year` | int | current year | Budget year |
-| `month` | int | current month | Budget month (1–12) |
+| Param   | Type | Default       | Description         |
+| ------- | ---- | ------------- | ------------------- |
+| `year`  | int  | current year  | Budget year         |
+| `month` | int  | current month | Budget month (1–12) |
 
 **Response:**
+
 ```json
 {
   "year": 2026,
@@ -343,9 +357,9 @@ Get budgets for a specific month/year with actual spending totals.
         "icon": "🍔",
         "color": "#ef4444"
       },
-      "budgetAmount": 400.00,
-      "spentAmount": 188.30,
-      "remainingAmount": 211.70,
+      "budgetAmount": 400.0,
+      "spentAmount": 188.3,
+      "remainingAmount": 211.7,
       "percentUsed": 47.08,
       "status": "on_track"
     },
@@ -357,20 +371,21 @@ Get budgets for a specific month/year with actual spending totals.
         "icon": "🚗",
         "color": "#f97316"
       },
-      "budgetAmount": 150.00,
-      "spentAmount": 78.30,
-      "remainingAmount": 71.70,
-      "percentUsed": 52.20,
+      "budgetAmount": 150.0,
+      "spentAmount": 78.3,
+      "remainingAmount": 71.7,
+      "percentUsed": 52.2,
       "status": "on_track"
     }
   ],
-  "totalBudget": 1900.00,
+  "totalBudget": 1900.0,
   "totalSpent": 1023.49,
   "totalRemaining": 876.51
 }
 ```
 
 **Status values:**
+
 - `"on_track"`: < 80% spent
 - `"warning"`: 80–99% spent
 - `"over_budget"`: ≥ 100% spent
@@ -380,10 +395,11 @@ Get budgets for a specific month/year with actual spending totals.
 Create or update a budget for a category in a given month.
 
 **Request Body:**
+
 ```json
 {
   "categoryId": "cat-food",
-  "amount": 400.00,
+  "amount": 400.0,
   "year": 2026,
   "month": 2
 }
@@ -405,14 +421,15 @@ Aggregated data for the dashboard charts. Server-side computation to avoid sendi
 
 **Query Parameters:**
 
-| Param | Type | Default | Description |
-|-------|------|---------|-------------|
-| `period` | string | `"month"` | `"week"`, `"month"`, `"year"` |
-| `year` | int | current year | Year to query |
-| `month` | int | current month | Month to query (for week/month periods) |
-| `week` | int | current week | ISO week number (for week period) |
+| Param    | Type   | Default       | Description                             |
+| -------- | ------ | ------------- | --------------------------------------- |
+| `period` | string | `"month"`     | `"week"`, `"month"`, `"year"`           |
+| `year`   | int    | current year  | Year to query                           |
+| `month`  | int    | current month | Month to query (for week/month periods) |
+| `week`   | int    | current week  | ISO week number (for week period)       |
 
 **Response:**
+
 ```json
 {
   "period": "month",
@@ -420,7 +437,7 @@ Aggregated data for the dashboard charts. Server-side computation to avoid sendi
   "month": 2,
   "summary": {
     "totalSpent": 1023.49,
-    "totalBudget": 1900.00,
+    "totalBudget": 1900.0,
     "transactionCount": 30,
     "averageTransaction": 34.12
   },
@@ -430,8 +447,8 @@ Aggregated data for the dashboard charts. Server-side computation to avoid sendi
       "categoryName": "Food & Beverage",
       "icon": "🍔",
       "color": "#ef4444",
-      "spent": 188.30,
-      "budget": 400.00,
+      "spent": 188.3,
+      "budget": 400.0,
       "percentage": 18.4,
       "transactionCount": 7
     }
@@ -449,7 +466,7 @@ Aggregated data for the dashboard charts. Server-side computation to avoid sendi
   ],
   "dailySpending": [
     { "date": "2026-02-01", "amount": 54.48 },
-    { "date": "2026-02-02", "amount": 5.80 }
+    { "date": "2026-02-02", "amount": 5.8 }
   ]
 }
 ```
@@ -459,6 +476,7 @@ Aggregated data for the dashboard charts. Server-side computation to avoid sendi
 Returns budget alert status for the current period.
 
 **Response:**
+
 ```json
 {
   "alerts": [
@@ -467,7 +485,7 @@ Returns budget alert status for the current period.
       "categoryId": "cat-entertain",
       "categoryName": "Entertainment",
       "icon": "🎬",
-      "budgetAmount": 100.00,
+      "budgetAmount": 100.0,
       "spentAmount": 83.47,
       "percentUsed": 83.47,
       "message": "Entertainment spending is at 83% of your $100.00 budget"
@@ -477,7 +495,7 @@ Returns budget alert status for the current period.
       "categoryId": "cat-shopping",
       "categoryName": "Shopping",
       "icon": "🛍️",
-      "budgetAmount": 300.00,
+      "budgetAmount": 300.0,
       "spentAmount": 327.19,
       "percentUsed": 109.06,
       "overAmount": 27.19,
@@ -498,6 +516,7 @@ Returns budget alert status for the current period.
 Get the authenticated user's profile, including their unique inbound email address.
 
 **Response:**
+
 ```json
 {
   "id": "user-abc-123",
@@ -544,14 +563,12 @@ export async function getAuthenticatedUser(request: NextRequest) {
 }
 
 export function unauthorized() {
-  return NextResponse.json(
-    { error: 'Unauthorized' },
-    { status: 401 }
-  );
+  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 }
 ```
 
 **Usage in API routes:**
+
 ```typescript
 export async function GET(request: NextRequest) {
   const user = await getAuthenticatedUser(request);
@@ -566,17 +583,17 @@ export async function GET(request: NextRequest) {
 
 ## 📊 Rate Limits & Error Codes
 
-| Status Code | Meaning | When |
-|-------------|---------|------|
-| `200` | Success | Standard response |
-| `201` | Created | New resource created |
-| `204` | No Content | Successful deletion |
-| `400` | Bad Request | Invalid request body or query params |
-| `401` | Unauthorized | Missing or invalid session |
-| `404` | Not Found | Resource doesn't exist or belongs to another user |
-| `409` | Conflict | Duplicate entry (e.g., category name already exists) |
-| `429` | Rate Limited | Appwrite Cloud rate limits (unlikely at low volume) |
-| `500` | Server Error | Unexpected failure (agent timeout, DB error) |
+| Status Code | Meaning      | When                                                 |
+| ----------- | ------------ | ---------------------------------------------------- |
+| `200`       | Success      | Standard response                                    |
+| `201`       | Created      | New resource created                                 |
+| `204`       | No Content   | Successful deletion                                  |
+| `400`       | Bad Request  | Invalid request body or query params                 |
+| `401`       | Unauthorized | Missing or invalid session                           |
+| `404`       | Not Found    | Resource doesn't exist or belongs to another user    |
+| `409`       | Conflict     | Duplicate entry (e.g., category name already exists) |
+| `429`       | Rate Limited | Appwrite Cloud rate limits (unlikely at low volume)  |
+| `500`       | Server Error | Unexpected failure (agent timeout, DB error)         |
 
 ---
 
@@ -587,6 +604,7 @@ export async function GET(request: NextRequest) {
 Process user feedback on a miscategorized transaction. The AI proposes a new category based on the user's correction text.
 
 **Request Body:**
+
 ```json
 {
   "transactionId": "tx-001",
@@ -596,6 +614,7 @@ Process user feedback on a miscategorized transaction. The AI proposes a new cat
 ```
 
 **Response (200):**
+
 ```json
 {
   "proposedCategoryId": "cat-bills",
@@ -610,6 +629,7 @@ Process user feedback on a miscategorized transaction. The AI proposes a new cat
 Approve the AI's proposed re-categorization. Updates the transaction, vendor cache, and stores the correction in Mem0 for future recall.
 
 **Request Body:**
+
 ```json
 {
   "transactionId": "tx-001",
@@ -620,6 +640,7 @@ Approve the AI's proposed re-categorization. Updates the transaction, vendor cac
 ```
 
 **Response (200):**
+
 ```json
 {
   "status": "approved",
@@ -635,17 +656,19 @@ Approve the AI's proposed re-categorization. Updates the transaction, vendor cac
 Update user profile fields (salary, budget mode).
 
 **Request Body:**
+
 ```json
 {
-  "monthly_salary": 6000.00,
+  "monthly_salary": 6000.0,
   "budget_mode": "percentage"
 }
 ```
 
 **Response (200):**
+
 ```json
 {
-  "monthly_salary": 6000.00,
+  "monthly_salary": 6000.0,
   "budget_mode": "percentage",
   "updated_at": "2026-02-13T10:00:00+08:00"
 }

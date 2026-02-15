@@ -20,6 +20,7 @@ Every feature follows a strict **Red → Green → Refactor** cycle:
 ```
 
 ### TDD Rules
+
 - **No production code without a failing test first**
 - **Each test file covers one feature or one module**
 - **Mock data lives in JSON files** in `__tests__/fixtures/` — never hardcoded in test files
@@ -108,7 +109,7 @@ export const fixtures = {
 // Helper: seed an in-memory repository from fixtures
 export function seedTransactionRepo(repo: InMemoryTransactionRepository, userId?: string) {
   const txs = userId
-    ? fixtures.transactions.filter(tx => tx.user_id === userId)
+    ? fixtures.transactions.filter((tx) => tx.user_id === userId)
     : fixtures.transactions;
 
   for (const tx of txs) {
@@ -121,14 +122,14 @@ export function seedTransactionRepo(repo: InMemoryTransactionRepository, userId?
 
 ## Test Coverage Targets
 
-| Layer | Target | Rationale |
-|-------|--------|-----------|
-| Services | 90%+ | All business rules must be tested |
-| Repositories (InMemory) | 80%+ | Verify CRUD + query behavior matches interfaces |
-| Agent Tools | 85%+ | Extraction accuracy is critical |
-| Utils | 95%+ | Pure functions, no excuse not to test |
-| API Routes | 70%+ | Integration tests cover the happy paths |
-| UI Components | 60%+ | Visual testing is less valuable for a chart-heavy dashboard |
+| Layer                   | Target | Rationale                                                   |
+| ----------------------- | ------ | ----------------------------------------------------------- |
+| Services                | 90%+   | All business rules must be tested                           |
+| Repositories (InMemory) | 80%+   | Verify CRUD + query behavior matches interfaces             |
+| Agent Tools             | 85%+   | Extraction accuracy is critical                             |
+| Utils                   | 95%+   | Pure functions, no excuse not to test                       |
+| API Routes              | 70%+   | Integration tests cover the happy paths                     |
+| UI Components           | 60%+   | Visual testing is less valuable for a chart-heavy dashboard |
 
 ---
 
@@ -136,14 +137,14 @@ export function seedTransactionRepo(repo: InMemoryTransactionRepository, userId?
 
 Each feature has a dedicated test plan document:
 
-| Document | Feature | Tests |
-|----------|---------|-------|
-| [01-utils.test-plan.md](01-utils.test-plan.md) | Utility Functions (date, currency, vendor, budget) | ~20 unit tests |
-| [02-repositories.test-plan.md](02-repositories.test-plan.md) | Repository Layer (InMemory implementations) | ~25 unit tests |
-| [03-services.test-plan.md](03-services.test-plan.md) | Service Layer (business logic) | ~30 unit tests |
-| [04-agent.test-plan.md](04-agent.test-plan.md) | AI Agent (tools, graph, categorization) | ~15 unit tests |
-| [05-integration.test-plan.md](05-integration.test-plan.md) | Integration Tests (API routes, webhook pipeline) | ~15 integration tests |
-| [06-e2e.test-plan.md](06-e2e.test-plan.md) | E2E Tests (Playwright browser flows) | ~8 E2E tests |
+| Document                                                     | Feature                                            | Tests                 |
+| ------------------------------------------------------------ | -------------------------------------------------- | --------------------- |
+| [01-utils.test-plan.md](01-utils.test-plan.md)               | Utility Functions (date, currency, vendor, budget) | ~20 unit tests        |
+| [02-repositories.test-plan.md](02-repositories.test-plan.md) | Repository Layer (InMemory implementations)        | ~25 unit tests        |
+| [03-services.test-plan.md](03-services.test-plan.md)         | Service Layer (business logic)                     | ~30 unit tests        |
+| [04-agent.test-plan.md](04-agent.test-plan.md)               | AI Agent (tools, graph, categorization)            | ~15 unit tests        |
+| [05-integration.test-plan.md](05-integration.test-plan.md)   | Integration Tests (API routes, webhook pipeline)   | ~15 integration tests |
+| [06-e2e.test-plan.md](06-e2e.test-plan.md)                   | E2E Tests (Playwright browser flows)               | ~8 E2E tests          |
 
 ---
 

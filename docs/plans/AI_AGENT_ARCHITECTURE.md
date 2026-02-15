@@ -1,10 +1,10 @@
 # Aura Expense Agent — AI Agent Architecture
 
 > **Framework:** LangGraph.js + LangChain.js  
-> **Model:** OpenAI GPT-5.1  
-> **Pattern:** ReAct (Reasoning + Acting)  
+> **Model:** OpenAI GPT-5.2  
+> **Pattern:** Manual StateGraph with tool-calling loop  
 > **Memory:** Vendor Cache table (Appwrite) + Mem0 Cloud (feedback corrections)  
-> **Fallback Search:** Brave Search via Smithery.ai MCP Registry (`https://server.smithery.ai/brave`)
+> **Fallback Search:** Brave Search via Smithery V2 API (`@smithery/api` + `@modelcontextprotocol/sdk`)
 
 ---
 
@@ -43,10 +43,10 @@ stateDiagram-v2
     reason_category --> uncertain: confidence < 0.8
 
     confident --> log_transaction
-    
+
     uncertain --> web_search
     web_search --> re_evaluate
-    
+
     re_evaluate --> resolved: confidence >= 0.6
     re_evaluate --> fallback_other: confidence < 0.6
 
@@ -68,23 +68,23 @@ import { Annotation } from '@langchain/langgraph';
 
 export const AgentState = Annotation.Root({
   // Input
-  emailHtml: Annotation<string>,          // Raw HTML from Resend
-  emailText: Annotation<string>,          // Plain text fallback
-  emailSubject: Annotation<string>,       // Email subject line
-  emailDate: Annotation<string>,          // ISO 8601 from Resend (UTC)
-  resendEmailId: Annotation<string>,      // For dedup
-  userId: Annotation<string>,             // Appwrite user ID
+  emailHtml: Annotation<string>, // Raw HTML from Resend
+  emailText: Annotation<string>, // Plain text fallback
+  emailSubject: Annotation<string>, // Email subject line
+  emailDate: Annotation<string>, // ISO 8601 from Resend (UTC)
+  resendEmailId: Annotation<string>, // For dedup
+  userId: Annotation<string>, // Appwrite user ID
 
   // Extracted data
-  vendor: Annotation<string | null>,      // Parsed vendor name
-  amount: Annotation<number | null>,      // Parsed amount in SGD
+  vendor: Annotation<string | null>, // Parsed vendor name
+  amount: Annotation<number | null>, // Parsed amount in SGD
   transactionDate: Annotation<string | null>, // Parsed date in SGT
 
   // Classification
-  categoryId: Annotation<string | null>,  // Resolved category ID
-  categoryName: Annotation<string | null>,// For logging
+  categoryId: Annotation<string | null>, // Resolved category ID
+  categoryName: Annotation<string | null>, // For logging
   confidence: Annotation<'high' | 'medium' | 'low'>,
-  
+
   // Context
   userCategories: Annotation<Array<{
     id: string;
@@ -122,10 +122,10 @@ export const extractExpenseTool = tool(
     // The LLM itself does the extraction via function calling.
     // This tool provides the schema contract.
     // In practice, this is implemented as a structured output call.
-    
+
     return {
       vendor: '', // LLM fills this
-      amount: 0,  // LLM fills this
+      amount: 0, // LLM fills this
       transactionDate: '', // LLM fills this
     };
   },
@@ -164,14 +164,14 @@ import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 export const lookupCategoriesTool = tool(
   async ({ userId }) => {
     const { databases } = getServerAppwrite();
-    
+
     const result = await databases.listDocuments(
       APPWRITE_CONFIG.databaseId,
       APPWRITE_CONFIG.tables.categories,
       [Query.equal('user_id', userId)]
     );
 
-    return result.documents.map(doc => ({
+    return result.documents.map((doc) => ({
       id: doc.$id,
       name: doc.name,
       description: doc.description,
@@ -192,6 +192,7 @@ export const lookupCategoriesTool = tool(
 Web search fallback via Brave Search MCP Server on Smithery.ai registry. Only called when the agent can't confidently categorize a vendor.
 
 **Smithery.ai MCP Integration:**
+
 - **Registry URL:** `https://server.smithery.ai/brave`
 - **Repository:** `brave/brave-search-mcp-server`
 - **Tool:** `brave_web_search` — performs web searches with rich metadata (titles, descriptions, URLs)
@@ -214,7 +215,7 @@ export const braveSearchTool = tool(
       `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=5`,
       {
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Accept-Encoding': 'gzip',
           'X-Subscription-Token': process.env.BRAVE_SEARCH_API_KEY!,
         },
@@ -226,11 +227,13 @@ export const braveSearchTool = tool(
     }
 
     const data = await response.json();
-    
+
     // Extract relevant snippets
-    const results = data.web?.results?.slice(0, 3).map((r: any) => 
-      `${r.title}: ${r.description}`
-    ).join('\n\n') || 'No results found.';
+    const results =
+      data.web?.results
+        ?.slice(0, 3)
+        .map((r: any) => `${r.title}: ${r.description}`)
+        .join('\n\n') || 'No results found.';
 
     return results;
 
@@ -270,19 +273,17 @@ import { getMem0Client } from '@/lib/mem0/client';
 export const recallMemoriesTool = tool(
   async ({ userId, vendor }) => {
     const mem0 = getMem0Client();
-    
-    const memories = await mem0.search(
-      `How should I categorize ${vendor}?`,
-      { user_id: userId, limit: 3 }
-    );
+
+    const memories = await mem0.search(`How should I categorize ${vendor}?`, {
+      user_id: userId,
+      limit: 3,
+    });
 
     if (!memories.results?.length) {
       return 'No relevant memories found for this vendor.';
     }
 
-    return memories.results
-      .map((m: { memory: string }) => m.memory)
-      .join('\n');
+    return memories.results.map((m: { memory: string }) => m.memory).join('\n');
   },
   {
     name: 'recall_memories',
@@ -332,7 +333,16 @@ import { ID, Query } from 'node-appwrite';
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 
 export const logExpenseTool = tool(
-  async ({ userId, categoryId, amount, vendor, transactionDate, resendEmailId, emailSubject, confidence }) => {
+  async ({
+    userId,
+    categoryId,
+    amount,
+    vendor,
+    transactionDate,
+    resendEmailId,
+    emailSubject,
+    confidence,
+  }) => {
     const { databases } = getServerAppwrite();
     const { databaseId, tables } = APPWRITE_CONFIG;
 
@@ -357,14 +367,10 @@ export const logExpenseTool = tool(
 
     // 2. Update or create vendor cache entry
     const normalizedVendor = vendor.toUpperCase().trim();
-    const existingCache = await databases.listDocuments(
-      databaseId,
-      tables.vendorCache,
-      [
-        Query.equal('user_id', userId),
-        Query.equal('vendor_name', normalizedVendor),
-      ]
-    );
+    const existingCache = await databases.listDocuments(databaseId, tables.vendorCache, [
+      Query.equal('user_id', userId),
+      Query.equal('vendor_name', normalizedVendor),
+    ]);
 
     if (existingCache.total > 0) {
       // Update hit count
@@ -376,17 +382,12 @@ export const logExpenseTool = tool(
       );
     } else {
       // Create new cache entry
-      await databases.createDocument(
-        databaseId,
-        tables.vendorCache,
-        ID.unique(),
-        {
-          user_id: userId,
-          vendor_name: normalizedVendor,
-          category_id: categoryId,
-          hit_count: 1,
-        }
-      );
+      await databases.createDocument(databaseId, tables.vendorCache, ID.unique(), {
+        user_id: userId,
+        vendor_name: normalizedVendor,
+        category_id: categoryId,
+        hit_count: 1,
+      });
     }
 
     return {
@@ -477,7 +478,13 @@ import { SYSTEM_PROMPT, buildUserPrompt } from './prompts';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 
 // Initialize the model with all tools bound
-const tools = [extractExpenseTool, lookupCategoriesTool, recallMemoriesTool, braveSearchTool, logExpenseTool];
+const tools = [
+  extractExpenseTool,
+  lookupCategoriesTool,
+  recallMemoriesTool,
+  braveSearchTool,
+  logExpenseTool,
+];
 const model = new ChatOpenAI({
   model: 'gpt-5.1',
   temperature: 0,
@@ -489,7 +496,7 @@ const toolNode = new ToolNode(tools);
 
 async function agentNode(state: AgentStateType) {
   const emailContent = state.emailText || state.emailHtml || '';
-  
+
   const messages = [
     new SystemMessage(SYSTEM_PROMPT),
     new HumanMessage(buildUserPrompt(emailContent, state.emailSubject)),
@@ -501,12 +508,12 @@ async function agentNode(state: AgentStateType) {
 
 function shouldContinue(state: AgentStateType) {
   const lastMessage = state.messages[state.messages.length - 1];
-  
+
   // If the LLM wants to call tools, route to tool node
   if (lastMessage.tool_calls?.length > 0) {
     return 'tools';
   }
-  
+
   // Otherwise, we're done
   return 'end';
 }
@@ -579,7 +586,7 @@ const roughVendor = vendorMatch?.[1]?.toUpperCase().trim();
 if (roughVendor) {
   // 2. Check vendor cache
   const cached = await checkVendorCache(userId, roughVendor);
-  
+
   if (cached) {
     // 3. Fast path: skip agent, log directly
     await logTransaction({
@@ -591,10 +598,10 @@ if (roughVendor) {
       resendEmailId,
       confidence: 'high',
     });
-    
+
     // 4. Increment cache hit count
     await incrementCacheHitCount(cached.id);
-    
+
     return NextResponse.json({ status: 'cached' });
   }
 }
@@ -622,12 +629,14 @@ The Brave Search tool leverages the **Smithery.ai MCP registry** (`https://serve
 **V2 Approach:** Full MCP client via `@modelcontextprotocol/sdk` connecting to `https://server.smithery.ai/brave`.
 
 **When the agent calls `brave_search`:**
+
 1. It constructs a query like: `"What is DIGITALOCEAN.COM? What products or services do they sell?"`
 2. Brave returns the top 3 web results with titles and descriptions
 3. The agent re-evaluates its category choice with the new context
 4. If it now has a match → `confidence: "medium"`, else → `confidence: "low"` + category `"Other"`
 
 **Cost:**
+
 - Brave Search API: 2,000 free queries/month
 - Expected usage: < 50 queries/month (only for unknown vendors, first-time only due to caching)
 - After cache warm-up, Brave Search calls drop to near-zero
@@ -677,13 +686,14 @@ The Brave Search tool leverages the **Smithery.ai MCP registry** (`https://serve
 
 ## 📊 Token & Cost Estimation
 
-| Scenario | Input Tokens | Output Tokens | Cost (GPT-4o) | Frequency |
-|----------|-------------|---------------|---------------|-----------|
-| Cache HIT | 0 | 0 | $0.00 | ~70% of emails after warm-up |
-| Simple categorization (no search) | ~1,500 | ~200 | ~$0.005 | ~25% |
-| Web search fallback | ~3,000 | ~400 | ~$0.012 | ~5% |
+| Scenario                          | Input Tokens | Output Tokens | Cost (GPT-4o) | Frequency                    |
+| --------------------------------- | ------------ | ------------- | ------------- | ---------------------------- |
+| Cache HIT                         | 0            | 0             | $0.00         | ~70% of emails after warm-up |
+| Simple categorization (no search) | ~1,500       | ~200          | ~$0.005       | ~25%                         |
+| Web search fallback               | ~3,000       | ~400          | ~$0.012       | ~5%                          |
 
 **Estimated monthly cost at 100 transactions:**
+
 - 70 cache hits: $0.00
 - 25 simple: $0.125
 - 5 with search: $0.06
@@ -693,14 +703,14 @@ The Brave Search tool leverages the **Smithery.ai MCP registry** (`https://serve
 
 ## ⚠️ Error Handling
 
-| Error | Handling |
-|-------|---------|
-| LLM can't parse amount | Agent returns error → webhook logs raw email for manual review |
-| LLM timeout | 30s timeout on agent invocation → retry once → if still fails, log as "pending review" |
-| Brave Search API down | Agent skips search, assigns "Other" with `confidence: "low"` |
-| Appwrite DB write fails | Retry with exponential backoff (3 attempts) → if still fails, return 500 (Resend will retry webhook) |
-| Duplicate vendor cache entry | Caught by unique index → upsert pattern (update hit count) |
-| Mem0 API down | Skip memory recall, proceed to Tier 3 (LLM category matching). Feedback storage queued for retry. |
+| Error                        | Handling                                                                                             |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------- |
+| LLM can't parse amount       | Agent returns error → webhook logs raw email for manual review                                       |
+| LLM timeout                  | 30s timeout on agent invocation → retry once → if still fails, log as "pending review"               |
+| Brave Search API down        | Agent skips search, assigns "Other" with `confidence: "low"`                                         |
+| Appwrite DB write fails      | Retry with exponential backoff (3 attempts) → if still fails, return 500 (Resend will retry webhook) |
+| Duplicate vendor cache entry | Caught by unique index → upsert pattern (update hit count)                                           |
+| Mem0 API down                | Skip memory recall, proceed to Tier 3 (LLM category matching). Feedback storage queued for retry.    |
 
 ---
 
@@ -761,24 +771,28 @@ export class FeedbackService {
 
     // 1. Load transaction
     const transaction = await databases.getDocument(
-      databaseId, tables.transactions, params.transactionId
+      databaseId,
+      tables.transactions,
+      params.transactionId
     );
 
     // 2. Load user categories
-    const categories = await databases.listDocuments(
-      databaseId, tables.categories,
-      [Query.equal('user_id', params.userId)]
-    );
+    const categories = await databases.listDocuments(databaseId, tables.categories, [
+      Query.equal('user_id', params.userId),
+    ]);
 
     // 3. Ask LLM to propose re-categorization
     const response = await model.invoke([
       { role: 'system', content: FEEDBACK_SYSTEM_PROMPT },
-      { role: 'user', content: `
+      {
+        role: 'user',
+        content: `
         Transaction: ${transaction.vendor} — SGD ${transaction.amount}
         Current category: ${transaction.category_id}
-        Available categories: ${JSON.stringify(categories.documents.map(c => ({ id: c.$id, name: c.name, description: c.description })))}
+        Available categories: ${JSON.stringify(categories.documents.map((c) => ({ id: c.$id, name: c.name, description: c.description })))}
         User feedback: "${params.feedbackText}"
-      `},
+      `,
+      },
       ...(params.conversationHistory || []),
     ]);
 
@@ -801,10 +815,9 @@ export class FeedbackService {
     const mem0 = getMem0Client();
 
     // 1. Update transaction
-    await databases.updateDocument(
-      databaseId, tables.transactions, params.transactionId,
-      { category_id: params.newCategoryId }
-    );
+    await databases.updateDocument(databaseId, tables.transactions, params.transactionId, {
+      category_id: params.newCategoryId,
+    });
 
     // 2. Update vendor cache
     const normalizedVendor = params.vendor.toUpperCase().trim();
@@ -822,6 +835,7 @@ export class FeedbackService {
 **Memory Impact on Future Categorizations:**
 
 After a user corrects "DIGITALOCEAN.COM" from "Shopping" to "Bills & Utilities":
+
 1. **Vendor Cache** is updated → next DigitalOcean charge hits cache (Tier 1)
 2. **Mem0** stores the preference → if vendor cache is cold (e.g., after "DIGITAL OCEAN" variant), Mem0 recall (Tier 2) catches similar vendors
 3. The 5-tier chain ensures corrections "stick" across both exact matches and fuzzy/semantic matches

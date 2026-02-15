@@ -17,53 +17,53 @@ Aura is a **"zero-touch" financial intelligence system**. You make a purchase, y
 
 ### 👤 User Stories
 
-| ID | Story | Acceptance Criteria |
-|----|-------|-------------------|
-| US-1 | "As a user, I want my bank transaction emails auto-forwarded to a unique Resend address so I never manually upload a receipt." | Email arrives → expense logged in < 30s. |
-| US-2 | "As a user, I want the AI to categorize my expenses with high certainty, learning from my feedback over time." | Agent uses cached vendor mapping → Mem0 memory → user categories → web search → `Other` (5-tier fallback). |
-| US-3 | "As a user, I want to define monthly budgets per category so I can track how much I've spent vs. my limit." | Dashboard shows per-category progress bars + over-budget alerts. |
-| US-4 | "As a user, I want to see my spending as pie/donut charts, broken down by category within a selected time range (week, month, year)." | Recharts donut chart + data table with time range selector. |
-| US-5 | "As a user, I want to be notified in-app when I'm approaching or exceeding my budget." | Banner at 80% and 100% thresholds per category. |
-| US-6 | "As a user, I want to sign in with Google or GitHub via OAuth2." | Appwrite OAuth2 flow for Google + GitHub. |
-| US-7 | "As a user, I want to manage my expense categories (CRUD) with descriptions that help the AI categorize correctly." | Custom categories stored in DB, fed to agent as context. |
-| US-8 | "As a user, I want to correct the AI's categorization by providing conversational feedback." | Feedback sheet → AI proposes new category → user approves/rejects. Max 3 rounds. |
-| US-9 | "As a user, I want the AI to remember my corrections so it doesn't repeat mistakes." | Corrections stored in Mem0 → recalled on future categorizations. |
-| US-10 | "As a user, I want full CRUD over my transactions (create, update, delete) including manual entry." | Transaction detail sheet + Quick Add form + delete with undo toast. |
+| ID    | Story                                                                                                                                 | Acceptance Criteria                                                                                        |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| US-1  | "As a user, I want my bank transaction emails auto-forwarded to a unique Resend address so I never manually upload a receipt."        | Email arrives → expense logged in < 30s.                                                                   |
+| US-2  | "As a user, I want the AI to categorize my expenses with high certainty, learning from my feedback over time."                        | Agent uses cached vendor mapping → Mem0 memory → user categories → web search → `Other` (5-tier fallback). |
+| US-3  | "As a user, I want to define monthly budgets per category so I can track how much I've spent vs. my limit."                           | Dashboard shows per-category progress bars + over-budget alerts.                                           |
+| US-4  | "As a user, I want to see my spending as pie/donut charts, broken down by category within a selected time range (week, month, year)." | Recharts donut chart + data table with time range selector.                                                |
+| US-5  | "As a user, I want to be notified in-app when I'm approaching or exceeding my budget."                                                | Banner at 80% and 100% thresholds per category.                                                            |
+| US-6  | "As a user, I want to sign in with Google or GitHub via OAuth2."                                                                      | Appwrite OAuth2 flow for Google + GitHub.                                                                  |
+| US-7  | "As a user, I want to manage my expense categories (CRUD) with descriptions that help the AI categorize correctly."                   | Custom categories stored in DB, fed to agent as context.                                                   |
+| US-8  | "As a user, I want to correct the AI's categorization by providing conversational feedback."                                          | Feedback sheet → AI proposes new category → user approves/rejects. Max 3 rounds.                           |
+| US-9  | "As a user, I want the AI to remember my corrections so it doesn't repeat mistakes."                                                  | Corrections stored in Mem0 → recalled on future categorizations.                                           |
+| US-10 | "As a user, I want full CRUD over my transactions (create, update, delete) including manual entry."                                   | Transaction detail sheet + Quick Add form + delete with undo toast.                                        |
 
 ---
 
 ## 🛠️ The Tech Stack
 
-| Layer | Technology | Role |
-|-------|-----------|------|
-| **Email Gateway** | Resend (Inbound) | Receives forwarded emails at a per-user unique address. |
-| **Application Server** | Next.js 19 (App Router + API Routes) using TypeScript | Full-stack: SSR dashboard + webhook handler + API layer. |
-| **AI Agent** | LangGraph.js + LangChain.js + OpenAI GPT-5.1 | ReAct agent with tool use for extraction, categorization, and web search. |
-| **Agent Memory** | Vendor Cache table (Appwrite) | Cross-invocation memory: maps `vendor → category` to skip re-classification. |
-| **Agent Feedback Memory** | Mem0 Cloud (`mem0ai` npm) | Long-term semantic memory: stores user corrections & preferences for 5-tier categorization. |
-| **Web Search** | Brave Search MCP Server | Fallback tool when the agent can't determine a category from local context. |
-| **Database** | Appwrite Cloud (MariaDB) | All persistent data: users, transactions, categories, budgets, vendor cache. |
-| **Authentication** | Appwrite OAuth2 (Google + GitHub) | Zero-password auth with session management. |
-| **UI Framework** | React 19 + shadcn/ui + Tailwind CSS v4 | Component library with consistent design system. |
-| **Charts** | Recharts | Donut charts, bar charts, and budget progress visualizations. |
-| **Animations** | Framer Motion | Staggered reveals, count-up numbers, sheet transitions, micro-interactions. |
-| **Theme** | next-themes | Dark/light mode switching via `data-theme` attribute. |
-| **Language** | TypeScript (end-to-end) | Type safety across frontend, API, and agent. All imports use `@/` path alias (`"@/*": ["./src/*"]`). |
-| **Deployment** | Vercel | Next.js-native hosting with edge functions and preview deployments. |
+| Layer                     | Technology                                            | Role                                                                                                 |
+| ------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| **Email Gateway**         | Resend (Inbound)                                      | Receives forwarded emails at a per-user unique address.                                              |
+| **Application Server**    | Next.js 19 (App Router + API Routes) using TypeScript | Full-stack: SSR dashboard + webhook handler + API layer.                                             |
+| **AI Agent**              | LangGraph.js + LangChain.js + OpenAI GPT-5.1          | ReAct agent with tool use for extraction, categorization, and web search.                            |
+| **Agent Memory**          | Vendor Cache table (Appwrite)                         | Cross-invocation memory: maps `vendor → category` to skip re-classification.                         |
+| **Agent Feedback Memory** | Mem0 Cloud (`mem0ai` npm)                             | Long-term semantic memory: stores user corrections & preferences for 5-tier categorization.          |
+| **Web Search**            | Brave Search MCP Server                               | Fallback tool when the agent can't determine a category from local context.                          |
+| **Database**              | Appwrite Cloud (MariaDB)                              | All persistent data: users, transactions, categories, budgets, vendor cache.                         |
+| **Authentication**        | Appwrite OAuth2 (Google + GitHub)                     | Zero-password auth with session management.                                                          |
+| **UI Framework**          | React 19 + shadcn/ui + Tailwind CSS v4                | Component library with consistent design system.                                                     |
+| **Charts**                | Recharts                                              | Donut charts, bar charts, and budget progress visualizations.                                        |
+| **Animations**            | Framer Motion                                         | Staggered reveals, count-up numbers, sheet transitions, micro-interactions.                          |
+| **Theme**                 | next-themes                                           | Dark/light mode switching via `data-theme` attribute.                                                |
+| **Language**              | TypeScript (end-to-end)                               | Type safety across frontend, API, and agent. All imports use `@/` path alias (`"@/*": ["./src/*"]`). |
+| **Deployment**            | Vercel                                                | Next.js-native hosting with edge functions and preview deployments.                                  |
 
 ### Key Decision Log
 
-| Decision | Rationale |
-|----------|-----------|
-| **LangGraph.js over Python LangGraph** | Avoids cross-language microservice complexity. Entire stack stays TypeScript. Next.js API routes call the agent directly — no HTTP bridge needed. |
-| **Appwrite over Supabase** | User preference. Appwrite Cloud provides DB, auth (OAuth2), and file storage in one platform. |
-| **Vendor Cache over mem0 (for vendor mapping)** | mem0 adds an external dependency and API cost. A simple Appwrite table (`vendor_cache`) achieves the same "memory" for the specific use case of vendor→category mapping, with zero additional cost. |
-| **Mem0 Cloud for feedback memory** | User corrections need semantic recall ("User prefers X to be in category Y"). Mem0 Cloud provides this with free tier (1,000 memories) and ~200ms latency. Vendor cache handles exact matches; Mem0 handles fuzzy/contextual preferences. See [ADR-015](../ADR/ADR-015-mem0-feedback-memory.md). |
-| **Brave Search MCP over Tavily** | Cheapest web search API. 2,000 free queries/month, then $0.003/query. Sufficient for the low-volume "confused agent" fallback. |
-| **TypeScript `@/` path aliases** | All imports use `@/` prefix mapping to `./src/*` via `tsconfig.json` paths. Enforced project-wide for consistency and readability. Example: `import { cn } from '@/lib/utils'`. |
-| **SGD only (no FX conversion)** | V1 simplification. All amounts stored and displayed in SGD. |
-| **Recharts over Tremor** | shadcn/ui has native Recharts integration via its `chart` component. No extra dependency. |
-| **On-refresh over real-time** | V1 simplification. Avoids WebSocket complexity. Appwrite Realtime can be added in V2. |
+| Decision                                        | Rationale                                                                                                                                                                                                                                                                                        |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **LangGraph.js over Python LangGraph**          | Avoids cross-language microservice complexity. Entire stack stays TypeScript. Next.js API routes call the agent directly — no HTTP bridge needed.                                                                                                                                                |
+| **Appwrite over Supabase**                      | User preference. Appwrite Cloud provides DB, auth (OAuth2), and file storage in one platform.                                                                                                                                                                                                    |
+| **Vendor Cache over mem0 (for vendor mapping)** | mem0 adds an external dependency and API cost. A simple Appwrite table (`vendor_cache`) achieves the same "memory" for the specific use case of vendor→category mapping, with zero additional cost.                                                                                              |
+| **Mem0 Cloud for feedback memory**              | User corrections need semantic recall ("User prefers X to be in category Y"). Mem0 Cloud provides this with free tier (1,000 memories) and ~200ms latency. Vendor cache handles exact matches; Mem0 handles fuzzy/contextual preferences. See [ADR-015](../ADR/ADR-015-mem0-feedback-memory.md). |
+| **Brave Search MCP over Tavily**                | Cheapest web search API. 2,000 free queries/month, then $0.003/query. Sufficient for the low-volume "confused agent" fallback.                                                                                                                                                                   |
+| **TypeScript `@/` path aliases**                | All imports use `@/` prefix mapping to `./src/*` via `tsconfig.json` paths. Enforced project-wide for consistency and readability. Example: `import { cn } from '@/lib/utils'`.                                                                                                                  |
+| **SGD only (no FX conversion)**                 | V1 simplification. All amounts stored and displayed in SGD.                                                                                                                                                                                                                                      |
+| **Recharts over Tremor**                        | shadcn/ui has native Recharts integration via its `chart` component. No extra dependency.                                                                                                                                                                                                        |
+| **On-refresh over real-time**                   | V1 simplification. Avoids WebSocket complexity. Appwrite Realtime can be added in V2.                                                                                                                                                                                                            |
 
 ---
 
@@ -144,11 +144,11 @@ sequenceDiagram
             Cache-->>API: No match
 
             API->>Agent: Invoke agent with email content + user categories
-            
+
             Agent->>Agent: Tool: extract_expense → { amount, date, vendor }
             Agent->>Agent: Tool: lookup_categories → user's categories + descriptions
             Agent->>Agent: Reason: Can I match vendor to a category?
-            
+
             alt Confident
                 Agent-->>API: { amount, date, vendor, category_id, confidence: "high" }
             else Uncertain
@@ -320,6 +320,7 @@ aura-expense-agent/
 ## ⚙️ Implementation Phases
 
 ### Phase 1: Foundation (Week 1)
+
 - [ ] Initialize Next.js 15 project with App Router, TypeScript, Tailwind CSS v4
 - [ ] Install and configure shadcn/ui
 - [ ] Set up Appwrite Cloud project: create database, all tables, attributes, indexes
@@ -328,6 +329,7 @@ aura-expense-agent/
 - [ ] Seed default categories for new users
 
 ### Phase 2: Email Pipeline (Week 2)
+
 - [ ] Configure Resend inbound domain + MX records
 - [ ] Build `POST /api/webhooks/resend` → fetch email → dedup check
 - [ ] Implement LangGraph.js agent with ReAct pattern
@@ -337,6 +339,7 @@ aura-expense-agent/
 - [ ] Configure Gmail filter + auto-forward for testing
 
 ### Phase 3: Dashboard (Week 3)
+
 - [ ] Build dashboard layout with shadcn/ui sidebar
 - [ ] Implement spending donut chart (Recharts) with time range selector
 - [ ] Build budget management page (per-category CRUD)
@@ -348,6 +351,7 @@ aura-expense-agent/
 - [ ] Implement budget alert banner (80% warning, 100% over-budget)
 
 ### Phase 4: Polish & Testing (Week 4)
+
 - [ ] Unit tests for agent tools, date utils, API routes
 - [ ] Integration tests for full webhook→agent→DB pipeline
 - [ ] E2E tests with Playwright for dashboard flows
@@ -361,46 +365,46 @@ aura-expense-agent/
 
 ### Architecture & Design
 
-| Document | Description |
-|----------|-------------|
-| [DATABASE_SCHEMA.md](./DATABASE_SCHEMA.md) | Complete Appwrite database schema: all tables, attributes, indexes, relationships, seed scripts. |
-| [AI_AGENT_ARCHITECTURE.md](./AI_AGENT_ARCHITECTURE.md) | LangGraph.js agent design: state machine, tools, ReAct loop, Brave Search via Smithery.ai MCP, vendor cache strategy. |
-| [API_SPECIFICATION.md](./API_SPECIFICATION.md) | All Next.js API routes: webhook handler, CRUD endpoints, request/response schemas. |
-| [FRONTEND_ARCHITECTURE.md](./FRONTEND_ARCHITECTURE.md) | Component tree, page layouts, shadcn/ui + Recharts integration, budget alerts, responsive design. |
-| [BACKEND_DESIGN_PATTERNS.md](./BACKEND_DESIGN_PATTERNS.md) | SOLID principles, Repository, Service, Factory, Strategy, DI patterns with full code examples. |
-| [UX_DECISIONS.md](./UX_DECISIONS.md) | User personas, core flows, budget salary allocation UX, AI feedback correction flow, empty states, responsive breakpoints, accessibility. |
-| [DESIGN.md](./DESIGN.md) | "Aurora Noir" design system: typography, color palette, spacing, motion, dark/light mode, component styling, anti-patterns. |
+| Document                                                   | Description                                                                                                                               |
+| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| [DATABASE_SCHEMA.md](./DATABASE_SCHEMA.md)                 | Complete Appwrite database schema: all tables, attributes, indexes, relationships, seed scripts.                                          |
+| [AI_AGENT_ARCHITECTURE.md](./AI_AGENT_ARCHITECTURE.md)     | LangGraph.js agent design: state machine, tools, ReAct loop, Brave Search via Smithery.ai MCP, vendor cache strategy.                     |
+| [API_SPECIFICATION.md](./API_SPECIFICATION.md)             | All Next.js API routes: webhook handler, CRUD endpoints, request/response schemas.                                                        |
+| [FRONTEND_ARCHITECTURE.md](./FRONTEND_ARCHITECTURE.md)     | Component tree, page layouts, shadcn/ui + Recharts integration, budget alerts, responsive design.                                         |
+| [BACKEND_DESIGN_PATTERNS.md](./BACKEND_DESIGN_PATTERNS.md) | SOLID principles, Repository, Service, Factory, Strategy, DI patterns with full code examples.                                            |
+| [UX_DECISIONS.md](./UX_DECISIONS.md)                       | User personas, core flows, budget salary allocation UX, AI feedback correction flow, empty states, responsive breakpoints, accessibility. |
+| [DESIGN.md](./DESIGN.md)                                   | "Aurora Noir" design system: typography, color palette, spacing, motion, dark/light mode, component styling, anti-patterns.               |
 
 ### Decision Records
 
-| Document | Description |
-|----------|-------------|
+| Document                      | Description                                                                           |
+| ----------------------------- | ------------------------------------------------------------------------------------- |
 | [ADR Index](../ADR/README.md) | 15 Architecture Decision Records covering every technology and design pattern choice. |
 
 ### Testing
 
-| Document | Description |
-|----------|-------------|
-| [Testing Strategy](./TESTING_STRATEGY.md) | Original high-level testing strategy. |
+| Document                                        | Description                                                                                       |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| [Testing Strategy](./TESTING_STRATEGY.md)       | Original high-level testing strategy.                                                             |
 | [Testing Plan (TDD)](../testing-plan/README.md) | Master TDD testing plan with 6 detailed test plans, JSON fixtures, CI pipeline, coverage targets. |
 
 ### Feature Specs
 
-| Document | Description |
-|----------|-------------|
+| Document                               | Description                                                                                         |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | [Feature Index](../features/README.md) | 13 JIRA-style feature specs (FEAT-001 to FEAT-013) with acceptance criteria and Definition of Done. |
 
 ---
 
 ## 🚨 Risks & Mitigations
 
-| Risk | Impact | Mitigation |
-|------|--------|-----------|
-| **LangGraph.js is less mature than Python** | Agent bugs, missing features | Pin to stable version. Keep agent logic simple (5 tools). Fallback to direct OpenAI call if LangGraph fails. |
-| **Resend webhook delivery failure** | Missed transactions | Resend has built-in retry (up to 3 attempts). Dedup by `resend_email_id` handles replays safely. |
-| **Appwrite Cloud rate limits** | Throttled DB writes | Low volume (< 50 tx/day). Well within free tier limits. |
-| **Email format variance** | Extraction failures | Agent handles both plain-text bank alerts and rich HTML receipts. Fallback: log raw email for manual review. |
-| **Brave Search API downtime** | Agent can't resolve unknown vendors | Agent still categorizes using local context. Web search is a "nice-to-have" fallback, not a hard dependency. |
+| Risk                                        | Impact                              | Mitigation                                                                                                   |
+| ------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **LangGraph.js is less mature than Python** | Agent bugs, missing features        | Pin to stable version. Keep agent logic simple (5 tools). Fallback to direct OpenAI call if LangGraph fails. |
+| **Resend webhook delivery failure**         | Missed transactions                 | Resend has built-in retry (up to 3 attempts). Dedup by `resend_email_id` handles replays safely.             |
+| **Appwrite Cloud rate limits**              | Throttled DB writes                 | Low volume (< 50 tx/day). Well within free tier limits.                                                      |
+| **Email format variance**                   | Extraction failures                 | Agent handles both plain-text bank alerts and rich HTML receipts. Fallback: log raw email for manual review. |
+| **Brave Search API downtime**               | Agent can't resolve unknown vendors | Agent still categorizes using local context. Web search is a "nice-to-have" fallback, not a hard dependency. |
 
 ---
 

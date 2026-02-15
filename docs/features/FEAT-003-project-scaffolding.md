@@ -36,6 +36,7 @@ Initialize the Next.js 19 project with all required configurations, install depe
 ### Dependencies
 
 **Production:**
+
 ```json
 {
   "next": "^15.x",
@@ -50,6 +51,7 @@ Initialize the Next.js 19 project with all required configurations, install depe
 ```
 
 **Development:**
+
 ```json
 {
   "vitest": "^3.x",

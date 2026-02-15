@@ -36,14 +36,14 @@ Build the category management page where users can view, create, edit, and delet
 
 ### Files to Create/Modify
 
-| File | Purpose |
-|------|---------|
-| `src/app/(dashboard)/categories/page.tsx` | Categories page |
-| `src/components/categories/category-list.tsx` | Category list |
-| `src/components/categories/category-form.tsx` | Create/edit form |
-| `src/components/categories/emoji-picker.tsx` | Emoji selector |
-| `src/components/categories/color-picker.tsx` | Color selector |
-| `src/hooks/use-categories.ts` | Data fetching hook |
+| File                                          | Purpose            |
+| --------------------------------------------- | ------------------ |
+| `src/app/(dashboard)/categories/page.tsx`     | Categories page    |
+| `src/components/categories/category-list.tsx` | Category list      |
+| `src/components/categories/category-form.tsx` | Create/edit form   |
+| `src/components/categories/emoji-picker.tsx`  | Emoji selector     |
+| `src/components/categories/color-picker.tsx`  | Color selector     |
+| `src/hooks/use-categories.ts`                 | Data fetching hook |
 
 ### API Routes Used
 

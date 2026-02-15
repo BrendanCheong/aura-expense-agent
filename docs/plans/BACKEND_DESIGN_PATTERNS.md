@@ -39,13 +39,13 @@ Every API route in Aura follows a strict layered architecture with dependency in
 
 ### S — Single Responsibility
 
-| Component | Single Responsibility |
-|-----------|----------------------|
-| `TransactionRepository` | CRUD operations on the `transactions` table |
-| `TransactionService` | Business rules: dedup, budget checks, vendor cache updates |
+| Component                   | Single Responsibility                                             |
+| --------------------------- | ----------------------------------------------------------------- |
+| `TransactionRepository`     | CRUD operations on the `transactions` table                       |
+| `TransactionService`        | Business rules: dedup, budget checks, vendor cache updates        |
 | `POST /api/webhooks/resend` | HTTP handling: parse webhook, validate signature, return response |
-| `ExpenseAgent` | AI orchestration: invoke LangGraph, manage agent state |
-| `BraveSearchTool` | External web search API call |
+| `ExpenseAgent`              | AI orchestration: invoke LangGraph, manage agent state            |
+| `BraveSearchTool`           | External web search API call                                      |
 
 **Anti-pattern avoided:** API route that queries the DB, runs business logic, calls the agent, and formats the response all in one function.
 
@@ -107,7 +107,7 @@ class TransactionService {
 class TransactionService {
   constructor(
     private readonly transactionRepo: ITransactionRepository,
-    private readonly vendorCacheRepo: IVendorCacheRepository,
+    private readonly vendorCacheRepo: IVendorCacheRepository
   ) {}
 }
 ```
@@ -129,14 +129,26 @@ import type { VendorCacheEntry } from '@/types/vendor-cache';
 // --- Transaction Repository ---
 export interface ITransactionRepository {
   findById(id: string): Promise<Transaction | null>;
-  findByUserId(userId: string, options: TransactionQueryOptions): Promise<PaginatedResult<Transaction>>;
+  findByUserId(
+    userId: string,
+    options: TransactionQueryOptions
+  ): Promise<PaginatedResult<Transaction>>;
   findByResendEmailId(resendEmailId: string): Promise<Transaction | null>;
   findByUserAndDateRange(userId: string, start: string, end: string): Promise<Transaction[]>;
-  findByUserCategoryDateRange(userId: string, categoryId: string, start: string, end: string): Promise<Transaction[]>;
+  findByUserCategoryDateRange(
+    userId: string,
+    categoryId: string,
+    start: string,
+    end: string
+  ): Promise<Transaction[]>;
   create(data: TransactionCreate): Promise<Transaction>;
   update(id: string, data: TransactionUpdate): Promise<Transaction>;
   delete(id: string): Promise<void>;
-  sumByUserCategoryDateRange(userId: string, start: string, end: string): Promise<CategorySpendingSummary[]>;
+  sumByUserCategoryDateRange(
+    userId: string,
+    start: string,
+    end: string
+  ): Promise<CategorySpendingSummary[]>;
 }
 
 export interface TransactionQueryOptions {
@@ -179,7 +191,12 @@ export interface ICategoryRepository {
 export interface IBudgetRepository {
   findById(id: string): Promise<Budget | null>;
   findByUserAndPeriod(userId: string, year: number, month: number): Promise<Budget[]>;
-  findByUserCategoryPeriod(userId: string, categoryId: string, year: number, month: number): Promise<Budget | null>;
+  findByUserCategoryPeriod(
+    userId: string,
+    categoryId: string,
+    year: number,
+    month: number
+  ): Promise<Budget | null>;
   create(data: BudgetCreate): Promise<Budget>;
   update(id: string, data: BudgetUpdate): Promise<Budget>;
   delete(id: string): Promise<void>;
@@ -231,22 +248,24 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
   }
 
   async findByResendEmailId(resendEmailId: string): Promise<Transaction | null> {
-    const result = await this.databases.listDocuments(
-      this.databaseId,
-      this.collectionId,
-      [Query.equal('resend_email_id', resendEmailId)]
-    );
+    const result = await this.databases.listDocuments(this.databaseId, this.collectionId, [
+      Query.equal('resend_email_id', resendEmailId),
+    ]);
     return result.total > 0 ? this.mapToTransaction(result.documents[0]) : null;
   }
 
-  async findByUserId(userId: string, options: TransactionQueryOptions): Promise<PaginatedResult<Transaction>> {
+  async findByUserId(
+    userId: string,
+    options: TransactionQueryOptions
+  ): Promise<PaginatedResult<Transaction>> {
     const queries = [
       Query.equal('user_id', userId),
       Query.limit(options.limit),
       Query.offset((options.page - 1) * options.limit),
     ];
 
-    if (options.startDate) queries.push(Query.greaterThanEqual('transaction_date', options.startDate));
+    if (options.startDate)
+      queries.push(Query.greaterThanEqual('transaction_date', options.startDate));
     if (options.endDate) queries.push(Query.lessThan('transaction_date', options.endDate));
     if (options.categoryId) queries.push(Query.equal('category_id', options.categoryId));
     if (options.source) queries.push(Query.equal('source', options.source));
@@ -276,7 +295,12 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
     return result.documents.map(this.mapToTransaction);
   }
 
-  async findByUserCategoryDateRange(userId: string, categoryId: string, start: string, end: string): Promise<Transaction[]> {
+  async findByUserCategoryDateRange(
+    userId: string,
+    categoryId: string,
+    start: string,
+    end: string
+  ): Promise<Transaction[]> {
     const result = await this.databases.listDocuments(this.databaseId, this.collectionId, [
       Query.equal('user_id', userId),
       Query.equal('category_id', categoryId),
@@ -298,12 +322,7 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
   }
 
   async update(id: string, data: TransactionUpdate): Promise<Transaction> {
-    const doc = await this.databases.updateDocument(
-      this.databaseId,
-      this.collectionId,
-      id,
-      data
-    );
+    const doc = await this.databases.updateDocument(this.databaseId, this.collectionId, id, data);
     return this.mapToTransaction(doc);
   }
 
@@ -311,14 +330,25 @@ export class AppwriteTransactionRepository implements ITransactionRepository {
     await this.databases.deleteDocument(this.databaseId, this.collectionId, id);
   }
 
-  async sumByUserCategoryDateRange(userId: string, start: string, end: string): Promise<CategorySpendingSummary[]> {
+  async sumByUserCategoryDateRange(
+    userId: string,
+    start: string,
+    end: string
+  ): Promise<CategorySpendingSummary[]> {
     // Appwrite doesn't support aggregation — fetch all and sum in memory
     // Acceptable for V1 with < 1000 transactions/month
     const transactions = await this.findByUserAndDateRange(userId, start, end);
-    const summaryMap = new Map<string, { categoryId: string; categoryName: string; totalSpent: number }>();
+    const summaryMap = new Map<
+      string,
+      { categoryId: string; categoryName: string; totalSpent: number }
+    >();
 
     for (const tx of transactions) {
-      const existing = summaryMap.get(tx.categoryId) || { categoryId: tx.categoryId, categoryName: '', totalSpent: 0 };
+      const existing = summaryMap.get(tx.categoryId) || {
+        categoryId: tx.categoryId,
+        categoryName: '',
+        totalSpent: 0,
+      };
       existing.totalSpent += tx.amount;
       summaryMap.set(tx.categoryId, existing);
     }
@@ -374,30 +404,48 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
     return null;
   }
 
-  async findByUserId(userId: string, options: TransactionQueryOptions): Promise<PaginatedResult<Transaction>> {
-    let data = Array.from(this.store.values()).filter(tx => tx.userId === userId);
+  async findByUserId(
+    userId: string,
+    options: TransactionQueryOptions
+  ): Promise<PaginatedResult<Transaction>> {
+    let data = Array.from(this.store.values()).filter((tx) => tx.userId === userId);
 
-    if (options.startDate) data = data.filter(tx => tx.transactionDate >= options.startDate!);
-    if (options.endDate) data = data.filter(tx => tx.transactionDate < options.endDate!);
-    if (options.categoryId) data = data.filter(tx => tx.categoryId === options.categoryId);
-    if (options.source) data = data.filter(tx => tx.source === options.source);
+    if (options.startDate) data = data.filter((tx) => tx.transactionDate >= options.startDate!);
+    if (options.endDate) data = data.filter((tx) => tx.transactionDate < options.endDate!);
+    if (options.categoryId) data = data.filter((tx) => tx.categoryId === options.categoryId);
+    if (options.source) data = data.filter((tx) => tx.source === options.source);
 
     const total = data.length;
     const start = (options.page - 1) * options.limit;
     const paged = data.slice(start, start + options.limit);
 
-    return { data: paged, total, page: options.page, limit: options.limit, hasMore: total > start + options.limit };
+    return {
+      data: paged,
+      total,
+      page: options.page,
+      limit: options.limit,
+      hasMore: total > start + options.limit,
+    };
   }
 
   async findByUserAndDateRange(userId: string, start: string, end: string): Promise<Transaction[]> {
     return Array.from(this.store.values()).filter(
-      tx => tx.userId === userId && tx.transactionDate >= start && tx.transactionDate < end
+      (tx) => tx.userId === userId && tx.transactionDate >= start && tx.transactionDate < end
     );
   }
 
-  async findByUserCategoryDateRange(userId: string, categoryId: string, start: string, end: string): Promise<Transaction[]> {
+  async findByUserCategoryDateRange(
+    userId: string,
+    categoryId: string,
+    start: string,
+    end: string
+  ): Promise<Transaction[]> {
     return Array.from(this.store.values()).filter(
-      tx => tx.userId === userId && tx.categoryId === categoryId && tx.transactionDate >= start && tx.transactionDate < end
+      (tx) =>
+        tx.userId === userId &&
+        tx.categoryId === categoryId &&
+        tx.transactionDate >= start &&
+        tx.transactionDate < end
     );
   }
 
@@ -424,11 +472,19 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
     this.store.delete(id);
   }
 
-  async sumByUserCategoryDateRange(userId: string, start: string, end: string): Promise<CategorySpendingSummary[]> {
+  async sumByUserCategoryDateRange(
+    userId: string,
+    start: string,
+    end: string
+  ): Promise<CategorySpendingSummary[]> {
     const transactions = await this.findByUserAndDateRange(userId, start, end);
     const map = new Map<string, CategorySpendingSummary>();
     for (const tx of transactions) {
-      const existing = map.get(tx.categoryId) || { categoryId: tx.categoryId, categoryName: '', totalSpent: 0 };
+      const existing = map.get(tx.categoryId) || {
+        categoryId: tx.categoryId,
+        categoryName: '',
+        totalSpent: 0,
+      };
       existing.totalSpent += tx.amount;
       map.set(tx.categoryId, existing);
     }
@@ -458,7 +514,11 @@ import { extractExpenseTool } from '@/lib/agent/tools/extract-expense';
 import { lookupCategoriesTool } from '@/lib/agent/tools/lookup-categories';
 import { braveSearchTool } from '@/lib/agent/tools/brave-search';
 import { logExpenseTool } from '@/lib/agent/tools/log-expense';
-import type { ICategoryRepository, ITransactionRepository, IVendorCacheRepository } from '@/lib/repositories/interfaces';
+import type {
+  ICategoryRepository,
+  ITransactionRepository,
+  IVendorCacheRepository,
+} from '@/lib/repositories/interfaces';
 
 export interface AgentDependencies {
   transactionRepo: ITransactionRepository;
@@ -494,9 +554,15 @@ export class AgentFactory {
    * Uses InMemory repositories and skips external API calls.
    */
   static createForTesting(overrides?: Partial<AgentDependencies>) {
-    const { InMemoryTransactionRepository } = require('@/lib/repositories/in-memory/transaction.repository');
-    const { InMemoryCategoryRepository } = require('@/lib/repositories/in-memory/category.repository');
-    const { InMemoryVendorCacheRepository } = require('@/lib/repositories/in-memory/vendor-cache.repository');
+    const {
+      InMemoryTransactionRepository,
+    } = require('@/lib/repositories/in-memory/transaction.repository');
+    const {
+      InMemoryCategoryRepository,
+    } = require('@/lib/repositories/in-memory/category.repository');
+    const {
+      InMemoryVendorCacheRepository,
+    } = require('@/lib/repositories/in-memory/vendor-cache.repository');
 
     const defaults: AgentDependencies = {
       transactionRepo: new InMemoryTransactionRepository(),
@@ -555,10 +621,16 @@ export class RepositoryFactory {
    * Create in-memory repositories for testing.
    */
   static createInMemory(): Repositories {
-    const { InMemoryTransactionRepository } = require('@/lib/repositories/in-memory/transaction.repository');
-    const { InMemoryCategoryRepository } = require('@/lib/repositories/in-memory/category.repository');
+    const {
+      InMemoryTransactionRepository,
+    } = require('@/lib/repositories/in-memory/transaction.repository');
+    const {
+      InMemoryCategoryRepository,
+    } = require('@/lib/repositories/in-memory/category.repository');
     const { InMemoryBudgetRepository } = require('@/lib/repositories/in-memory/budget.repository');
-    const { InMemoryVendorCacheRepository } = require('@/lib/repositories/in-memory/vendor-cache.repository');
+    const {
+      InMemoryVendorCacheRepository,
+    } = require('@/lib/repositories/in-memory/vendor-cache.repository');
 
     return {
       transactions: new InMemoryTransactionRepository(),
@@ -600,7 +672,7 @@ export interface ServiceContainer {
 
 /**
  * Create a fully wired service container for the current request.
- * 
+ *
  * Each API route calls this once per request. The Appwrite SDK instance
  * is scoped to the authenticated user's session.
  */
@@ -624,7 +696,11 @@ export function createContainer(): ServiceContainer {
   const transactionService = new TransactionService(repos.transactions, repos.vendorCache);
   const categoryService = new CategoryService(repos.categories, repos.vendorCache, repos.budgets);
   const budgetService = new BudgetService(repos.budgets, repos.transactions);
-  const dashboardService = new DashboardService(repos.transactions, repos.budgets, repos.categories);
+  const dashboardService = new DashboardService(
+    repos.transactions,
+    repos.budgets,
+    repos.categories
+  );
   const webhookService = new WebhookService(repos.transactions, repos.vendorCache, agent);
 
   return {
@@ -647,7 +723,11 @@ export function createTestContainer(): ServiceContainer & { repos: Repositories 
   const transactionService = new TransactionService(repos.transactions, repos.vendorCache);
   const categoryService = new CategoryService(repos.categories, repos.vendorCache, repos.budgets);
   const budgetService = new BudgetService(repos.budgets, repos.transactions);
-  const dashboardService = new DashboardService(repos.transactions, repos.budgets, repos.categories);
+  const dashboardService = new DashboardService(
+    repos.transactions,
+    repos.budgets,
+    repos.categories
+  );
   const webhookService = new WebhookService(repos.transactions, repos.vendorCache, agent);
 
   return {
@@ -688,7 +768,11 @@ export async function GET(request: NextRequest) {
 
   // 4. Delegate to service
   const result = await transactionService.listTransactions(user.id, {
-    page, limit, startDate, endDate, categoryId,
+    page,
+    limit,
+    startDate,
+    endDate,
+    categoryId,
   });
 
   return NextResponse.json(result);
@@ -728,10 +812,13 @@ import type { Transaction, TransactionCreate, TransactionUpdate } from '@/types/
 export class TransactionService {
   constructor(
     private readonly transactionRepo: ITransactionRepository,
-    private readonly vendorCacheRepo: IVendorCacheRepository,
+    private readonly vendorCacheRepo: IVendorCacheRepository
   ) {}
 
-  async listTransactions(userId: string, options: TransactionQueryOptions): Promise<PaginatedResult<Transaction>> {
+  async listTransactions(
+    userId: string,
+    options: TransactionQueryOptions
+  ): Promise<PaginatedResult<Transaction>> {
     return this.transactionRepo.findByUserId(userId, options);
   }
 
@@ -743,13 +830,16 @@ export class TransactionService {
     return tx;
   }
 
-  async createManualTransaction(userId: string, data: {
-    amount: number;
-    vendor: string;
-    categoryId: string;
-    transactionDate: string;
-    description?: string;
-  }): Promise<Transaction> {
+  async createManualTransaction(
+    userId: string,
+    data: {
+      amount: number;
+      vendor: string;
+      categoryId: string;
+      transactionDate: string;
+      description?: string;
+    }
+  ): Promise<Transaction> {
     // Business rule: validate amount > 0
     if (data.amount <= 0) {
       throw new ValidationError('Amount must be greater than 0');
@@ -778,7 +868,11 @@ export class TransactionService {
     return transaction;
   }
 
-  async updateTransaction(userId: string, transactionId: string, data: TransactionUpdate): Promise<Transaction> {
+  async updateTransaction(
+    userId: string,
+    transactionId: string,
+    data: TransactionUpdate
+  ): Promise<Transaction> {
     const existing = await this.getTransaction(userId, transactionId);
 
     // Business rule: if category changes, update vendor cache
@@ -807,11 +901,17 @@ export class TransactionService {
 
 // --- Custom Error Classes ---
 export class NotFoundError extends Error {
-  constructor(message: string) { super(message); this.name = 'NotFoundError'; }
+  constructor(message: string) {
+    super(message);
+    this.name = 'NotFoundError';
+  }
 }
 
 export class ValidationError extends Error {
-  constructor(message: string) { super(message); this.name = 'ValidationError'; }
+  constructor(message: string) {
+    super(message);
+    this.name = 'ValidationError';
+  }
 }
 ```
 
@@ -827,7 +927,7 @@ export class WebhookService {
   constructor(
     private readonly transactionRepo: ITransactionRepository,
     private readonly vendorCacheRepo: IVendorCacheRepository,
-    private readonly agent: ExpenseAgent,
+    private readonly agent: ExpenseAgent
   ) {}
 
   /**
@@ -890,7 +990,11 @@ export class WebhookService {
 ```typescript
 // src/lib/services/dashboard.service.ts
 
-import type { ITransactionRepository, IBudgetRepository, ICategoryRepository } from '@/lib/repositories/interfaces';
+import type {
+  ITransactionRepository,
+  IBudgetRepository,
+  ICategoryRepository,
+} from '@/lib/repositories/interfaces';
 import { getMonthRange } from '@/lib/utils/date';
 
 export interface DashboardSummary {
@@ -930,7 +1034,7 @@ export class DashboardService {
   constructor(
     private readonly transactionRepo: ITransactionRepository,
     private readonly budgetRepo: IBudgetRepository,
-    private readonly categoryRepo: ICategoryRepository,
+    private readonly categoryRepo: ICategoryRepository
   ) {}
 
   async getSummary(userId: string, year: number, month: number): Promise<DashboardSummary> {
@@ -942,8 +1046,8 @@ export class DashboardService {
       this.categoryRepo.findByUserId(userId),
     ]);
 
-    const categoryMap = new Map(categories.map(c => [c.id, c]));
-    const budgetMap = new Map(budgets.map(b => [b.categoryId, b]));
+    const categoryMap = new Map(categories.map((c) => [c.id, c]));
+    const budgetMap = new Map(budgets.map((b) => [b.categoryId, b]));
 
     // Aggregate spending per category
     const spendingMap = new Map<string, number>();
@@ -954,11 +1058,12 @@ export class DashboardService {
     const totalSpent = transactions.reduce((sum, tx) => sum + tx.amount, 0);
     const totalBudget = budgets.reduce((sum, b) => sum + b.amount, 0);
 
-    const categoryBreakdown = categories.map(cat => {
+    const categoryBreakdown = categories.map((cat) => {
       const spent = spendingMap.get(cat.id) || 0;
       const budget = budgetMap.get(cat.id)?.amount || 0;
-      const percentUsed = budget > 0 ? (spent / budget) * 100 : (spent > 0 ? Infinity : 0);
-      const status = percentUsed >= 100 ? 'over_budget' : percentUsed >= 80 ? 'warning' : 'on_track';
+      const percentUsed = budget > 0 ? (spent / budget) * 100 : spent > 0 ? Infinity : 0;
+      const status =
+        percentUsed >= 100 ? 'over_budget' : percentUsed >= 80 ? 'warning' : 'on_track';
 
       return {
         categoryId: cat.id,
@@ -976,7 +1081,7 @@ export class DashboardService {
     const recentTransactions = transactions
       .sort((a, b) => new Date(b.transactionDate).getTime() - new Date(a.transactionDate).getTime())
       .slice(0, 10)
-      .map(tx => ({
+      .map((tx) => ({
         id: tx.id,
         vendor: tx.vendor,
         amount: tx.amount,
@@ -998,8 +1103,8 @@ export class DashboardService {
   async getAlerts(userId: string, year: number, month: number): Promise<BudgetAlert[]> {
     const summary = await this.getSummary(userId, year, month);
     return summary.categoryBreakdown
-      .filter(c => c.status !== 'on_track' && c.budget > 0)
-      .map(c => ({
+      .filter((c) => c.status !== 'on_track' && c.budget > 0)
+      .map((c) => ({
         categoryName: c.categoryName,
         icon: c.icon,
         type: c.status as 'warning' | 'over_budget',
@@ -1050,7 +1155,7 @@ export class VendorCacheStrategy implements CategorizationStrategy {
     const cached = await this.vendorCacheRepo.findByUserAndVendor(context.userId, normalizedVendor);
     if (!cached) return null;
 
-    const category = context.categories.find(c => c.id === cached.categoryId);
+    const category = context.categories.find((c) => c.id === cached.categoryId);
     return category
       ? { categoryId: category.id, categoryName: category.name, confidence: 'high' }
       : null;
@@ -1063,16 +1168,16 @@ export class Mem0MemoryStrategy implements CategorizationStrategy {
   constructor(private mem0Client: MemoryClient) {}
 
   async resolve(context: CategorizationContext): Promise<CategoryMatch | null> {
-    const memories = await this.mem0Client.search(
-      `How should I categorize ${context.vendor}?`,
-      { user_id: context.userId, limit: 3 }
-    );
+    const memories = await this.mem0Client.search(`How should I categorize ${context.vendor}?`, {
+      user_id: context.userId,
+      limit: 3,
+    });
 
     if (!memories.results?.length) return null;
 
     // Parse memory to find category preference
     const memoryText = memories.results.map((m: { memory: string }) => m.memory).join(' ');
-    const matchedCategory = context.categories.find(c =>
+    const matchedCategory = context.categories.find((c) =>
       memoryText.toLowerCase().includes(c.name.toLowerCase())
     );
 
@@ -1111,7 +1216,7 @@ export class FallbackOtherStrategy implements CategorizationStrategy {
   name = 'fallback_other';
 
   async resolve(context: CategorizationContext): Promise<CategoryMatch | null> {
-    const otherCategory = context.categories.find(c => c.name === 'Other');
+    const otherCategory = context.categories.find((c) => c.name === 'Other');
     return otherCategory
       ? { categoryId: otherCategory.id, categoryName: 'Other', confidence: 'low' }
       : null;
@@ -1131,7 +1236,9 @@ export class CategorizationChain {
     for (const strategy of this.strategies) {
       const result = await strategy.resolve(context);
       if (result) {
-        console.log(`[Categorization] Resolved by ${strategy.name}: ${result.categoryName} (${result.confidence})`);
+        console.log(
+          `[Categorization] Resolved by ${strategy.name}: ${result.categoryName} (${result.confidence})`
+        );
         return result;
       }
     }
@@ -1173,12 +1280,12 @@ export interface AppConfig {
     webhookSecret: string;
   };
   budget: {
-    warningThresholdPercent: number;   // 80
+    warningThresholdPercent: number; // 80
     overBudgetThresholdPercent: number; // 100
   };
   agent: {
-    maxRetries: number;    // 1
-    timeoutMs: number;     // 30000
+    maxRetries: number; // 1
+    timeoutMs: number; // 30000
     cacheEnabled: boolean; // true
   };
 }
@@ -1337,6 +1444,7 @@ src/lib/validation/
 ```
 
 **Usage pattern in each API route:**
+
 1. Parse raw input (`request.json()`, `searchParams`, `params`)
 2. Validate with schema (`schema.safeParse(...)`)
 3. Return `400` with flattened issues on validation failure
@@ -1345,6 +1453,7 @@ src/lib/validation/
 This keeps route handlers thin while guaranteeing runtime input safety before business logic executes.
 
 **Concrete reference implementation:** `src/app/api/transactions/route.ts` shows the complete pattern with:
+
 - user auth gate (temporary header-based scaffold)
 - query/body validation via `safeParse`
 - standardized `400` response shape from `src/lib/validation/http.ts`
@@ -1354,16 +1463,16 @@ This keeps route handlers thin while guaranteeing runtime input safety before bu
 
 ## 📊 Pattern Summary
 
-| Pattern | Where Used | Purpose |
-|---------|-----------|---------|
-| **Repository** | `src/lib/repositories/` | Abstracts data access. Appwrite production, InMemory for tests. |
-| **Service** | `src/lib/services/` | Business logic layer. Depends on repository interfaces only. |
-| **Factory** | `src/lib/factories/` | Creates complex objects (agents, repository sets). |
-| **Dependency Injection** | `src/lib/container/container.ts` | Wires dependencies per-request. API routes call `createContainer()`. |
-| **Strategy** | `src/lib/agent/strategies/` | 5-tier categorization escalation chain (Vendor Cache → Mem0 → LLM → Brave Search → Fallback). |
-| **Command** | `src/lib/agent/commands/` | Encapsulates multi-step AI workflows as discrete, testable units. |
-| **Configuration** | `src/lib/config/app.config.ts` | Typed, centralized config with env var validation. |
-| **Singleton** | `src/lib/appwrite/client.ts` | Single Appwrite client instance per runtime. |
+| Pattern                  | Where Used                       | Purpose                                                                                       |
+| ------------------------ | -------------------------------- | --------------------------------------------------------------------------------------------- |
+| **Repository**           | `src/lib/repositories/`          | Abstracts data access. Appwrite production, InMemory for tests.                               |
+| **Service**              | `src/lib/services/`              | Business logic layer. Depends on repository interfaces only.                                  |
+| **Factory**              | `src/lib/factories/`             | Creates complex objects (agents, repository sets).                                            |
+| **Dependency Injection** | `src/lib/container/container.ts` | Wires dependencies per-request. API routes call `createContainer()`.                          |
+| **Strategy**             | `src/lib/agent/strategies/`      | 5-tier categorization escalation chain (Vendor Cache → Mem0 → LLM → Brave Search → Fallback). |
+| **Command**              | `src/lib/agent/commands/`        | Encapsulates multi-step AI workflows as discrete, testable units.                             |
+| **Configuration**        | `src/lib/config/app.config.ts`   | Typed, centralized config with env var validation.                                            |
+| **Singleton**            | `src/lib/appwrite/client.ts`     | Single Appwrite client instance per runtime.                                                  |
 
 ---
 
@@ -1373,14 +1482,14 @@ This keeps route handlers thin while guaranteeing runtime input safety before bu
 
 ### Alignment With Hybrid Recommendations
 
-| Recommendation | Aura's Decision | Verdict |
-|---|---|---|
-| **Explicit constructor DI** (from tcs-core) | ✅ `createContainer()` with constructor injection — [ADR-007](../ADR/ADR-007-dependency-injection.md) | **Validated.** Aura's DI is explicit and zero-dependency. Every service receives its repositories through constructor params. No runtime registry magic, no decorator metadata issues with Next.js RSC/Edge. |
-| **Repository pattern over Active Record** (from tcs-core) | ✅ Interface-based repositories — [ADR-009](../ADR/ADR-009-repository-pattern.md) | **Validated.** `ITransactionRepository` + `AppwriteTransactionRepository` + `InMemoryTransactionRepository` is exactly the pattern recommended. |
-| **Strategy pattern for AI operations** | ✅ 5-tier categorization chain — [ADR-013](../ADR/ADR-013-strategy-pattern.md) | **Validated.** Aura's `CategorizationChain` is a textbook Strategy + Chain of Responsibility. |
-| **Factory pattern** | ✅ `AgentFactory` + `RepositoryFactory` — [ADR-010](../ADR/ADR-010-factory-pattern.md) | **Validated.** Both production and test creation paths are encapsulated. |
-| **Service layer** | ✅ 5 service classes — [ADR-008](../ADR/ADR-008-service-layer-pattern.md) | **Validated.** Business logic centralized, API routes stay thin. |
-| **2-tier models** | ✅ Domain types + API response types | **Validated.** Simpler than tcs-core's 3-tier (Route → DB → Web) without sacrificing type safety. |
+| Recommendation                                            | Aura's Decision                                                                                       | Verdict                                                                                                                                                                                                      |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Explicit constructor DI** (from tcs-core)               | ✅ `createContainer()` with constructor injection — [ADR-007](../ADR/ADR-007-dependency-injection.md) | **Validated.** Aura's DI is explicit and zero-dependency. Every service receives its repositories through constructor params. No runtime registry magic, no decorator metadata issues with Next.js RSC/Edge. |
+| **Repository pattern over Active Record** (from tcs-core) | ✅ Interface-based repositories — [ADR-009](../ADR/ADR-009-repository-pattern.md)                     | **Validated.** `ITransactionRepository` + `AppwriteTransactionRepository` + `InMemoryTransactionRepository` is exactly the pattern recommended.                                                              |
+| **Strategy pattern for AI operations**                    | ✅ 5-tier categorization chain — [ADR-013](../ADR/ADR-013-strategy-pattern.md)                        | **Validated.** Aura's `CategorizationChain` is a textbook Strategy + Chain of Responsibility.                                                                                                                |
+| **Factory pattern**                                       | ✅ `AgentFactory` + `RepositoryFactory` — [ADR-010](../ADR/ADR-010-factory-pattern.md)                | **Validated.** Both production and test creation paths are encapsulated.                                                                                                                                     |
+| **Service layer**                                         | ✅ 5 service classes — [ADR-008](../ADR/ADR-008-service-layer-pattern.md)                             | **Validated.** Business logic centralized, API routes stay thin.                                                                                                                                             |
+| **2-tier models**                                         | ✅ Domain types + API response types                                                                  | **Validated.** Simpler than tcs-core's 3-tier (Route → DB → Web) without sacrificing type safety.                                                                                                            |
 
 ### Recommendations Critically Rejected
 
@@ -1400,11 +1509,13 @@ The report recommends mixin-based class composition for API routes (e.g., `class
 The report makes a compelling case for the **Command pattern** to encapsulate multi-step AI operations. This is the one significant gap in Aura's current architecture.
 
 **Problem:** `WebhookService.processInboundEmail()` currently executes a 3-phase pipeline inline:
+
 1. Dedup check (is this email already processed?)
 2. Vendor cache fast-path (can we short-circuit the agent?)
 3. Full agent invocation (LangGraph state machine)
 
 This works but has limitations:
+
 - **Observability** — No structured logging of which phase resolved the transaction
 - **Retry granularity** — If the agent fails at step 3, the entire method must be retried (including redundant dedup/cache checks)
 - **Extensibility** — Adding a new pipeline step (e.g., Mem0 feedback recall) requires modifying `WebhookService` directly
@@ -1417,7 +1528,7 @@ This works but has limitations:
 export interface CommandResult<T> {
   success: boolean;
   data: T;
-  resolvedBy: string;  // Which step resolved the request
+  resolvedBy: string; // Which step resolved the request
   durationMs: number;
 }
 
@@ -1426,37 +1537,60 @@ export class ProcessEmailCommand {
     private readonly params: InboundEmailParams,
     private readonly transactionRepo: ITransactionRepository,
     private readonly vendorCacheRepo: IVendorCacheRepository,
-    private readonly agent: ExpenseAgent,
+    private readonly agent: ExpenseAgent
   ) {}
 
-  async execute(): Promise<CommandResult<{ transactionId: string } | { status: 'duplicate' | 'cached' }>> {
+  async execute(): Promise<
+    CommandResult<{ transactionId: string } | { status: 'duplicate' | 'cached' }>
+  > {
     const start = Date.now();
 
     // Phase 1: Dedup
     const existing = await this.transactionRepo.findByResendEmailId(this.params.resendEmailId);
     if (existing) {
-      return { success: true, data: { status: 'duplicate' }, resolvedBy: 'dedup', durationMs: Date.now() - start };
+      return {
+        success: true,
+        data: { status: 'duplicate' },
+        resolvedBy: 'dedup',
+        durationMs: Date.now() - start,
+      };
     }
 
     // Phase 2: Vendor cache fast-path
     const roughVendor = extractRoughVendor(this.params.emailText);
     if (roughVendor) {
-      const cached = await this.vendorCacheRepo.findByUserAndVendor(this.params.userId, roughVendor);
+      const cached = await this.vendorCacheRepo.findByUserAndVendor(
+        this.params.userId,
+        roughVendor
+      );
       if (cached) {
-        const tx = await this.transactionRepo.create({ /* ... */ });
+        const tx = await this.transactionRepo.create({
+          /* ... */
+        });
         await this.vendorCacheRepo.incrementHitCount(cached.id, cached.hitCount);
-        return { success: true, data: { status: 'cached' }, resolvedBy: 'vendor_cache', durationMs: Date.now() - start };
+        return {
+          success: true,
+          data: { status: 'cached' },
+          resolvedBy: 'vendor_cache',
+          durationMs: Date.now() - start,
+        };
       }
     }
 
     // Phase 3: Full agent invocation
     const result = await this.agent.invoke(this.params);
-    return { success: true, data: { transactionId: result.transactionId }, resolvedBy: 'agent', durationMs: Date.now() - start };
+    return {
+      success: true,
+      data: { transactionId: result.transactionId },
+      resolvedBy: 'agent',
+      durationMs: Date.now() - start,
+    };
   }
 }
 ```
 
 **Why this matters for AI backends specifically:**
+
 - Each command is independently testable (test dedup path, test cache path, test agent path)
 - `resolvedBy` field enables observability dashboards (what % of emails hit the cache vs the agent?)
 - `durationMs` enables performance monitoring per resolution strategy

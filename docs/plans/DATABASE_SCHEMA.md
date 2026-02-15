@@ -93,15 +93,15 @@ erDiagram
 
 Stores registered user profiles. Appwrite Auth handles the actual authentication; this table stores app-specific user data.
 
-| Column | Type | Required | Default | Description |
-|--------|------|----------|---------|-------------|
-| `email` | string(320) | ✅ | — | User's email (from OAuth) |
-| `name` | string(255) | ✅ | — | Display name (from OAuth) |
-| `avatar_url` | string(500) | ❌ | `""` | Profile picture URL (from OAuth) |
-| `inbound_email` | string(320) | ✅ | — | Unique Resend inbound address |
-| `oauth_provider` | string(20) | ✅ | — | `"google"` or `"github"` |
-| `monthly_salary` | float | ❌ | `null` | Monthly salary in SGD for budget % allocation |
-| `budget_mode` | string(20) | ❌ | `"direct"` | `"direct"` or `"percentage"` (last used mode) |
+| Column           | Type        | Required | Default    | Description                                   |
+| ---------------- | ----------- | -------- | ---------- | --------------------------------------------- |
+| `email`          | string(320) | ✅       | —          | User's email (from OAuth)                     |
+| `name`           | string(255) | ✅       | —          | Display name (from OAuth)                     |
+| `avatar_url`     | string(500) | ❌       | `""`       | Profile picture URL (from OAuth)              |
+| `inbound_email`  | string(320) | ✅       | —          | Unique Resend inbound address                 |
+| `oauth_provider` | string(20)  | ✅       | —          | `"google"` or `"github"`                      |
+| `monthly_salary` | float       | ❌       | `null`     | Monthly salary in SGD for budget % allocation |
+| `budget_mode`    | string(20)  | ❌       | `"direct"` | `"direct"` or `"percentage"` (last used mode) |
 
 **Indexes:**
 | Index Name | Type | Columns | Purpose |
@@ -110,6 +110,7 @@ Stores registered user profiles. Appwrite Auth handles the actual authentication
 | `idx_users_inbound_email` | Unique | `inbound_email` | Fast lookup on webhook receipt |
 
 **Permissions:**
+
 - `read("user:{userId}")` — Users can only read their own document
 - `update("user:{userId}")` — Users can update their own profile
 
@@ -119,15 +120,15 @@ Stores registered user profiles. Appwrite Auth handles the actual authentication
 
 User-defined expense categories. Each user gets seeded with defaults on signup but can CRUD freely. The `description` field is critical — it's fed to the AI agent as context for categorization.
 
-| Column | Type | Required | Default | Description |
-|--------|------|----------|---------|-------------|
-| `user_id` | string(36) | ✅ | — | FK to Appwrite Auth user ID |
-| `name` | string(100) | ✅ | — | Category display name |
-| `description` | string(500) | ✅ | — | Natural language description for AI context |
-| `icon` | string(10) | ❌ | `"📦"` | Emoji for UI display |
-| `color` | string(7) | ❌ | `"#6366f1"` | Hex color for chart segments |
-| `is_default` | boolean | ✅ | `true` | Was this a system-seeded category? |
-| `sort_order` | integer | ✅ | `0` | Controls display order in UI |
+| Column        | Type        | Required | Default     | Description                                 |
+| ------------- | ----------- | -------- | ----------- | ------------------------------------------- |
+| `user_id`     | string(36)  | ✅       | —           | FK to Appwrite Auth user ID                 |
+| `name`        | string(100) | ✅       | —           | Category display name                       |
+| `description` | string(500) | ✅       | —           | Natural language description for AI context |
+| `icon`        | string(10)  | ❌       | `"📦"`      | Emoji for UI display                        |
+| `color`       | string(7)   | ❌       | `"#6366f1"` | Hex color for chart segments                |
+| `is_default`  | boolean     | ✅       | `true`      | Was this a system-seeded category?          |
+| `sort_order`  | integer     | ✅       | `0`         | Controls display order in UI                |
 
 **Indexes:**
 | Index Name | Type | Columns | Purpose |
@@ -137,16 +138,16 @@ User-defined expense categories. Each user gets seeded with defaults on signup b
 
 **Default Seed Data (per new user):**
 
-| name | description | icon | color | sort_order |
-|------|-------------|------|-------|------------|
-| Food & Beverage | Restaurants, cafes, coffee shops, bubble tea, hawker centres, food delivery (GrabFood, Foodpanda, Deliveroo) | 🍔 | #ef4444 | 1 |
-| Transportation | Public transit (MRT, bus), ride-hailing (Grab, Gojek), fuel, parking, ERP charges | 🚗 | #f97316 | 2 |
-| Shopping | Retail purchases, clothing, electronics, online shopping (Shopee, Lazada, Amazon) | 🛍️ | #eab308 | 3 |
-| Entertainment | Movies, concerts, streaming subscriptions (Netflix, Spotify), games, nightlife | 🎬 | #22c55e | 4 |
-| Bills & Utilities | Electricity, water, gas, internet, phone bill, insurance premiums, loan repayments | 💡 | #3b82f6 | 5 |
-| Travel | Flights, hotels, travel insurance, overseas purchases, airport transfers | ✈️ | #8b5cf6 | 6 |
-| Investment | Stocks, crypto, ETFs, robo-advisors (StashAway, Syfe, Endowus), fixed deposits, bonds | 📈 | #a78bfa | 7 |
-| Other | Anything that doesn't fit — miscellaneous or one-off expenses | 📦 | #6b7280 | 8 |
+| name              | description                                                                                                  | icon | color   | sort_order |
+| ----------------- | ------------------------------------------------------------------------------------------------------------ | ---- | ------- | ---------- |
+| Food & Beverage   | Restaurants, cafes, coffee shops, bubble tea, hawker centres, food delivery (GrabFood, Foodpanda, Deliveroo) | 🍔   | #ef4444 | 1          |
+| Transportation    | Public transit (MRT, bus), ride-hailing (Grab, Gojek), fuel, parking, ERP charges                            | 🚗   | #f97316 | 2          |
+| Shopping          | Retail purchases, clothing, electronics, online shopping (Shopee, Lazada, Amazon)                            | 🛍️   | #eab308 | 3          |
+| Entertainment     | Movies, concerts, streaming subscriptions (Netflix, Spotify), games, nightlife                               | 🎬   | #22c55e | 4          |
+| Bills & Utilities | Electricity, water, gas, internet, phone bill, insurance premiums, loan repayments                           | 💡   | #3b82f6 | 5          |
+| Travel            | Flights, hotels, travel insurance, overseas purchases, airport transfers                                     | ✈️   | #8b5cf6 | 6          |
+| Investment        | Stocks, crypto, ETFs, robo-advisors (StashAway, Syfe, Endowus), fixed deposits, bonds                        | 📈   | #a78bfa | 7          |
+| Other             | Anything that doesn't fit — miscellaneous or one-off expenses                                                | 📦   | #6b7280 | 8          |
 
 ---
 
@@ -154,18 +155,18 @@ User-defined expense categories. Each user gets seeded with defaults on signup b
 
 The core table. Each row is a single expense, either auto-extracted from an email or manually entered.
 
-| Column | Type | Required | Default | Description |
-|--------|------|----------|---------|-------------|
-| `user_id` | string(36) | ✅ | — | FK to Appwrite Auth user ID |
-| `category_id` | string(36) | ✅ | — | FK to `categories` table |
-| `amount` | float | ✅ | — | Transaction amount in SGD |
-| `vendor` | string(255) | ✅ | — | Merchant/vendor name |
-| `description` | string(500) | ❌ | `""` | Optional notes or context |
-| `transaction_date` | datetime | ✅ | — | When the purchase occurred (SGT) |
-| `resend_email_id` | string(100) | ❌ | `null` | Resend email ID for dedup (null if manual entry) |
-| `raw_email_subject` | string(500) | ❌ | `""` | Original email subject line |
-| `confidence` | string(10) | ✅ | `"high"` | AI confidence: `"high"`, `"medium"`, `"low"` |
-| `source` | string(10) | ✅ | `"email"` | `"email"` (auto) or `"manual"` (user-entered) |
+| Column              | Type        | Required | Default   | Description                                      |
+| ------------------- | ----------- | -------- | --------- | ------------------------------------------------ |
+| `user_id`           | string(36)  | ✅       | —         | FK to Appwrite Auth user ID                      |
+| `category_id`       | string(36)  | ✅       | —         | FK to `categories` table                         |
+| `amount`            | float       | ✅       | —         | Transaction amount in SGD                        |
+| `vendor`            | string(255) | ✅       | —         | Merchant/vendor name                             |
+| `description`       | string(500) | ❌       | `""`      | Optional notes or context                        |
+| `transaction_date`  | datetime    | ✅       | —         | When the purchase occurred (SGT)                 |
+| `resend_email_id`   | string(100) | ❌       | `null`    | Resend email ID for dedup (null if manual entry) |
+| `raw_email_subject` | string(500) | ❌       | `""`      | Original email subject line                      |
+| `confidence`        | string(10)  | ✅       | `"high"`  | AI confidence: `"high"`, `"medium"`, `"low"`     |
+| `source`            | string(10)  | ✅       | `"email"` | `"email"` (auto) or `"manual"` (user-entered)    |
 
 **Indexes:**
 | Index Name | Type | Columns | Purpose |
@@ -185,7 +186,7 @@ The `resend_email_id` column has a unique index. Before invoking the AI agent, t
 const existing = await appwrite.listRows({
   databaseId: DB_ID,
   tableId: 'transactions',
-  queries: [Query.equal('resend_email_id', emailId)]
+  queries: [Query.equal('resend_email_id', emailId)],
 });
 
 if (existing.total > 0) {
@@ -196,7 +197,7 @@ if (existing.total > 0) {
 
 **Cross-source Dedup (same charge from bank + merchant):**
 
-For V1, we rely on `resend_email_id` uniqueness. If the same charge arrives from two different email senders (e.g., UOB alert + DigitalOcean receipt), they have different `resend_email_id` values and will be logged as separate transactions. 
+For V1, we rely on `resend_email_id` uniqueness. If the same charge arrives from two different email senders (e.g., UOB alert + DigitalOcean receipt), they have different `resend_email_id` values and will be logged as separate transactions.
 
 **V2 enhancement:** Add a compound near-duplicate check: same `user_id` + same `amount` + same `vendor` (fuzzy) + `transaction_date` within ±24 hours → flag for user review.
 
@@ -206,13 +207,13 @@ For V1, we rely on `resend_email_id` uniqueness. If the same charge arrives from
 
 Per-category monthly budget targets. Users set how much they plan to spend per category per month.
 
-| Column | Type | Required | Default | Description |
-|--------|------|----------|---------|-------------|
-| `user_id` | string(36) | ✅ | — | FK to Appwrite Auth user ID |
-| `category_id` | string(36) | ✅ | — | FK to `categories` table |
-| `amount` | float | ✅ | — | Budget limit in SGD |
-| `year` | integer | ✅ | — | Budget year (e.g., 2026) |
-| `month` | integer | ✅ | — | Budget month (1–12) |
+| Column        | Type       | Required | Default | Description                 |
+| ------------- | ---------- | -------- | ------- | --------------------------- |
+| `user_id`     | string(36) | ✅       | —       | FK to Appwrite Auth user ID |
+| `category_id` | string(36) | ✅       | —       | FK to `categories` table    |
+| `amount`      | float      | ✅       | —       | Budget limit in SGD         |
+| `year`        | integer    | ✅       | —       | Budget year (e.g., 2026)    |
+| `month`       | integer    | ✅       | —       | Budget month (1–12)         |
 
 **Indexes:**
 | Index Name | Type | Columns | Purpose |
@@ -227,11 +228,7 @@ Per-category monthly budget targets. Users set how much they plan to spend per c
 const budgets = await appwrite.listRows({
   databaseId: DB_ID,
   tableId: 'budgets',
-  queries: [
-    Query.equal('user_id', userId),
-    Query.equal('year', 2026),
-    Query.equal('month', 2)
-  ]
+  queries: [Query.equal('user_id', userId), Query.equal('year', 2026), Query.equal('month', 2)],
 });
 
 // Get total spent per category for February 2026
@@ -241,8 +238,8 @@ const transactions = await appwrite.listRows({
   queries: [
     Query.equal('user_id', userId),
     Query.greaterThanEqual('transaction_date', '2026-02-01T00:00:00+08:00'),
-    Query.lessThan('transaction_date', '2026-03-01T00:00:00+08:00')
-  ]
+    Query.lessThan('transaction_date', '2026-03-01T00:00:00+08:00'),
+  ],
 });
 
 // Compare: budget.amount vs SUM(transactions.amount) per category
@@ -254,12 +251,12 @@ const transactions = await appwrite.listRows({
 
 The "agent memory" table. Maps normalized vendor names to categories, so the AI agent doesn't need to re-classify known vendors. This is the **fast path** — checked before the agent is invoked.
 
-| Column | Type | Required | Default | Description |
-|--------|------|----------|---------|-------------|
-| `user_id` | string(36) | ✅ | — | FK to Appwrite Auth user ID |
-| `vendor_name` | string(255) | ✅ | — | Normalized vendor string (uppercased, trimmed) |
-| `category_id` | string(36) | ✅ | — | FK to `categories` table |
-| `hit_count` | integer | ✅ | `1` | Number of times this cache entry was used |
+| Column        | Type        | Required | Default | Description                                    |
+| ------------- | ----------- | -------- | ------- | ---------------------------------------------- |
+| `user_id`     | string(36)  | ✅       | —       | FK to Appwrite Auth user ID                    |
+| `vendor_name` | string(255) | ✅       | —       | Normalized vendor string (uppercased, trimmed) |
+| `category_id` | string(36)  | ✅       | —       | FK to `categories` table                       |
+| `hit_count`   | integer     | ✅       | `1`     | Number of times this cache entry was used      |
 
 **Indexes:**
 | Index Name | Type | Columns | Purpose |
@@ -276,10 +273,7 @@ const normalizedVendor = rawVendor.toUpperCase().trim();
 const cached = await appwrite.listRows({
   databaseId: DB_ID,
   tableId: 'vendor_cache',
-  queries: [
-    Query.equal('user_id', userId),
-    Query.equal('vendor_name', normalizedVendor)
-  ]
+  queries: [Query.equal('user_id', userId), Query.equal('vendor_name', normalizedVendor)],
 });
 
 if (cached.total > 0) {
@@ -287,7 +281,7 @@ if (cached.total > 0) {
   const categoryId = cached.rows[0].category_id;
   // Increment hit count
   await appwrite.updateRow(DB_ID, 'vendor_cache', cached.rows[0].$id, {
-    hit_count: cached.rows[0].hit_count + 1
+    hit_count: cached.rows[0].hit_count + 1,
   });
   return categoryId;
 }
@@ -302,8 +296,8 @@ await appwrite.createRow({
     user_id: userId,
     vendor_name: normalizedVendor,
     category_id: resolvedCategoryId,
-    hit_count: 1
-  }
+    hit_count: 1,
+  },
 });
 ```
 
@@ -345,7 +339,9 @@ async function setup() {
   // Wait for attributes to be ready
   await delay(2000);
   await databases.createIndex(DB_ID, USERS_TABLE, 'idx_users_email', 'unique', ['email']);
-  await databases.createIndex(DB_ID, USERS_TABLE, 'idx_users_inbound_email', 'unique', ['inbound_email']);
+  await databases.createIndex(DB_ID, USERS_TABLE, 'idx_users_inbound_email', 'unique', [
+    'inbound_email',
+  ]);
   console.log('✅ Users table created');
 
   // 3. Create Categories table
@@ -360,7 +356,10 @@ async function setup() {
   await databases.createIntegerAttribute(DB_ID, CATEGORIES_TABLE, 'sort_order', true, 0, 100, 0);
   await delay(2000);
   await databases.createIndex(DB_ID, CATEGORIES_TABLE, 'idx_categories_user', 'key', ['user_id']);
-  await databases.createIndex(DB_ID, CATEGORIES_TABLE, 'idx_categories_user_name', 'unique', ['user_id', 'name']);
+  await databases.createIndex(DB_ID, CATEGORIES_TABLE, 'idx_categories_user_name', 'unique', [
+    'user_id',
+    'name',
+  ]);
   console.log('✅ Categories table created');
 
   // 4. Create Transactions table
@@ -373,15 +372,34 @@ async function setup() {
   await databases.createStringAttribute(DB_ID, TRANSACTIONS_TABLE, 'description', 500, false, '');
   await databases.createDatetimeAttribute(DB_ID, TRANSACTIONS_TABLE, 'transaction_date', true);
   await databases.createStringAttribute(DB_ID, TRANSACTIONS_TABLE, 'resend_email_id', 100, false);
-  await databases.createStringAttribute(DB_ID, TRANSACTIONS_TABLE, 'raw_email_subject', 500, false, '');
+  await databases.createStringAttribute(
+    DB_ID,
+    TRANSACTIONS_TABLE,
+    'raw_email_subject',
+    500,
+    false,
+    ''
+  );
   await databases.createStringAttribute(DB_ID, TRANSACTIONS_TABLE, 'confidence', 10, true, 'high');
   await databases.createStringAttribute(DB_ID, TRANSACTIONS_TABLE, 'source', 10, true, 'email');
   await delay(2000);
   await databases.createIndex(DB_ID, TRANSACTIONS_TABLE, 'idx_tx_user', 'key', ['user_id']);
-  await databases.createIndex(DB_ID, TRANSACTIONS_TABLE, 'idx_tx_resend_id', 'unique', ['resend_email_id']);
-  await databases.createIndex(DB_ID, TRANSACTIONS_TABLE, 'idx_tx_user_date', 'key', ['user_id', 'transaction_date']);
-  await databases.createIndex(DB_ID, TRANSACTIONS_TABLE, 'idx_tx_user_category', 'key', ['user_id', 'category_id']);
-  await databases.createIndex(DB_ID, TRANSACTIONS_TABLE, 'idx_tx_user_date_category', 'key', ['user_id', 'transaction_date', 'category_id']);
+  await databases.createIndex(DB_ID, TRANSACTIONS_TABLE, 'idx_tx_resend_id', 'unique', [
+    'resend_email_id',
+  ]);
+  await databases.createIndex(DB_ID, TRANSACTIONS_TABLE, 'idx_tx_user_date', 'key', [
+    'user_id',
+    'transaction_date',
+  ]);
+  await databases.createIndex(DB_ID, TRANSACTIONS_TABLE, 'idx_tx_user_category', 'key', [
+    'user_id',
+    'category_id',
+  ]);
+  await databases.createIndex(DB_ID, TRANSACTIONS_TABLE, 'idx_tx_user_date_category', 'key', [
+    'user_id',
+    'transaction_date',
+    'category_id',
+  ]);
   console.log('✅ Transactions table created');
 
   // 5. Create Budgets table
@@ -393,8 +411,17 @@ async function setup() {
   await databases.createIntegerAttribute(DB_ID, BUDGETS_TABLE, 'year', true, 2020, 2100);
   await databases.createIntegerAttribute(DB_ID, BUDGETS_TABLE, 'month', true, 1, 12);
   await delay(2000);
-  await databases.createIndex(DB_ID, BUDGETS_TABLE, 'idx_budget_user_period', 'key', ['user_id', 'year', 'month']);
-  await databases.createIndex(DB_ID, BUDGETS_TABLE, 'idx_budget_unique', 'unique', ['user_id', 'category_id', 'year', 'month']);
+  await databases.createIndex(DB_ID, BUDGETS_TABLE, 'idx_budget_user_period', 'key', [
+    'user_id',
+    'year',
+    'month',
+  ]);
+  await databases.createIndex(DB_ID, BUDGETS_TABLE, 'idx_budget_unique', 'unique', [
+    'user_id',
+    'category_id',
+    'year',
+    'month',
+  ]);
   console.log('✅ Budgets table created');
 
   // 6. Create Vendor Cache table
@@ -403,16 +430,27 @@ async function setup() {
   await databases.createStringAttribute(DB_ID, VENDOR_CACHE_TABLE, 'user_id', 36, true);
   await databases.createStringAttribute(DB_ID, VENDOR_CACHE_TABLE, 'vendor_name', 255, true);
   await databases.createStringAttribute(DB_ID, VENDOR_CACHE_TABLE, 'category_id', 36, true);
-  await databases.createIntegerAttribute(DB_ID, VENDOR_CACHE_TABLE, 'hit_count', true, 0, 1000000, 1);
+  await databases.createIntegerAttribute(
+    DB_ID,
+    VENDOR_CACHE_TABLE,
+    'hit_count',
+    true,
+    0,
+    1000000,
+    1
+  );
   await delay(2000);
-  await databases.createIndex(DB_ID, VENDOR_CACHE_TABLE, 'idx_vc_user_vendor', 'unique', ['user_id', 'vendor_name']);
+  await databases.createIndex(DB_ID, VENDOR_CACHE_TABLE, 'idx_vc_user_vendor', 'unique', [
+    'user_id',
+    'vendor_name',
+  ]);
   console.log('✅ Vendor Cache table created');
 
   console.log('\n🎉 All tables created successfully!');
 }
 
 function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 setup().catch(console.error);
@@ -441,73 +479,326 @@ const TEST_USER_ID = 'test-user-001';
 
 // Default categories with IDs for referencing
 const DEFAULT_CATEGORIES = [
-  { id: 'cat-food',      name: 'Food & Beverage',     description: 'Restaurants, cafes, coffee shops, bubble tea, hawker centres, food delivery (GrabFood, Foodpanda, Deliveroo)', icon: '🍔', color: '#ef4444', sort_order: 1 },
-  { id: 'cat-transport',  name: 'Transportation',      description: 'Public transit (MRT, bus), ride-hailing (Grab, Gojek), fuel, parking, ERP charges',                           icon: '🚗', color: '#f97316', sort_order: 2 },
-  { id: 'cat-shopping',   name: 'Shopping',             description: 'Retail purchases, clothing, electronics, online shopping (Shopee, Lazada, Amazon)',                             icon: '🛍️', color: '#eab308', sort_order: 3 },
-  { id: 'cat-entertain',  name: 'Entertainment',        description: 'Movies, concerts, streaming subscriptions (Netflix, Spotify), games, nightlife',                               icon: '🎬', color: '#22c55e', sort_order: 4 },
-  { id: 'cat-bills',      name: 'Bills & Utilities',    description: 'Electricity, water, gas, internet, phone bill, insurance premiums, loan repayments',                           icon: '💡', color: '#3b82f6', sort_order: 5 },
-  { id: 'cat-travel',     name: 'Travel',               description: 'Flights, hotels, travel insurance, overseas purchases, airport transfers',                                     icon: '✈️', color: '#8b5cf6', sort_order: 6 },
-  { id: 'cat-invest',     name: 'Investment',           description: 'Stocks, crypto, ETFs, robo-advisors (StashAway, Syfe, Endowus), fixed deposits, bonds',                        icon: '📈', color: '#a78bfa', sort_order: 7 },
-  { id: 'cat-other',      name: 'Other',                description: 'Anything that doesn\'t fit — miscellaneous or one-off expenses',                                               icon: '📦', color: '#6b7280', sort_order: 8 },
+  {
+    id: 'cat-food',
+    name: 'Food & Beverage',
+    description:
+      'Restaurants, cafes, coffee shops, bubble tea, hawker centres, food delivery (GrabFood, Foodpanda, Deliveroo)',
+    icon: '🍔',
+    color: '#ef4444',
+    sort_order: 1,
+  },
+  {
+    id: 'cat-transport',
+    name: 'Transportation',
+    description:
+      'Public transit (MRT, bus), ride-hailing (Grab, Gojek), fuel, parking, ERP charges',
+    icon: '🚗',
+    color: '#f97316',
+    sort_order: 2,
+  },
+  {
+    id: 'cat-shopping',
+    name: 'Shopping',
+    description:
+      'Retail purchases, clothing, electronics, online shopping (Shopee, Lazada, Amazon)',
+    icon: '🛍️',
+    color: '#eab308',
+    sort_order: 3,
+  },
+  {
+    id: 'cat-entertain',
+    name: 'Entertainment',
+    description: 'Movies, concerts, streaming subscriptions (Netflix, Spotify), games, nightlife',
+    icon: '🎬',
+    color: '#22c55e',
+    sort_order: 4,
+  },
+  {
+    id: 'cat-bills',
+    name: 'Bills & Utilities',
+    description:
+      'Electricity, water, gas, internet, phone bill, insurance premiums, loan repayments',
+    icon: '💡',
+    color: '#3b82f6',
+    sort_order: 5,
+  },
+  {
+    id: 'cat-travel',
+    name: 'Travel',
+    description: 'Flights, hotels, travel insurance, overseas purchases, airport transfers',
+    icon: '✈️',
+    color: '#8b5cf6',
+    sort_order: 6,
+  },
+  {
+    id: 'cat-invest',
+    name: 'Investment',
+    description:
+      'Stocks, crypto, ETFs, robo-advisors (StashAway, Syfe, Endowus), fixed deposits, bonds',
+    icon: '📈',
+    color: '#a78bfa',
+    sort_order: 7,
+  },
+  {
+    id: 'cat-other',
+    name: 'Other',
+    description: "Anything that doesn't fit — miscellaneous or one-off expenses",
+    icon: '📦',
+    color: '#6b7280',
+    sort_order: 8,
+  },
 ];
 
 // Mock transactions for February 2026
 const MOCK_TRANSACTIONS = [
-  { vendor: 'GRAB *GRABFOOD',           amount: 18.50, category: 'cat-food',      date: '2026-02-01T12:30:00+08:00', confidence: 'high'   },
-  { vendor: 'MRT TOP-UP',               amount: 20.00, category: 'cat-transport', date: '2026-02-01T08:15:00+08:00', confidence: 'high'   },
-  { vendor: 'NETFLIX.COM',              amount: 15.98, category: 'cat-entertain', date: '2026-02-01T00:00:00+08:00', confidence: 'high'   },
-  { vendor: 'YA KUN KAYA TOAST',        amount: 5.80,  category: 'cat-food',      date: '2026-02-02T07:45:00+08:00', confidence: 'high'   },
-  { vendor: 'SHOPEE SG',                amount: 45.90, category: 'cat-shopping',  date: '2026-02-03T14:20:00+08:00', confidence: 'high'   },
-  { vendor: 'GRAB *RIDE',               amount: 12.30, category: 'cat-transport', date: '2026-02-03T09:00:00+08:00', confidence: 'high'   },
-  { vendor: 'SP GROUP',                 amount: 85.60, category: 'cat-bills',     date: '2026-02-04T00:00:00+08:00', confidence: 'high'   },
-  { vendor: 'DIGITALOCEAN.COM',         amount: 16.23, category: 'cat-bills',     date: '2026-02-08T09:31:00+08:00', confidence: 'medium' },
-  { vendor: 'STARBUCKS VIVOCITY',       amount: 8.90,  category: 'cat-food',      date: '2026-02-05T15:00:00+08:00', confidence: 'high'   },
-  { vendor: 'GOLDEN VILLAGE',           amount: 13.50, category: 'cat-entertain', date: '2026-02-06T19:30:00+08:00', confidence: 'high'   },
-  { vendor: 'SINGTEL MOBILE',           amount: 48.00, category: 'cat-bills',     date: '2026-02-07T00:00:00+08:00', confidence: 'high'   },
-  { vendor: 'AMAZON.SG',               amount: 89.99, category: 'cat-shopping',  date: '2026-02-08T11:00:00+08:00', confidence: 'high'   },
-  { vendor: 'SCOOT AIRLINES',           amount: 250.00,category: 'cat-travel',    date: '2026-02-09T10:00:00+08:00', confidence: 'high'   },
-  { vendor: 'FAIRPRICE FINEST',         amount: 62.30, category: 'cat-food',      date: '2026-02-10T18:45:00+08:00', confidence: 'high'   },
-  { vendor: 'CIRCLES.LIFE',             amount: 28.00, category: 'cat-bills',     date: '2026-02-10T00:00:00+08:00', confidence: 'medium' },
-  { vendor: 'LAZADA SG',               amount: 35.50, category: 'cat-shopping',  date: '2026-02-11T16:20:00+08:00', confidence: 'high'   },
-  { vendor: 'SPOTIFY',                  amount: 9.99,  category: 'cat-entertain', date: '2026-02-11T00:00:00+08:00', confidence: 'high'   },
-  { vendor: 'COMFORT DELGRO TAXI',      amount: 15.40, category: 'cat-transport', date: '2026-02-12T22:00:00+08:00', confidence: 'high'   },
-  { vendor: 'UNIQLO ION ORCHARD',       amount: 79.90, category: 'cat-shopping',  date: '2026-02-13T13:30:00+08:00', confidence: 'high'   },
-  { vendor: 'BOON TONG KEE',            amount: 28.00, category: 'cat-food',      date: '2026-02-14T19:00:00+08:00', confidence: 'high'   },
-  { vendor: 'KLOOK TRAVEL',             amount: 120.00,category: 'cat-travel',    date: '2026-02-15T09:00:00+08:00', confidence: 'high'   },
-  { vendor: 'STASHAWAY',                amount: 500.00,category: 'cat-invest',    date: '2026-02-15T10:00:00+08:00', confidence: 'high'   },
-  { vendor: 'SYFE TRADE',                amount: 200.00,category: 'cat-invest',    date: '2026-02-16T09:00:00+08:00', confidence: 'high'   },
-  { vendor: 'UNKNOWN MERCHANT XYZ',      amount: 10.00, category: 'cat-other',     date: '2026-02-16T14:00:00+08:00', confidence: 'low'    },
-  { vendor: 'MCDONALD\'S BEDOK',        amount: 9.80,  category: 'cat-food',      date: '2026-02-17T12:15:00+08:00', confidence: 'high'   },
-  { vendor: 'GOJEK RIDE',               amount: 8.50,  category: 'cat-transport', date: '2026-02-18T08:30:00+08:00', confidence: 'high'   },
-  { vendor: 'CATHAY CINEPLEXES',         amount: 14.00, category: 'cat-entertain', date: '2026-02-19T20:00:00+08:00', confidence: 'high'   },
-  { vendor: 'NTUC INCOME INSURANCE',    amount: 180.00,category: 'cat-bills',     date: '2026-02-20T00:00:00+08:00', confidence: 'high'   },
-  { vendor: 'DAISO SINGAPORE',          amount: 6.80,  category: 'cat-shopping',  date: '2026-02-21T17:00:00+08:00', confidence: 'high'   },
-  { vendor: 'HAI DI LAO CLARKE QUAY',   amount: 55.00, category: 'cat-food',      date: '2026-02-22T19:30:00+08:00', confidence: 'high'   },
-  { vendor: 'GRAB *RIDE',               amount: 22.10, category: 'cat-transport', date: '2026-02-23T23:00:00+08:00', confidence: 'high'   },
-  { vendor: 'AWS',                      amount: 12.50, category: 'cat-bills',     date: '2026-02-24T00:00:00+08:00', confidence: 'medium' },
+  {
+    vendor: 'GRAB *GRABFOOD',
+    amount: 18.5,
+    category: 'cat-food',
+    date: '2026-02-01T12:30:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'MRT TOP-UP',
+    amount: 20.0,
+    category: 'cat-transport',
+    date: '2026-02-01T08:15:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'NETFLIX.COM',
+    amount: 15.98,
+    category: 'cat-entertain',
+    date: '2026-02-01T00:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'YA KUN KAYA TOAST',
+    amount: 5.8,
+    category: 'cat-food',
+    date: '2026-02-02T07:45:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'SHOPEE SG',
+    amount: 45.9,
+    category: 'cat-shopping',
+    date: '2026-02-03T14:20:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'GRAB *RIDE',
+    amount: 12.3,
+    category: 'cat-transport',
+    date: '2026-02-03T09:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'SP GROUP',
+    amount: 85.6,
+    category: 'cat-bills',
+    date: '2026-02-04T00:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'DIGITALOCEAN.COM',
+    amount: 16.23,
+    category: 'cat-bills',
+    date: '2026-02-08T09:31:00+08:00',
+    confidence: 'medium',
+  },
+  {
+    vendor: 'STARBUCKS VIVOCITY',
+    amount: 8.9,
+    category: 'cat-food',
+    date: '2026-02-05T15:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'GOLDEN VILLAGE',
+    amount: 13.5,
+    category: 'cat-entertain',
+    date: '2026-02-06T19:30:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'SINGTEL MOBILE',
+    amount: 48.0,
+    category: 'cat-bills',
+    date: '2026-02-07T00:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'AMAZON.SG',
+    amount: 89.99,
+    category: 'cat-shopping',
+    date: '2026-02-08T11:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'SCOOT AIRLINES',
+    amount: 250.0,
+    category: 'cat-travel',
+    date: '2026-02-09T10:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'FAIRPRICE FINEST',
+    amount: 62.3,
+    category: 'cat-food',
+    date: '2026-02-10T18:45:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'CIRCLES.LIFE',
+    amount: 28.0,
+    category: 'cat-bills',
+    date: '2026-02-10T00:00:00+08:00',
+    confidence: 'medium',
+  },
+  {
+    vendor: 'LAZADA SG',
+    amount: 35.5,
+    category: 'cat-shopping',
+    date: '2026-02-11T16:20:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'SPOTIFY',
+    amount: 9.99,
+    category: 'cat-entertain',
+    date: '2026-02-11T00:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'COMFORT DELGRO TAXI',
+    amount: 15.4,
+    category: 'cat-transport',
+    date: '2026-02-12T22:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'UNIQLO ION ORCHARD',
+    amount: 79.9,
+    category: 'cat-shopping',
+    date: '2026-02-13T13:30:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'BOON TONG KEE',
+    amount: 28.0,
+    category: 'cat-food',
+    date: '2026-02-14T19:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'KLOOK TRAVEL',
+    amount: 120.0,
+    category: 'cat-travel',
+    date: '2026-02-15T09:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'STASHAWAY',
+    amount: 500.0,
+    category: 'cat-invest',
+    date: '2026-02-15T10:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'SYFE TRADE',
+    amount: 200.0,
+    category: 'cat-invest',
+    date: '2026-02-16T09:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'UNKNOWN MERCHANT XYZ',
+    amount: 10.0,
+    category: 'cat-other',
+    date: '2026-02-16T14:00:00+08:00',
+    confidence: 'low',
+  },
+  {
+    vendor: "MCDONALD'S BEDOK",
+    amount: 9.8,
+    category: 'cat-food',
+    date: '2026-02-17T12:15:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'GOJEK RIDE',
+    amount: 8.5,
+    category: 'cat-transport',
+    date: '2026-02-18T08:30:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'CATHAY CINEPLEXES',
+    amount: 14.0,
+    category: 'cat-entertain',
+    date: '2026-02-19T20:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'NTUC INCOME INSURANCE',
+    amount: 180.0,
+    category: 'cat-bills',
+    date: '2026-02-20T00:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'DAISO SINGAPORE',
+    amount: 6.8,
+    category: 'cat-shopping',
+    date: '2026-02-21T17:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'HAI DI LAO CLARKE QUAY',
+    amount: 55.0,
+    category: 'cat-food',
+    date: '2026-02-22T19:30:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'GRAB *RIDE',
+    amount: 22.1,
+    category: 'cat-transport',
+    date: '2026-02-23T23:00:00+08:00',
+    confidence: 'high',
+  },
+  {
+    vendor: 'AWS',
+    amount: 12.5,
+    category: 'cat-bills',
+    date: '2026-02-24T00:00:00+08:00',
+    confidence: 'medium',
+  },
 ];
 
 // Mock budgets for February 2026
 const MOCK_BUDGETS = [
-  { category: 'cat-food',      amount: 400.00 },
-  { category: 'cat-transport', amount: 150.00 },
-  { category: 'cat-shopping',  amount: 300.00 },
-  { category: 'cat-entertain', amount: 100.00 },
-  { category: 'cat-bills',     amount: 500.00 },
-  { category: 'cat-travel',    amount: 400.00 },
-  { category: 'cat-invest',    amount: 800.00 },
-  { category: 'cat-other',     amount: 50.00  },
+  { category: 'cat-food', amount: 400.0 },
+  { category: 'cat-transport', amount: 150.0 },
+  { category: 'cat-shopping', amount: 300.0 },
+  { category: 'cat-entertain', amount: 100.0 },
+  { category: 'cat-bills', amount: 500.0 },
+  { category: 'cat-travel', amount: 400.0 },
+  { category: 'cat-invest', amount: 800.0 },
+  { category: 'cat-other', amount: 50.0 },
 ];
 
 // Mock vendor cache entries
 const MOCK_VENDOR_CACHE = [
-  { vendor_name: 'GRAB *GRABFOOD',      category: 'cat-food',      hit_count: 15 },
-  { vendor_name: 'GRAB *RIDE',          category: 'cat-transport', hit_count: 22 },
-  { vendor_name: 'NETFLIX.COM',         category: 'cat-entertain', hit_count: 6  },
-  { vendor_name: 'SP GROUP',            category: 'cat-bills',     hit_count: 6  },
-  { vendor_name: 'DIGITALOCEAN.COM',    category: 'cat-bills',     hit_count: 12 },
-  { vendor_name: 'SINGTEL MOBILE',      category: 'cat-bills',     hit_count: 6  },
-  { vendor_name: 'SPOTIFY',             category: 'cat-entertain', hit_count: 6  },
+  { vendor_name: 'GRAB *GRABFOOD', category: 'cat-food', hit_count: 15 },
+  { vendor_name: 'GRAB *RIDE', category: 'cat-transport', hit_count: 22 },
+  { vendor_name: 'NETFLIX.COM', category: 'cat-entertain', hit_count: 6 },
+  { vendor_name: 'SP GROUP', category: 'cat-bills', hit_count: 6 },
+  { vendor_name: 'DIGITALOCEAN.COM', category: 'cat-bills', hit_count: 12 },
+  { vendor_name: 'SINGTEL MOBILE', category: 'cat-bills', hit_count: 6 },
+  { vendor_name: 'SPOTIFY', category: 'cat-entertain', hit_count: 6 },
 ];
 
 async function seed() {
@@ -520,7 +811,7 @@ async function seed() {
     avatar_url: 'https://lh3.googleusercontent.com/a/default-user',
     inbound_email: `user-${TEST_USER_ID}@inbound.yourdomain.com`,
     oauth_provider: 'google',
-    monthly_salary: 6000.00,
+    monthly_salary: 6000.0,
     budget_mode: 'direct',
   });
   console.log('✅ Test user created');

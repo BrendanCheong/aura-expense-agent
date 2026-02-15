@@ -1,500 +1,465 @@
 {
-    "projectId": "6987f0080038745fc381",
-    "projectName": "Brendan Side Project",
-    "endpoint": "https://sgp.cloud.appwrite.io/v1",
-    "settings": {
-        "services": {
-            "account": true,
-            "avatars": true,
-            "databases": true,
-            "locale": true,
-            "health": true,
-            "storage": true,
-            "teams": true,
-            "users": true,
-            "sites": true,
-            "functions": true,
-            "graphql": true,
-            "messaging": true
-        },
-        "auth": {
-            "methods": {
-                "jwt": true,
-                "phone": true,
-                "invites": true,
-                "anonymous": true,
-                "email-otp": true,
-                "magic-url": true,
-                "email-password": true
-            },
-            "security": {
-                "duration": 31536000,
-                "limit": 100,
-                "sessionsLimit": 10,
-                "passwordHistory": 0,
-                "passwordDictionary": false,
-                "personalDataCheck": false,
-                "sessionAlerts": false,
-                "mockNumbers": []
-            }
-        }
+  "projectId": "6987f0080038745fc381",
+  "projectName": "Brendan Side Project",
+  "endpoint": "https://sgp.cloud.appwrite.io/v1",
+  "settings": {
+    "services": {
+      "account": true,
+      "avatars": true,
+      "databases": true,
+      "locale": true,
+      "health": true,
+      "storage": true,
+      "teams": true,
+      "users": true,
+      "sites": true,
+      "functions": true,
+      "graphql": true,
+      "messaging": true
     },
-    "tablesDB": [
+    "auth": {
+      "methods": {
+        "jwt": true,
+        "phone": true,
+        "invites": true,
+        "anonymous": true,
+        "email-otp": true,
+        "magic-url": true,
+        "email-password": true
+      },
+      "security": {
+        "duration": 31536000,
+        "limit": 100,
+        "sessionsLimit": 10,
+        "passwordHistory": 0,
+        "passwordDictionary": false,
+        "personalDataCheck": false,
+        "sessionAlerts": false,
+        "mockNumbers": []
+      }
+    }
+  },
+  "tablesDB": [
+    {
+      "$id": "698fecfd000214619564",
+      "name": "Aura expense DB Test",
+      "enabled": true
+    }
+  ],
+  "tables": [
+    {
+      "$id": "users",
+      "$permissions": [],
+      "databaseId": "698fecfd000214619564",
+      "name": "Users",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
         {
-            "$id": "698fecfd000214619564",
-            "name": "Aura expense DB Test",
-            "enabled": true
+          "key": "email",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "email"
+        },
+        {
+          "key": "name",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "inbound_email",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "email"
+        },
+        {
+          "key": "oauth_provider",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 20,
+          "default": null
+        },
+        {
+          "key": "avatar_url",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": "url"
+        },
+        {
+          "key": "monthly_salary",
+          "type": "double",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+          "max": 179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+        },
+        {
+          "key": "budget_mode",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 20,
+          "default": "direct"
         }
-    ],
-    "tables": [
+      ],
+      "indexes": [
         {
-            "$id": "users",
-            "$permissions": [],
-            "databaseId": "698fecfd000214619564",
-            "name": "Users",
-            "enabled": true,
-            "rowSecurity": false,
-            "columns": [
-                {
-                    "key": "email",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "format": "email"
-                },
-                {
-                    "key": "name",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 255,
-                    "default": null
-                },
-                {
-                    "key": "inbound_email",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "format": "email"
-                },
-                {
-                    "key": "oauth_provider",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 20,
-                    "default": null
-                },
-                {
-                    "key": "avatar_url",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "default": null,
-                    "format": "url"
-                },
-                {
-                    "key": "monthly_salary",
-                    "type": "double",
-                    "required": false,
-                    "array": false,
-                    "default": null,
-                    "min": -179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
-                    "max": 179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-                },
-                {
-                    "key": "budget_mode",
-                    "type": "varchar",
-                    "required": false,
-                    "array": false,
-                    "size": 20,
-                    "default": "direct"
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "idx_users_email",
-                    "type": "unique",
-                    "status": "available",
-                    "columns": [
-                        "email"
-                    ],
-                    "orders": []
-                },
-                {
-                    "key": "idx_users_inbound_email",
-                    "type": "unique",
-                    "status": "available",
-                    "columns": [
-                        "inbound_email"
-                    ],
-                    "orders": []
-                }
-            ]
+          "key": "idx_users_email",
+          "type": "unique",
+          "status": "available",
+          "columns": ["email"],
+          "orders": []
         },
         {
-            "$id": "categories",
-            "$permissions": [],
-            "databaseId": "698fecfd000214619564",
-            "name": "Categories",
-            "enabled": true,
-            "rowSecurity": false,
-            "columns": [
-                {
-                    "key": "user_id",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 36,
-                    "default": null
-                },
-                {
-                    "key": "name",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 100,
-                    "default": null
-                },
-                {
-                    "key": "description",
-                    "type": "text",
-                    "required": true,
-                    "array": false,
-                    "default": null
-                },
-                {
-                    "key": "icon",
-                    "type": "varchar",
-                    "required": false,
-                    "array": false,
-                    "size": 10,
-                    "default": "📦"
-                },
-                {
-                    "key": "color",
-                    "type": "varchar",
-                    "required": false,
-                    "array": false,
-                    "size": 7,
-                    "default": "#6366f1"
-                },
-                {
-                    "key": "is_default",
-                    "type": "boolean",
-                    "required": true,
-                    "array": false,
-                    "default": null
-                },
-                {
-                    "key": "sort_order",
-                    "type": "integer",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "min": 0,
-                    "max": 100
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "idx_categories_user",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "user_id"
-                    ],
-                    "orders": []
-                },
-                {
-                    "key": "idx_categories_user_name",
-                    "type": "unique",
-                    "status": "available",
-                    "columns": [
-                        "user_id",
-                        "name"
-                    ],
-                    "orders": []
-                }
-            ]
-        },
-        {
-            "$id": "transactions",
-            "$permissions": [],
-            "databaseId": "698fecfd000214619564",
-            "name": "Transactions",
-            "enabled": true,
-            "rowSecurity": false,
-            "columns": [
-                {
-                    "key": "user_id",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 36,
-                    "default": null
-                },
-                {
-                    "key": "category_id",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 36,
-                    "default": null
-                },
-                {
-                    "key": "amount",
-                    "type": "double",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "min": -179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
-                    "max": 179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-                },
-                {
-                    "key": "vendor",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 255,
-                    "default": null
-                },
-                {
-                    "key": "description",
-                    "type": "text",
-                    "required": false,
-                    "array": false,
-                    "default": ""
-                },
-                {
-                    "key": "transaction_date",
-                    "type": "datetime",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "format": ""
-                },
-                {
-                    "key": "resend_email_id",
-                    "type": "varchar",
-                    "required": false,
-                    "array": false,
-                    "size": 100,
-                    "default": null
-                },
-                {
-                    "key": "raw_email_subject",
-                    "type": "text",
-                    "required": false,
-                    "array": false,
-                    "default": ""
-                },
-                {
-                    "key": "confidence",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 10,
-                    "default": null
-                },
-                {
-                    "key": "source",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 10,
-                    "default": null
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "idx_tx_user",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "user_id"
-                    ],
-                    "orders": []
-                },
-                {
-                    "key": "idx_tx_resend_id",
-                    "type": "unique",
-                    "status": "available",
-                    "columns": [
-                        "resend_email_id"
-                    ],
-                    "orders": []
-                },
-                {
-                    "key": "idx_tx_user_date",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "user_id",
-                        "transaction_date"
-                    ],
-                    "orders": []
-                },
-                {
-                    "key": "idx_tx_user_category",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "user_id",
-                        "category_id"
-                    ],
-                    "orders": []
-                },
-                {
-                    "key": "idx_tx_user_date_category",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "user_id",
-                        "transaction_date",
-                        "category_id"
-                    ],
-                    "orders": []
-                }
-            ]
-        },
-        {
-            "$id": "budgets",
-            "$permissions": [],
-            "databaseId": "698fecfd000214619564",
-            "name": "Budgets",
-            "enabled": true,
-            "rowSecurity": false,
-            "columns": [
-                {
-                    "key": "user_id",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 36,
-                    "default": null
-                },
-                {
-                    "key": "category_id",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 36,
-                    "default": null
-                },
-                {
-                    "key": "amount",
-                    "type": "double",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "min": -179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
-                    "max": 179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-                },
-                {
-                    "key": "year",
-                    "type": "integer",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "min": 2020,
-                    "max": 2100
-                },
-                {
-                    "key": "month",
-                    "type": "integer",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "min": 1,
-                    "max": 12
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "idx_budget_user_period",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "user_id",
-                        "year",
-                        "month"
-                    ],
-                    "orders": []
-                },
-                {
-                    "key": "idx_budget_unique",
-                    "type": "unique",
-                    "status": "available",
-                    "columns": [
-                        "user_id",
-                        "category_id",
-                        "year",
-                        "month"
-                    ],
-                    "orders": []
-                }
-            ]
-        },
-        {
-            "$id": "vendor_cache",
-            "$permissions": [],
-            "databaseId": "698fecfd000214619564",
-            "name": "Vendor Cache",
-            "enabled": true,
-            "rowSecurity": false,
-            "columns": [
-                {
-                    "key": "user_id",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 36,
-                    "default": null
-                },
-                {
-                    "key": "vendor_name",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 255,
-                    "default": null
-                },
-                {
-                    "key": "category_id",
-                    "type": "varchar",
-                    "required": true,
-                    "array": false,
-                    "size": 36,
-                    "default": null
-                },
-                {
-                    "key": "hit_count",
-                    "type": "integer",
-                    "required": true,
-                    "array": false,
-                    "default": null,
-                    "min": 0,
-                    "max": 1000000
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "idx_vc_user_vendor",
-                    "type": "unique",
-                    "status": "available",
-                    "columns": [
-                        "user_id",
-                        "vendor_name"
-                    ],
-                    "orders": []
-                }
-            ]
+          "key": "idx_users_inbound_email",
+          "type": "unique",
+          "status": "available",
+          "columns": ["inbound_email"],
+          "orders": []
         }
-    ],
-    "buckets": [],
-    "teams": [],
-    "topics": []
+      ]
+    },
+    {
+      "$id": "categories",
+      "$permissions": [],
+      "databaseId": "698fecfd000214619564",
+      "name": "Categories",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "user_id",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 36,
+          "default": null
+        },
+        {
+          "key": "name",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 100,
+          "default": null
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "icon",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 10,
+          "default": "📦"
+        },
+        {
+          "key": "color",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 7,
+          "default": "#6366f1"
+        },
+        {
+          "key": "is_default",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "sort_order",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": 0,
+          "max": 100
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_categories_user",
+          "type": "key",
+          "status": "available",
+          "columns": ["user_id"],
+          "orders": []
+        },
+        {
+          "key": "idx_categories_user_name",
+          "type": "unique",
+          "status": "available",
+          "columns": ["user_id", "name"],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "transactions",
+      "$permissions": [],
+      "databaseId": "698fecfd000214619564",
+      "name": "Transactions",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "user_id",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 36,
+          "default": null
+        },
+        {
+          "key": "category_id",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 36,
+          "default": null
+        },
+        {
+          "key": "amount",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+          "max": 179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+        },
+        {
+          "key": "vendor",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": ""
+        },
+        {
+          "key": "transaction_date",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "resend_email_id",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 100,
+          "default": null
+        },
+        {
+          "key": "raw_email_subject",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": ""
+        },
+        {
+          "key": "confidence",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 10,
+          "default": null
+        },
+        {
+          "key": "source",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 10,
+          "default": null
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_tx_user",
+          "type": "key",
+          "status": "available",
+          "columns": ["user_id"],
+          "orders": []
+        },
+        {
+          "key": "idx_tx_resend_id",
+          "type": "unique",
+          "status": "available",
+          "columns": ["resend_email_id"],
+          "orders": []
+        },
+        {
+          "key": "idx_tx_user_date",
+          "type": "key",
+          "status": "available",
+          "columns": ["user_id", "transaction_date"],
+          "orders": []
+        },
+        {
+          "key": "idx_tx_user_category",
+          "type": "key",
+          "status": "available",
+          "columns": ["user_id", "category_id"],
+          "orders": []
+        },
+        {
+          "key": "idx_tx_user_date_category",
+          "type": "key",
+          "status": "available",
+          "columns": ["user_id", "transaction_date", "category_id"],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "budgets",
+      "$permissions": [],
+      "databaseId": "698fecfd000214619564",
+      "name": "Budgets",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "user_id",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 36,
+          "default": null
+        },
+        {
+          "key": "category_id",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 36,
+          "default": null
+        },
+        {
+          "key": "amount",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+          "max": 179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+        },
+        {
+          "key": "year",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": 2020,
+          "max": 2100
+        },
+        {
+          "key": "month",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": 1,
+          "max": 12
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_budget_user_period",
+          "type": "key",
+          "status": "available",
+          "columns": ["user_id", "year", "month"],
+          "orders": []
+        },
+        {
+          "key": "idx_budget_unique",
+          "type": "unique",
+          "status": "available",
+          "columns": ["user_id", "category_id", "year", "month"],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "vendor_cache",
+      "$permissions": [],
+      "databaseId": "698fecfd000214619564",
+      "name": "Vendor Cache",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "user_id",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 36,
+          "default": null
+        },
+        {
+          "key": "vendor_name",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null
+        },
+        {
+          "key": "category_id",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 36,
+          "default": null
+        },
+        {
+          "key": "hit_count",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": 0,
+          "max": 1000000
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_vc_user_vendor",
+          "type": "unique",
+          "status": "available",
+          "columns": ["user_id", "vendor_name"],
+          "orders": []
+        }
+      ]
+    }
+  ],
+  "buckets": [],
+  "teams": [],
+  "topics": []
 }

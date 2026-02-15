@@ -35,12 +35,12 @@ Implement the vendor cache system that maps normalized vendor names to categorie
 
 ### Files to Create/Modify
 
-| File | Purpose |
-|------|---------|
-| `src/lib/repositories/interfaces/vendor-cache.repository.ts` | Interface |
-| `src/lib/repositories/appwrite/vendor-cache.repository.ts` | Appwrite implementation |
-| `src/lib/repositories/in-memory/vendor-cache.repository.ts` | Test implementation |
-| `src/lib/utils/vendor.ts` | `normalizeVendorName()`, `extractRoughVendor()` |
+| File                                                         | Purpose                                         |
+| ------------------------------------------------------------ | ----------------------------------------------- |
+| `src/lib/repositories/interfaces/vendor-cache.repository.ts` | Interface                                       |
+| `src/lib/repositories/appwrite/vendor-cache.repository.ts`   | Appwrite implementation                         |
+| `src/lib/repositories/in-memory/vendor-cache.repository.ts`  | Test implementation                             |
+| `src/lib/utils/vendor.ts`                                    | `normalizeVendorName()`, `extractRoughVendor()` |
 
 ### Normalization Rules
 
@@ -49,8 +49,8 @@ function normalizeVendorName(raw: string): string {
   return raw
     .trim()
     .toUpperCase()
-    .replace(/\s+/g, ' ')     // collapse multiple spaces
-    .replace(/[.]+$/, '');     // remove trailing dots
+    .replace(/\s+/g, ' ') // collapse multiple spaces
+    .replace(/[.]+$/, ''); // remove trailing dots
 }
 
 // "  Grab *GrabFood  " → "GRAB *GRABFOOD"

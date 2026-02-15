@@ -27,15 +27,16 @@ We will integrate **Mem0** as the long-term semantic memory layer for the AI age
 
 ### Option A: Mem0 Cloud ✅ (Selected)
 
-| Aspect | Detail |
-|--------|--------|
+| Aspect         | Detail                                                        |
+| -------------- | ------------------------------------------------------------- |
 | Implementation | `npm install mem0ai`, API key, `mem0.add()` / `mem0.search()` |
-| Memory model | Semantic search over stored memories per user |
-| Isolation | Built-in user-level isolation via `user_id` parameter |
-| Cost | Free tier: 1,000 memories. Paid: $0.001/memory/month |
-| Ops burden | Zero — managed cloud service |
+| Memory model   | Semantic search over stored memories per user                 |
+| Isolation      | Built-in user-level isolation via `user_id` parameter         |
+| Cost           | Free tier: 1,000 memories. Paid: $0.001/memory/month          |
+| Ops burden     | Zero — managed cloud service                                  |
 
 **Pros:**
+
 - Purpose-built for AI agent memory
 - Semantic search (not just exact match) — can find relevant feedback even with different wording
 - User isolation built-in
@@ -43,6 +44,7 @@ We will integrate **Mem0** as the long-term semantic memory layer for the AI age
 - Scales naturally
 
 **Cons:**
+
 - External dependency / third-party service
 - Additional API latency (~200ms per query)
 - Data leaves your infrastructure
@@ -88,6 +90,7 @@ Keep vendor cache only. No feedback memory beyond simple re-categorization.
 ### Migration Path
 
 If Mem0 Cloud becomes unsuitable, memories can be exported and migrated to:
+
 - Self-hosted Mem0 (open-source)
 - Appwrite table + OpenAI embeddings
 - Any vector database (Pinecone, Weaviate, etc.)

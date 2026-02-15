@@ -28,11 +28,11 @@
 
 Aura is a **personal finance intelligence system**. It should feel like a premium, private cockpit for your money — not a toy, not a spreadsheet, not a generic SaaS dashboard. Every visual decision should communicate three things:
 
-| Principle | Meaning | Execution |
-|-----------|---------|-----------|
-| **Precision** | Financial data demands trust and clarity | Monospace amounts, sharp alignment, zero visual ambiguity |
-| **Calm Authority** | Money is emotional — the UI should be a calming, confident presence | Deep muted tones, generous whitespace, deliberate restraint |
-| **Living Intelligence** | The AI agent is always working behind the scenes | Subtle aurora-inspired glows, gentle pulse animations on new data, organic gradients |
+| Principle               | Meaning                                                             | Execution                                                                            |
+| ----------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **Precision**           | Financial data demands trust and clarity                            | Monospace amounts, sharp alignment, zero visual ambiguity                            |
+| **Calm Authority**      | Money is emotional — the UI should be a calming, confident presence | Deep muted tones, generous whitespace, deliberate restraint                          |
+| **Living Intelligence** | The AI agent is always working behind the scenes                    | Subtle aurora-inspired glows, gentle pulse animations on new data, organic gradients |
 
 > **Mantra:** _"Design as if the user trusts you with their entire financial life."_
 
@@ -47,6 +47,7 @@ The app is called **Aura**. The visual identity draws from the **aurora borealis
 **Tone:** Refined luxury meets futuristic data visualization. Closer to a Bloomberg terminal reimagined by a Japanese design studio than a typical SaaS dashboard.
 
 **Mood Board References:**
+
 - Linear's dark mode (spatial depth, restraint)
 - Stripe's data visualization (precision, confidence)
 - Raycast's glass-morphism (atmospheric, modern)
@@ -55,6 +56,7 @@ The app is called **Aura**. The visual identity draws from the **aurora borealis
 ### What Makes Aura Unforgettable?
 
 **The "Aurora Glow"** — A signature ambient light effect that appears throughout the interface:
+
 - Sidebar has a barely perceptible teal→emerald gradient edge
 - Active chart segments emit a soft luminous halo
 - Budget bars pulse with a breathing glow when approaching thresholds
@@ -68,12 +70,12 @@ This is the one thing a user remembers: _"The app that glows."_
 
 ### Font Stack
 
-| Role | Font | Source | Weight Range | Fallback |
-|------|------|--------|-------------|----------|
-| **Display** | **Instrument Serif** | Google Fonts | 400 (regular + italic) | Georgia, serif |
-| **Heading** | **Syne** | Google Fonts | 500–800 | system-ui, sans-serif |
-| **Body** | **Outfit** | Google Fonts | 300–600 | system-ui, sans-serif |
-| **Mono** | **JetBrains Mono** | Google Fonts | 400–600 | ui-monospace, monospace |
+| Role        | Font                 | Source       | Weight Range           | Fallback                |
+| ----------- | -------------------- | ------------ | ---------------------- | ----------------------- |
+| **Display** | **Instrument Serif** | Google Fonts | 400 (regular + italic) | Georgia, serif          |
+| **Heading** | **Syne**             | Google Fonts | 500–800                | system-ui, sans-serif   |
+| **Body**    | **Outfit**           | Google Fonts | 300–600                | system-ui, sans-serif   |
+| **Mono**    | **JetBrains Mono**   | Google Fonts | 400–600                | ui-monospace, monospace |
 
 ### Why These Fonts?
 
@@ -95,41 +97,41 @@ This is the one thing a user remembers: _"The app that glows."_
 --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
 /* Scale (1.250 — Major Third) */
---text-xs:    0.64rem;   /* 10.24px — captions, badges */
---text-sm:    0.80rem;   /* 12.80px — secondary text */
---text-base:  1.00rem;   /* 16.00px — body text */
---text-lg:    1.25rem;   /* 20.00px — card titles */
---text-xl:    1.563rem;  /* 25.00px — section headers */
---text-2xl:   1.953rem;  /* 31.25px — page titles */
---text-3xl:   2.441rem;  /* 39.06px — hero numbers */
---text-4xl:   3.052rem;  /* 48.83px — display/logo */
+--text-xs: 0.64rem; /* 10.24px — captions, badges */
+--text-sm: 0.8rem; /* 12.80px — secondary text */
+--text-base: 1rem; /* 16.00px — body text */
+--text-lg: 1.25rem; /* 20.00px — card titles */
+--text-xl: 1.563rem; /* 25.00px — section headers */
+--text-2xl: 1.953rem; /* 31.25px — page titles */
+--text-3xl: 2.441rem; /* 39.06px — hero numbers */
+--text-4xl: 3.052rem; /* 48.83px — display/logo */
 
 /* Letter spacing */
---tracking-tight:  -0.02em;  /* headings */
---tracking-normal:  0em;     /* body */
---tracking-wide:    0.05em;  /* mono, badges, overlines */
+--tracking-tight: -0.02em; /* headings */
+--tracking-normal: 0em; /* body */
+--tracking-wide: 0.05em; /* mono, badges, overlines */
 
 /* Line height */
---leading-tight:   1.2;  /* headings, display */
---leading-normal:  1.6;  /* body text */
---leading-relaxed: 1.8;  /* long-form, descriptions */
+--leading-tight: 1.2; /* headings, display */
+--leading-normal: 1.6; /* body text */
+--leading-relaxed: 1.8; /* long-form, descriptions */
 ```
 
 ### Usage Rules
 
-| Context | Font | Size | Weight | Tracking |
-|---------|------|------|--------|----------|
-| App wordmark "Aura" | Instrument Serif | `text-4xl` | 400 | `-0.03em` |
-| Total spent amount | Instrument Serif | `text-3xl` | 400 | `-0.02em` |
-| Page title ("Dashboard") | Syne | `text-2xl` | 700 | `-0.02em` |
-| Section header | Syne | `text-xl` | 600 | `-0.01em` |
-| Card title | Syne | `text-lg` | 600 | `0em` |
-| Body text | Outfit | `text-base` | 400 | `0em` |
-| Secondary text | Outfit | `text-sm` | 400 | `0em` |
-| Dollar amounts | JetBrains Mono | `text-base` | 500 | `0.02em` |
-| Table data | Outfit | `text-sm` | 400 | `0em` |
-| Badge text | Outfit | `text-xs` | 600 | `0.05em` |
-| Overline labels | Syne | `text-xs` | 700 | `0.08em` |
+| Context                  | Font             | Size        | Weight | Tracking  |
+| ------------------------ | ---------------- | ----------- | ------ | --------- |
+| App wordmark "Aura"      | Instrument Serif | `text-4xl`  | 400    | `-0.03em` |
+| Total spent amount       | Instrument Serif | `text-3xl`  | 400    | `-0.02em` |
+| Page title ("Dashboard") | Syne             | `text-2xl`  | 700    | `-0.02em` |
+| Section header           | Syne             | `text-xl`   | 600    | `-0.01em` |
+| Card title               | Syne             | `text-lg`   | 600    | `0em`     |
+| Body text                | Outfit           | `text-base` | 400    | `0em`     |
+| Secondary text           | Outfit           | `text-sm`   | 400    | `0em`     |
+| Dollar amounts           | JetBrains Mono   | `text-base` | 500    | `0.02em`  |
+| Table data               | Outfit           | `text-sm`   | 400    | `0em`     |
+| Badge text               | Outfit           | `text-xs`   | 600    | `0.05em`  |
+| Overline labels          | Syne             | `text-xs`   | 700    | `0.08em`  |
 
 ---
 
@@ -142,44 +144,44 @@ All colors defined as CSS custom properties with **HSL values** for easy manipul
 ### Dark Mode Palette (Primary)
 
 ```css
-:root[data-theme="dark"] {
+:root[data-theme='dark'] {
   /* Backgrounds — Deep space with cool blue undertone */
-  --bg-primary:     hsl(222, 47%, 5%);    /* #070B14 — app background */
-  --bg-surface-1:   hsl(222, 30%, 8%);    /* #0F1420 — card background */
-  --bg-surface-2:   hsl(222, 25%, 13%);   /* #171D2E — elevated surface */
-  --bg-surface-3:   hsl(222, 22%, 18%);   /* #1E2640 — hover/active */
-  
+  --bg-primary: hsl(222, 47%, 5%); /* #070B14 — app background */
+  --bg-surface-1: hsl(222, 30%, 8%); /* #0F1420 — card background */
+  --bg-surface-2: hsl(222, 25%, 13%); /* #171D2E — elevated surface */
+  --bg-surface-3: hsl(222, 22%, 18%); /* #1E2640 — hover/active */
+
   /* Text */
-  --text-primary:   hsl(210, 20%, 95%);   /* #F0F2F5 — primary text */
-  --text-secondary: hsl(215, 15%, 60%);   /* #8A94A6 — secondary text */
-  --text-muted:     hsl(218, 12%, 40%);   /* #5A6173 — disabled/subtle */
-  
+  --text-primary: hsl(210, 20%, 95%); /* #F0F2F5 — primary text */
+  --text-secondary: hsl(215, 15%, 60%); /* #8A94A6 — secondary text */
+  --text-muted: hsl(218, 12%, 40%); /* #5A6173 — disabled/subtle */
+
   /* Borders */
-  --border-subtle:  hsl(222, 20%, 15%);   /* #1E2433 — card borders */
-  --border-default: hsl(222, 18%, 22%);   /* #2D3548 — input borders */
-  --border-strong:  hsl(222, 15%, 30%);   /* #3E4760 — focus rings */
+  --border-subtle: hsl(222, 20%, 15%); /* #1E2433 — card borders */
+  --border-default: hsl(222, 18%, 22%); /* #2D3548 — input borders */
+  --border-strong: hsl(222, 15%, 30%); /* #3E4760 — focus rings */
 }
 ```
 
 ### Light Mode Palette
 
 ```css
-:root[data-theme="light"] {
+:root[data-theme='light'] {
   /* Backgrounds — Warm parchment, NOT pure white */
-  --bg-primary:     hsl(40, 20%, 97%);    /* #F8F6F2 — app background */
-  --bg-surface-1:   hsl(0, 0%, 100%);     /* #FFFFFF — card background */
-  --bg-surface-2:   hsl(40, 15%, 96%);    /* #F4F2ED — elevated surface */
-  --bg-surface-3:   hsl(40, 12%, 92%);    /* #ECE9E3 — hover/active */
-  
+  --bg-primary: hsl(40, 20%, 97%); /* #F8F6F2 — app background */
+  --bg-surface-1: hsl(0, 0%, 100%); /* #FFFFFF — card background */
+  --bg-surface-2: hsl(40, 15%, 96%); /* #F4F2ED — elevated surface */
+  --bg-surface-3: hsl(40, 12%, 92%); /* #ECE9E3 — hover/active */
+
   /* Text */
-  --text-primary:   hsl(222, 47%, 11%);   /* #0D1321 — primary text */
-  --text-secondary: hsl(218, 15%, 45%);   /* #636E83 — secondary text */
-  --text-muted:     hsl(216, 10%, 65%);   /* #9BA3B0 — disabled/subtle */
-  
+  --text-primary: hsl(222, 47%, 11%); /* #0D1321 — primary text */
+  --text-secondary: hsl(218, 15%, 45%); /* #636E83 — secondary text */
+  --text-muted: hsl(216, 10%, 65%); /* #9BA3B0 — disabled/subtle */
+
   /* Borders */
-  --border-subtle:  hsl(40, 10%, 90%);    /* #E6E3DD — card borders */
-  --border-default: hsl(40, 8%, 85%);     /* #DAD7D0 — input borders */
-  --border-strong:  hsl(40, 6%, 75%);     /* #C2BFB8 — focus rings */
+  --border-subtle: hsl(40, 10%, 90%); /* #E6E3DD — card borders */
+  --border-default: hsl(40, 8%, 85%); /* #DAD7D0 — input borders */
+  --border-strong: hsl(40, 6%, 75%); /* #C2BFB8 — focus rings */
 }
 ```
 
@@ -190,25 +192,25 @@ These work on both dark and light backgrounds:
 ```css
 :root {
   /* Aura Teal — Primary brand color, positive actions */
-  --accent-primary:       hsl(165, 100%, 42%);  /* #00D4AA */
-  --accent-primary-hover: hsl(165, 100%, 48%);  /* #00F5C5 */
-  --accent-primary-muted: hsl(165, 60%, 20%);   /* Dark: subtle bg tint */
-  --accent-primary-glow:  hsla(165, 100%, 50%, 0.15); /* Aurora glow effect */
-  
+  --accent-primary: hsl(165, 100%, 42%); /* #00D4AA */
+  --accent-primary-hover: hsl(165, 100%, 48%); /* #00F5C5 */
+  --accent-primary-muted: hsl(165, 60%, 20%); /* Dark: subtle bg tint */
+  --accent-primary-glow: hsla(165, 100%, 50%, 0.15); /* Aurora glow effect */
+
   /* Cyan — Secondary, informational */
-  --accent-cyan:          hsl(195, 100%, 50%);   /* #00BFFF */
-  --accent-cyan-muted:    hsl(195, 60%, 18%);
-  
+  --accent-cyan: hsl(195, 100%, 50%); /* #00BFFF */
+  --accent-cyan-muted: hsl(195, 60%, 18%);
+
   /* Amber — Warnings, budget approaching */
-  --accent-amber:         hsl(38, 100%, 56%);    /* #FFB020 */
-  --accent-amber-muted:   hsl(38, 60%, 18%);
-  
+  --accent-amber: hsl(38, 100%, 56%); /* #FFB020 */
+  --accent-amber-muted: hsl(38, 60%, 18%);
+
   /* Coral — Danger, over-budget, errors */
-  --accent-coral:         hsl(0, 90%, 65%);      /* #F06060 */
-  --accent-coral-muted:   hsl(0, 50%, 18%);
-  
+  --accent-coral: hsl(0, 90%, 65%); /* #F06060 */
+  --accent-coral-muted: hsl(0, 50%, 18%);
+
   /* Emerald — Success confirmations */
-  --accent-emerald:       hsl(155, 70%, 50%);    /* #34D399 */
+  --accent-emerald: hsl(155, 70%, 50%); /* #34D399 */
 }
 ```
 
@@ -216,16 +218,16 @@ These work on both dark and light backgrounds:
 
 Each default category has a fixed color that works on both themes:
 
-| Category | Color | Hex | HSL |
-|----------|-------|-----|-----|
-| Food & Beverage | Warm Coral | `#FF6B6B` | `hsl(0, 100%, 71%)` |
-| Transportation | Ocean Teal | `#2DD4BF` | `hsl(172, 66%, 50%)` |
-| Shopping | Sky Blue | `#38BDF8` | `hsl(199, 93%, 60%)` |
-| Entertainment | Lime | `#A3E635` | `hsl(82, 77%, 55%)` |
-| Bills & Utilities | Amber | `#FBBF24` | `hsl(45, 96%, 56%)` |
-| Travel | Rose | `#FB7185` | `hsl(352, 95%, 72%)` |
-| Investment | Violet | `#A78BFA` | `hsl(258, 90%, 76%)` |
-| Other | Slate | `#94A3B8` | `hsl(215, 20%, 65%)` |
+| Category          | Color      | Hex       | HSL                  |
+| ----------------- | ---------- | --------- | -------------------- |
+| Food & Beverage   | Warm Coral | `#FF6B6B` | `hsl(0, 100%, 71%)`  |
+| Transportation    | Ocean Teal | `#2DD4BF` | `hsl(172, 66%, 50%)` |
+| Shopping          | Sky Blue   | `#38BDF8` | `hsl(199, 93%, 60%)` |
+| Entertainment     | Lime       | `#A3E635` | `hsl(82, 77%, 55%)`  |
+| Bills & Utilities | Amber      | `#FBBF24` | `hsl(45, 96%, 56%)`  |
+| Travel            | Rose       | `#FB7185` | `hsl(352, 95%, 72%)` |
+| Investment        | Violet     | `#A78BFA` | `hsl(258, 90%, 76%)` |
+| Other             | Slate      | `#94A3B8` | `hsl(215, 20%, 65%)` |
 
 ### Gradient Tokens
 
@@ -238,14 +240,14 @@ Each default category has a fixed color that works on both themes:
     hsl(180, 80%, 45%) 50%,
     hsl(195, 100%, 50%) 100%
   );
-  
+
   /* Subtle aurora for backgrounds (very low opacity) */
   --gradient-aurora-muted: linear-gradient(
     135deg,
     hsla(165, 100%, 42%, 0.08) 0%,
     hsla(195, 100%, 50%, 0.05) 100%
   );
-  
+
   /* Glass overlay */
   --gradient-glass: linear-gradient(
     135deg,
@@ -262,18 +264,18 @@ Each default category has a fixed color that works on both themes:
 ### Spacing Scale (4px base)
 
 ```css
---space-0:   0;
---space-1:   0.25rem;   /*  4px */
---space-2:   0.5rem;    /*  8px */
---space-3:   0.75rem;   /* 12px */
---space-4:   1rem;      /* 16px */
---space-5:   1.25rem;   /* 20px */
---space-6:   1.5rem;    /* 24px */
---space-8:   2rem;      /* 32px */
---space-10:  2.5rem;    /* 40px */
---space-12:  3rem;      /* 48px */
---space-16:  4rem;      /* 64px */
---space-20:  5rem;      /* 80px */
+--space-0: 0;
+--space-1: 0.25rem; /*  4px */
+--space-2: 0.5rem; /*  8px */
+--space-3: 0.75rem; /* 12px */
+--space-4: 1rem; /* 16px */
+--space-5: 1.25rem; /* 20px */
+--space-6: 1.5rem; /* 24px */
+--space-8: 2rem; /* 32px */
+--space-10: 2.5rem; /* 40px */
+--space-12: 3rem; /* 48px */
+--space-16: 4rem; /* 64px */
+--space-20: 5rem; /* 80px */
 ```
 
 ### Layout Principles
@@ -285,10 +287,10 @@ Each default category has a fixed color that works on both themes:
 ### Border Radius
 
 ```css
---radius-sm:  6px;     /* Buttons, badges, inputs */
---radius-md:  10px;    /* Cards, dropdowns */
---radius-lg:  16px;    /* Modals, sheets */
---radius-xl:  24px;    /* Hero elements, onboarding cards */
+--radius-sm: 6px; /* Buttons, badges, inputs */
+--radius-md: 10px; /* Cards, dropdowns */
+--radius-lg: 16px; /* Modals, sheets */
+--radius-xl: 24px; /* Hero elements, onboarding cards */
 --radius-full: 9999px; /* Avatars, dots */
 ```
 
@@ -296,10 +298,10 @@ Each default category has a fixed color that works on both themes:
 
 ```css
 /* Dark mode uses border-subtle instead of shadows */
---shadow-sm:   0 1px 2px hsla(222, 47%, 5%, 0.06);
---shadow-md:   0 4px 12px hsla(222, 47%, 5%, 0.08);
---shadow-lg:   0 12px 32px hsla(222, 47%, 5%, 0.12);
---shadow-glow: 0 0 20px var(--accent-primary-glow);  /* Aurora glow */
+--shadow-sm: 0 1px 2px hsla(222, 47%, 5%, 0.06);
+--shadow-md: 0 4px 12px hsla(222, 47%, 5%, 0.08);
+--shadow-lg: 0 12px 32px hsla(222, 47%, 5%, 0.12);
+--shadow-glow: 0 0 20px var(--accent-primary-glow); /* Aurora glow */
 ```
 
 ---
@@ -318,32 +320,32 @@ Use `motion` from `framer-motion` for all React animations. CSS-only for non-Rea
 
 ```css
 /* Durations */
---duration-fast:    150ms;  /* Micro-interactions: hover, focus */
---duration-normal:  300ms;  /* Transitions: open/close, fade */
---duration-slow:    500ms;  /* Entrances: cards, charts */
---duration-slower:  800ms;  /* Hero: total-spent counter, page load */
+--duration-fast: 150ms; /* Micro-interactions: hover, focus */
+--duration-normal: 300ms; /* Transitions: open/close, fade */
+--duration-slow: 500ms; /* Entrances: cards, charts */
+--duration-slower: 800ms; /* Hero: total-spent counter, page load */
 
 /* Easings */
---ease-out:      cubic-bezier(0.16, 1, 0.3, 1);    /* Exits, collapses */
---ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);   /* Symmetric transforms */
---ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy entrances */
+--ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* Exits, collapses */
+--ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* Symmetric transforms */
+--ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy entrances */
 ```
 
 ### High-Impact Animation Moments
 
-| Moment | Animation | Library | Priority |
-|--------|-----------|---------|----------|
-| **Dashboard load** | Staggered card reveal (fade + slide up) with 80ms delay per card | Framer Motion | 🔴 Critical |
-| **Total spent counter** | Count-up from 0 to actual value over 800ms | Framer Motion `useSpring` | 🔴 Critical |
-| **Chart draw-in** | Donut segments animate from 0° to final arc, 500ms stagger | Recharts `animationBegin` | 🔴 Critical |
-| **Budget bar fill** | Bars fill from 0% to actual, with color transition at thresholds | CSS `@keyframes` + `animation-delay` | 🟡 High |
-| **New transaction** | Brief aurora shimmer on row (teal glow pulse, 1 cycle) | CSS `@keyframes` | 🟡 High |
-| **Sheet open/close** | Slide from right + backdrop fade | Framer Motion `AnimatePresence` | 🟡 High |
-| **Toast notification** | Slide up from bottom + fade out | Framer Motion | 🟡 High |
-| **Hover: card** | Subtle scale(1.01) + border-color brighten | CSS `transition` | 🟢 Normal |
-| **Hover: button** | Background brightens + slight glow | CSS `transition` | 🟢 Normal |
-| **Focus: input** | Border transitions to accent-primary + subtle glow | CSS `transition` | 🟢 Normal |
-| **Page transition** | Fade out/in with 150ms crossfade | Next.js `loading.tsx` | 🟢 Normal |
+| Moment                  | Animation                                                        | Library                              | Priority    |
+| ----------------------- | ---------------------------------------------------------------- | ------------------------------------ | ----------- |
+| **Dashboard load**      | Staggered card reveal (fade + slide up) with 80ms delay per card | Framer Motion                        | 🔴 Critical |
+| **Total spent counter** | Count-up from 0 to actual value over 800ms                       | Framer Motion `useSpring`            | 🔴 Critical |
+| **Chart draw-in**       | Donut segments animate from 0° to final arc, 500ms stagger       | Recharts `animationBegin`            | 🔴 Critical |
+| **Budget bar fill**     | Bars fill from 0% to actual, with color transition at thresholds | CSS `@keyframes` + `animation-delay` | 🟡 High     |
+| **New transaction**     | Brief aurora shimmer on row (teal glow pulse, 1 cycle)           | CSS `@keyframes`                     | 🟡 High     |
+| **Sheet open/close**    | Slide from right + backdrop fade                                 | Framer Motion `AnimatePresence`      | 🟡 High     |
+| **Toast notification**  | Slide up from bottom + fade out                                  | Framer Motion                        | 🟡 High     |
+| **Hover: card**         | Subtle scale(1.01) + border-color brighten                       | CSS `transition`                     | 🟢 Normal   |
+| **Hover: button**       | Background brightens + slight glow                               | CSS `transition`                     | 🟢 Normal   |
+| **Focus: input**        | Border transitions to accent-primary + subtle glow               | CSS `transition`                     | 🟢 Normal   |
+| **Page transition**     | Fade out/in with 150ms crossfade                                 | Next.js `loading.tsx`                | 🟢 Normal   |
 
 ### Staggered Dashboard Load (Implementation)
 
@@ -353,8 +355,8 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 }
-  }
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+  },
 };
 
 const cardVariants = {
@@ -362,8 +364,8 @@ const cardVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
-  }
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+  },
 };
 
 <motion.div variants={containerVariants} initial="hidden" animate="visible">
@@ -376,7 +378,7 @@ const cardVariants = {
   <motion.div variants={cardVariants}>
     <RecentTransactions />
   </motion.div>
-</motion.div>
+</motion.div>;
 ```
 
 ### Count-Up Animation (Total Spent)
@@ -386,9 +388,11 @@ import { useSpring, animated } from 'framer-motion';
 
 function AnimatedAmount({ value }: { value: number }) {
   const spring = useSpring(0, { stiffness: 50, damping: 20 });
-  
-  useEffect(() => { spring.set(value); }, [value]);
-  
+
+  useEffect(() => {
+    spring.set(value);
+  }, [value]);
+
   return (
     <motion.span className="font-display text-3xl tabular-nums">
       {spring.get().toFixed(2)}
@@ -401,10 +405,17 @@ function AnimatedAmount({ value }: { value: number }) {
 
 ```css
 @keyframes aurora-shimmer {
-  0%   { box-shadow: inset 0 0 0 1px hsla(165, 100%, 50%, 0); }
-  30%  { box-shadow: inset 0 0 0 1px hsla(165, 100%, 50%, 0.3),
-                      0 0 20px hsla(165, 100%, 50%, 0.1); }
-  100% { box-shadow: inset 0 0 0 1px hsla(165, 100%, 50%, 0); }
+  0% {
+    box-shadow: inset 0 0 0 1px hsla(165, 100%, 50%, 0);
+  }
+  30% {
+    box-shadow:
+      inset 0 0 0 1px hsla(165, 100%, 50%, 0.3),
+      0 0 20px hsla(165, 100%, 50%, 0.1);
+  }
+  100% {
+    box-shadow: inset 0 0 0 1px hsla(165, 100%, 50%, 0);
+  }
 }
 
 .transaction-new {
@@ -416,7 +427,9 @@ function AnimatedAmount({ value }: { value: number }) {
 
 ```css
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
@@ -434,20 +447,12 @@ The app background is NOT a flat color. It uses layered effects to create depth:
 ```css
 .app-background-dark {
   background-color: var(--bg-primary);
-  
+
   /* Subtle radial gradient in top-left — aurora glow */
   background-image:
-    radial-gradient(
-      ellipse 60% 40% at 15% 10%,
-      hsla(165, 100%, 42%, 0.04) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse 40% 50% at 85% 80%,
-      hsla(195, 100%, 50%, 0.03) 0%,
-      transparent 60%
-    );
-  
+    radial-gradient(ellipse 60% 40% at 15% 10%, hsla(165, 100%, 42%, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 50% at 85% 80%, hsla(195, 100%, 50%, 0.03) 0%, transparent 60%);
+
   /* Noise texture overlay (SVG data URI) */
   position: relative;
 }
@@ -475,7 +480,7 @@ Dashboard cards use a frosted glass effect:
 }
 
 /* Light mode: Use subtle shadow instead of glass */
-:root[data-theme="light"] .card-glass {
+:root[data-theme='light'] .card-glass {
   background: var(--bg-surface-1);
   backdrop-filter: none;
   box-shadow: var(--shadow-md);
@@ -515,7 +520,7 @@ The sidebar has a signature gradient border on its right edge:
 /* Primary — Aura Teal */
 .btn-primary {
   background: var(--accent-primary);
-  color: hsl(222, 47%, 5%);  /* Dark text on bright bg */
+  color: hsl(222, 47%, 5%); /* Dark text on bright bg */
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: var(--text-sm);
@@ -523,8 +528,9 @@ The sidebar has a signature gradient border on its right edge:
   text-transform: uppercase;
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-sm);
-  transition: background var(--duration-fast) var(--ease-out),
-              box-shadow var(--duration-fast) var(--ease-out);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 }
 
 .btn-primary:hover {
@@ -544,8 +550,9 @@ The sidebar has a signature gradient border on its right edge:
   font-family: var(--font-body);
   font-size: var(--text-base);
   color: var(--text-primary);
-  transition: border-color var(--duration-fast),
-              box-shadow var(--duration-fast);
+  transition:
+    border-color var(--duration-fast),
+    box-shadow var(--duration-fast);
 }
 
 .input:focus {
@@ -567,9 +574,15 @@ Dollar amounts are always mono, with specific styling:
   font-variant-numeric: tabular-nums;
 }
 
-.amount-positive { color: var(--accent-emerald); }
-.amount-negative { color: var(--accent-coral); }
-.amount-neutral  { color: var(--text-primary); }
+.amount-positive {
+  color: var(--accent-emerald);
+}
+.amount-negative {
+  color: var(--accent-coral);
+}
+.amount-neutral {
+  color: var(--text-primary);
+}
 ```
 
 ### Budget Progress Bar
@@ -590,9 +603,13 @@ Dollar amounts are always mono, with specific styling:
 }
 
 /* Status colors */
-.budget-bar-fill[data-status="on_track"]    { background: var(--accent-emerald); }
-.budget-bar-fill[data-status="warning"]     { background: var(--accent-amber); }
-.budget-bar-fill[data-status="over_budget"] { 
+.budget-bar-fill[data-status='on_track'] {
+  background: var(--accent-emerald);
+}
+.budget-bar-fill[data-status='warning'] {
+  background: var(--accent-amber);
+}
+.budget-bar-fill[data-status='over_budget'] {
   background: var(--accent-coral);
   box-shadow: 0 0 12px hsla(0, 90%, 65%, 0.3);
 }
@@ -608,16 +625,25 @@ Dollar amounts are always mono, with specific styling:
   display: inline-block;
 }
 
-.confidence-dot[data-level="high"]   { background: var(--accent-emerald); }
-.confidence-dot[data-level="medium"] { background: var(--accent-amber); }
-.confidence-dot[data-level="low"]    {
+.confidence-dot[data-level='high'] {
+  background: var(--accent-emerald);
+}
+.confidence-dot[data-level='medium'] {
+  background: var(--accent-amber);
+}
+.confidence-dot[data-level='low'] {
   background: var(--accent-coral);
   animation: pulse-subtle 2s ease-in-out infinite;
 }
 
 @keyframes pulse-subtle {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 ```
 
@@ -657,15 +683,15 @@ Light:  [● ━━━━ ☀️]   (amber accent on track)
 
 ### Dark ↔ Light Differences
 
-| Element | Dark | Light |
-|---------|------|-------|
-| Background | Deep navy + aurora radials | Warm parchment `#F8F6F2` |
-| Cards | Glass-morphism (blur + transparency) | White + subtle shadow |
-| Borders | Luminous edges (subtle opacity) | Neutral warm gray |
-| Text | Cool gray spectrum | Warm dark spectrum |
-| Charts | Bright, saturated colors | Slightly desaturated for ink feel |
-| Aurora glow | Visible (teal ambient light) | Hidden (too subtle on light bg) |
-| Noise texture | 2% opacity (adds depth) | 0% (clean surface) |
+| Element       | Dark                                 | Light                             |
+| ------------- | ------------------------------------ | --------------------------------- |
+| Background    | Deep navy + aurora radials           | Warm parchment `#F8F6F2`          |
+| Cards         | Glass-morphism (blur + transparency) | White + subtle shadow             |
+| Borders       | Luminous edges (subtle opacity)      | Neutral warm gray                 |
+| Text          | Cool gray spectrum                   | Warm dark spectrum                |
+| Charts        | Bright, saturated colors             | Slightly desaturated for ink feel |
+| Aurora glow   | Visible (teal ambient light)         | Hidden (too subtle on light bg)   |
+| Noise texture | 2% opacity (adds depth)              | 0% (clean surface)                |
 
 ### Rule: Dark Mode is Default
 
@@ -695,20 +721,20 @@ Categories use native emoji (not Lucide). This is intentional — emoji adds war
 
 ## 11. Anti-Patterns (What We Avoid)
 
-| ❌ Don't | ✅ Do Instead |
-|----------|--------------|
-| Inter, Roboto, Arial, system-ui as primary font | Instrument Serif + Syne + Outfit |
-| Purple gradients on white backgrounds | Teal-cyan aurora gradients on deep navy |
-| Flat white cards with gray borders | Glass-morphism with subtle aurora tint |
-| Uniform spacing everywhere | Generous whitespace with intentional density in data areas |
-| Generic toggle switches | Custom themed toggle with moon/sun icons |
-| Every element animates on hover | Strategic high-impact animations only (dashboard load, counters, charts) |
-| Solid color backgrounds | Layered gradients + noise texture |
-| Default shadcn/ui theme colors | Custom CSS variables following Aurora Noir palette |
-| Rainbow category colors with no logic | Curated 8-color palette that works in both themes |
-| Stock photography or illustrations | Abstract geometric patterns inspired by aurora light |
-| Cookie-cutter chart styling | Luminous chart segments with glow effects |
-| Generic "Success!" messages | Personality-driven copy ("Expense logged. Your AI is learning.") |
+| ❌ Don't                                        | ✅ Do Instead                                                            |
+| ----------------------------------------------- | ------------------------------------------------------------------------ |
+| Inter, Roboto, Arial, system-ui as primary font | Instrument Serif + Syne + Outfit                                         |
+| Purple gradients on white backgrounds           | Teal-cyan aurora gradients on deep navy                                  |
+| Flat white cards with gray borders              | Glass-morphism with subtle aurora tint                                   |
+| Uniform spacing everywhere                      | Generous whitespace with intentional density in data areas               |
+| Generic toggle switches                         | Custom themed toggle with moon/sun icons                                 |
+| Every element animates on hover                 | Strategic high-impact animations only (dashboard load, counters, charts) |
+| Solid color backgrounds                         | Layered gradients + noise texture                                        |
+| Default shadcn/ui theme colors                  | Custom CSS variables following Aurora Noir palette                       |
+| Rainbow category colors with no logic           | Curated 8-color palette that works in both themes                        |
+| Stock photography or illustrations              | Abstract geometric patterns inspired by aurora light                     |
+| Cookie-cutter chart styling                     | Luminous chart segments with glow effects                                |
+| Generic "Success!" messages                     | Personality-driven copy ("Expense logged. Your AI is learning.")         |
 
 ---
 
@@ -747,7 +773,7 @@ Tailwind CSS v4 uses the CSS `@import` syntax instead of `@tailwind` directives:
 
 ```css
 /* src/app/globals.css */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Custom theme layer */
 @theme {
@@ -755,7 +781,7 @@ Tailwind CSS v4 uses the CSS `@import` syntax instead of `@tailwind` directives:
   --font-heading: 'Syne', system-ui, sans-serif;
   --font-body: 'Outfit', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  
+
   --color-aura-teal: hsl(165, 100%, 42%);
   --color-aura-cyan: hsl(195, 100%, 50%);
   --color-aura-amber: hsl(38, 100%, 56%);
@@ -770,7 +796,7 @@ Override shadcn/ui's default CSS variables with Aura design tokens:
 ```css
 /* Map shadcn semantic tokens to Aura tokens */
 @layer base {
-  :root[data-theme="dark"] {
+  :root[data-theme='dark'] {
     --background: 222 47% 5%;
     --foreground: 210 20% 95%;
     --card: 222 30% 8%;
@@ -798,9 +824,11 @@ Override shadcn/ui's default CSS variables with Aura design tokens:
 // src/app/layout.tsx
 import { Instrument_Serif, Syne, Outfit, JetBrains_Mono } from 'next/font/google';
 
-const instrumentSerif = Instrument_Serif({ 
-  subsets: ['latin'], weight: '400', style: ['normal', 'italic'],
-  variable: '--font-display'
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-display',
 });
 const syne = Syne({ subsets: ['latin'], variable: '--font-heading' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-body' });
@@ -808,7 +836,9 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mon
 
 export default function RootLayout({ children }) {
   return (
-    <html className={`${instrumentSerif.variable} ${syne.variable} ${outfit.variable} ${jetbrainsMono.variable}`}>
+    <html
+      className={`${instrumentSerif.variable} ${syne.variable} ${outfit.variable} ${jetbrainsMono.variable}`}
+    >
       <body className="font-body">{children}</body>
     </html>
   );
@@ -817,11 +847,11 @@ export default function RootLayout({ children }) {
 
 ### File Naming Convention
 
-| Type | Convention | Example |
-|------|-----------|---------|
-| Components | kebab-case | `spending-donut.tsx` |
-| Utilities | kebab-case | `currency.ts` |
-| Types | kebab-case | `transaction.ts` |
+| Type        | Convention                 | Example                |
+| ----------- | -------------------------- | ---------------------- |
+| Components  | kebab-case                 | `spending-donut.tsx`   |
+| Utilities   | kebab-case                 | `currency.ts`          |
+| Types       | kebab-case                 | `transaction.ts`       |
 | CSS modules | kebab-case + `.module.css` | `dashboard.module.css` |
-| Tests | kebab-case + `.test.ts` | `currency.test.ts` |
-| E2E | kebab-case + `.spec.ts` | `dashboard.spec.ts` |
+| Tests       | kebab-case + `.test.ts`    | `currency.test.ts`     |
+| E2E         | kebab-case + `.spec.ts`    | `dashboard.spec.ts`    |

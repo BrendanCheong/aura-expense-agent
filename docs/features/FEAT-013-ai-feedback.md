@@ -75,18 +75,18 @@ Implement a conversational feedback system on the `/transactions` page that allo
 
 ### Files to Create/Modify
 
-| File | Purpose |
-|------|---------|
-| `src/components/transactions/feedback-sheet.tsx` | **NEW** — Feedback modal UI |
-| `src/components/transactions/feedback-conversation.tsx` | **NEW** — Agent response + approve/reject |
-| `src/app/api/feedback/route.ts` | **NEW** — Feedback processing API route |
-| `src/lib/services/feedback.service.ts` | **NEW** — Feedback → Agent → Mem0 pipeline |
-| `src/lib/mem0/client.ts` | **NEW** — Mem0 client singleton |
-| `src/lib/agent/tools/recall-memories.ts` | **NEW** — Tool to query Mem0 during categorization |
-| `src/lib/agent/graph.ts` | **MODIFY** — Add Mem0 memory recall to categorization chain |
-| `src/lib/agent/prompts.ts` | **MODIFY** — Add memory context to system prompt |
-| `src/components/transactions/transaction-sheet.tsx` | **MODIFY** — Add feedback button + category dropdown |
-| `src/components/transactions/add-transaction-sheet.tsx` | **MODIFY** — Full create form |
+| File                                                    | Purpose                                                     |
+| ------------------------------------------------------- | ----------------------------------------------------------- |
+| `src/components/transactions/feedback-sheet.tsx`        | **NEW** — Feedback modal UI                                 |
+| `src/components/transactions/feedback-conversation.tsx` | **NEW** — Agent response + approve/reject                   |
+| `src/app/api/feedback/route.ts`                         | **NEW** — Feedback processing API route                     |
+| `src/lib/services/feedback.service.ts`                  | **NEW** — Feedback → Agent → Mem0 pipeline                  |
+| `src/lib/mem0/client.ts`                                | **NEW** — Mem0 client singleton                             |
+| `src/lib/agent/tools/recall-memories.ts`                | **NEW** — Tool to query Mem0 during categorization          |
+| `src/lib/agent/graph.ts`                                | **MODIFY** — Add Mem0 memory recall to categorization chain |
+| `src/lib/agent/prompts.ts`                              | **MODIFY** — Add memory context to system prompt            |
+| `src/components/transactions/transaction-sheet.tsx`     | **MODIFY** — Add feedback button + category dropdown        |
+| `src/components/transactions/add-transaction-sheet.tsx` | **MODIFY** — Full create form                               |
 
 ### Feedback API Route
 
@@ -158,16 +158,16 @@ export function getMem0Client(): MemoryClient {
 // Store feedback
 await mem0Client.add(
   `User corrected ${vendor} from ${oldCategory} to ${newCategory}. ` +
-  `Reason: ${feedbackText}. ` +
-  `Agent reasoning: ${agentReasoning}`,
+    `Reason: ${feedbackText}. ` +
+    `Agent reasoning: ${agentReasoning}`,
   { user_id: userId }
 );
 
 // Recall during categorization
-const memories = await mem0Client.search(
-  `How should I categorize ${vendor}?`,
-  { user_id: userId, limit: 3 }
-);
+const memories = await mem0Client.search(`How should I categorize ${vendor}?`, {
+  user_id: userId,
+  limit: 3,
+});
 ```
 
 ### 5-Tier Categorization Chain (Updated)

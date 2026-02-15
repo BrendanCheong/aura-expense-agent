@@ -5,7 +5,6 @@
  * Testing: In-memory repositories.
  */
 
-import type { TablesDB } from 'node-appwrite';
 import type {
   ITransactionRepository,
   ICategoryRepository,
@@ -13,6 +12,7 @@ import type {
   IVendorCacheRepository,
   IUserRepository,
 } from '@/lib/repositories/interfaces';
+import type { TablesDB } from 'node-appwrite';
 
 export interface Repositories {
   transactions: ITransactionRepository;

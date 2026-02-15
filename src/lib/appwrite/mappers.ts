@@ -4,13 +4,6 @@
  * Appwrite-specific concerns.
  */
 
-import type { Transaction, TransactionCreate, TransactionUpdate } from '@/types/transaction';
-import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category';
-import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
-import type { VendorCacheEntry } from '@/types/vendor-cache';
-import type { User, UserCreate, UserUpdate } from '@/types/user';
-import type { Models } from 'node-appwrite';
-import { Confidence, TransactionSource, OAuthProvider, BudgetMode } from '@/lib/enums';
 import type {
   UserRow,
   CategoryRow,
@@ -18,6 +11,15 @@ import type {
   BudgetRow,
   VendorCacheRow,
 } from '@/types/appwrite/rows';
+import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
+import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category';
+import type { Transaction, TransactionCreate, TransactionUpdate } from '@/types/transaction';
+import type { User, UserCreate, UserUpdate } from '@/types/user';
+import type { VendorCacheEntry } from '@/types/vendor-cache';
+import type { Models } from 'node-appwrite';
+
+import { BudgetMode, type Confidence, type OAuthProvider, type TransactionSource } from '@/lib/enums';
+
 
 // ---------------------------------------------------------------------------
 // Row data types (for create/update — excludes Models.Row base fields)
@@ -112,12 +114,12 @@ export function mapTransactionToRow(data: TransactionCreate): TransactionRowData
 
 export function mapTransactionUpdateToRow(data: TransactionUpdate): Partial<TransactionRowData> {
   const row: Partial<TransactionRowData> = {};
-  if (data.categoryId !== undefined) row.category_id = data.categoryId;
-  if (data.amount !== undefined) row.amount = data.amount;
-  if (data.vendor !== undefined) row.vendor = data.vendor;
-  if (data.description !== undefined) row.description = data.description;
-  if (data.transactionDate !== undefined) row.transaction_date = data.transactionDate;
-  if (data.confidence !== undefined) row.confidence = data.confidence;
+  if (data.categoryId !== undefined) {row.category_id = data.categoryId;}
+  if (data.amount !== undefined) {row.amount = data.amount;}
+  if (data.vendor !== undefined) {row.vendor = data.vendor;}
+  if (data.description !== undefined) {row.description = data.description;}
+  if (data.transactionDate !== undefined) {row.transaction_date = data.transactionDate;}
+  if (data.confidence !== undefined) {row.confidence = data.confidence;}
   return row;
 }
 
@@ -135,11 +137,11 @@ export function mapCategoryToRow(data: CategoryCreate): CategoryRowData {
 
 export function mapCategoryUpdateToRow(data: CategoryUpdate): Partial<CategoryRowData> {
   const row: Partial<CategoryRowData> = {};
-  if (data.name !== undefined) row.name = data.name;
-  if (data.description !== undefined) row.description = data.description;
-  if (data.icon !== undefined) row.icon = data.icon;
-  if (data.color !== undefined) row.color = data.color;
-  if (data.sortOrder !== undefined) row.sort_order = data.sortOrder;
+  if (data.name !== undefined) {row.name = data.name;}
+  if (data.description !== undefined) {row.description = data.description;}
+  if (data.icon !== undefined) {row.icon = data.icon;}
+  if (data.color !== undefined) {row.color = data.color;}
+  if (data.sortOrder !== undefined) {row.sort_order = data.sortOrder;}
   return row;
 }
 
@@ -155,7 +157,7 @@ export function mapBudgetToRow(data: BudgetCreate): BudgetRowData {
 
 export function mapBudgetUpdateToRow(data: BudgetUpdate): Partial<BudgetRowData> {
   const row: Partial<BudgetRowData> = {};
-  if (data.amount !== undefined) row.amount = data.amount;
+  if (data.amount !== undefined) {row.amount = data.amount;}
   return row;
 }
 
@@ -192,9 +194,9 @@ export function mapUserToRow(data: UserCreate): UserRowData {
 
 export function mapUserUpdateToRow(data: UserUpdate): Partial<UserRowData> {
   const row: Partial<UserRowData> = {};
-  if (data.name !== undefined) row.name = data.name;
-  if (data.avatarUrl !== undefined) row.avatar_url = data.avatarUrl;
-  if (data.monthlySalary !== undefined) row.monthly_salary = data.monthlySalary ?? 0;
-  if (data.budgetMode !== undefined) row.budget_mode = data.budgetMode;
+  if (data.name !== undefined) {row.name = data.name;}
+  if (data.avatarUrl !== undefined) {row.avatar_url = data.avatarUrl;}
+  if (data.monthlySalary !== undefined) {row.monthly_salary = data.monthlySalary ?? 0;}
+  if (data.budgetMode !== undefined) {row.budget_mode = data.budgetMode;}
   return row;
 }

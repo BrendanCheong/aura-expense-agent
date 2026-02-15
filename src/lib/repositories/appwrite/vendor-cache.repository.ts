@@ -1,9 +1,8 @@
-import { ID, Query } from 'node-appwrite';
+import { ID, Query, type TablesDB } from 'node-appwrite';
 
 import type { IVendorCacheRepository } from '../interfaces';
 import type { VendorCacheRow } from '@/types/appwrite/rows';
 import type { VendorCacheEntry } from '@/types/vendor-cache';
-import type { TablesDB } from 'node-appwrite';
 
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import { mapRowToVendorCacheEntry } from '@/lib/appwrite/mappers';

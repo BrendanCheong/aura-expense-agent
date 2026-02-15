@@ -10,14 +10,14 @@ let client: Client | null = null;
 let account: Account | null = null;
 
 function getClient(): Client {
-  if (client) return client;
+  if (client) {return client;}
 
   const endpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
   const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
 
   if (!endpoint || !projectId) {
     throw new Error(
-      'Missing Appwrite client env vars: NEXT_PUBLIC_APPWRITE_ENDPOINT, NEXT_PUBLIC_APPWRITE_PROJECT_ID',
+      'Missing Appwrite client env vars: NEXT_PUBLIC_APPWRITE_ENDPOINT, NEXT_PUBLIC_APPWRITE_PROJECT_ID'
     );
   }
 
@@ -26,7 +26,7 @@ function getClient(): Client {
 }
 
 export function getAppwriteAccount(): Account {
-  if (account) return account;
+  if (account) {return account;}
   account = new Account(getClient());
   return account;
 }
@@ -34,4 +34,3 @@ export function getAppwriteAccount(): Account {
 export function getAppwriteClient(): Client {
   return getClient();
 }
-

@@ -10,7 +10,7 @@
  * Required env vars: NEXT_PUBLIC_APPWRITE_ENDPOINT, NEXT_PUBLIC_APPWRITE_PROJECT_ID, APPWRITE_API_KEY
  */
 
-import { Client, TablesDB, ID, IndexType } from 'node-appwrite';
+import { Client, TablesDB, IndexType } from 'node-appwrite';
 
 // ---------------------------------------------------------------------------
 // Configuration

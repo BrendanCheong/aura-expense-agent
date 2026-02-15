@@ -6,14 +6,14 @@
  * Testing: Uses in-memory repositories and mock agent.
  */
 
-import { RepositoryFactory, type Repositories } from '@/lib/factories/repository.factory';
-import { TransactionService } from '@/lib/services/transaction.service';
-import { CategoryService } from '@/lib/services/category.service';
-import { BudgetService } from '@/lib/services/budget.service';
-import { DashboardService } from '@/lib/services/dashboard.service';
-import { WebhookService } from '@/lib/services/webhook.service';
-import { AuthService } from '@/lib/services/auth.service';
 import { getAppwriteServer } from '@/lib/appwrite/server';
+import { RepositoryFactory, type Repositories } from '@/lib/factories/repository.factory';
+import { AuthService } from '@/lib/services/auth.service';
+import { BudgetService } from '@/lib/services/budget.service';
+import { CategoryService } from '@/lib/services/category.service';
+import { DashboardService } from '@/lib/services/dashboard.service';
+import { TransactionService } from '@/lib/services/transaction.service';
+import { WebhookService } from '@/lib/services/webhook.service';
 
 export interface ServiceContainer {
   transactionService: TransactionService;
@@ -29,9 +29,18 @@ let containerPromise: Promise<ServiceContainer> | null = null;
 
 function buildContainer(repos: Repositories): ServiceContainer {
   const transactionService = new TransactionService(repos.transactions, repos.vendorCache);
-  const categoryService = new CategoryService(repos.categories, repos.vendorCache, repos.budgets, repos.transactions);
+  const categoryService = new CategoryService(
+    repos.categories,
+    repos.vendorCache,
+    repos.budgets,
+    repos.transactions
+  );
   const budgetService = new BudgetService(repos.budgets, repos.transactions);
-  const dashboardService = new DashboardService(repos.transactions, repos.budgets, repos.categories);
+  const dashboardService = new DashboardService(
+    repos.transactions,
+    repos.budgets,
+    repos.categories
+  );
   const webhookService = new WebhookService(repos.transactions, repos.vendorCache, null);
   const authService = new AuthService(repos.users, repos.categories);
 
@@ -49,7 +58,7 @@ function buildContainer(repos: Repositories): ServiceContainer {
  * Create (or return cached) production service container
  * backed by Appwrite TablesDB repositories.
  */
-export async function createContainer(): Promise<ServiceContainer> {
+export function createContainer(): Promise<ServiceContainer> {
   if (!containerPromise) {
     containerPromise = (async () => {
       const { tablesDb } = getAppwriteServer();

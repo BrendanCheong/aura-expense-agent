@@ -7,6 +7,7 @@
  */
 
 import { Client, Account } from 'node-appwrite';
+
 import type { NextRequest } from 'next/server';
 
 const DEV_USER = {
@@ -28,9 +29,7 @@ export interface SessionUser {
  *
  * In dev mode (PROJECT_ENV=dev), always returns a mock dev user.
  */
-export async function getSessionUser(
-  request: NextRequest,
-): Promise<SessionUser | null> {
+export async function getSessionUser(request: NextRequest): Promise<SessionUser | null> {
   // Dev bypass
   if (process.env.PROJECT_ENV === 'dev') {
     return {
@@ -42,11 +41,13 @@ export async function getSessionUser(
 
   // Extract Appwrite session from cookies
   const sessionCookie = request.cookies.get('a_session')?.value;
-  if (!sessionCookie) return null;
+  if (!sessionCookie) {return null;}
 
   try {
-    const endpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!;
-    const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!;
+    const endpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
+    const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
+
+    if (!endpoint || !projectId) {return null;}
 
     const client = new Client()
       .setEndpoint(endpoint)

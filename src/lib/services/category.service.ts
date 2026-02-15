@@ -21,7 +21,7 @@ export class CategoryService {
     private readonly transactionRepo: ITransactionRepository
   ) {}
 
-  async listCategories(userId: string): Promise<Category[]> {
+  listCategories(userId: string): Promise<Category[]> {
     return this.categoryRepo.findByUserId(userId);
   }
 
@@ -79,7 +79,7 @@ export class CategoryService {
     await this.categoryRepo.delete(categoryId);
   }
 
-  async seedDefaults(userId: string): Promise<Category[]> {
+  seedDefaults(userId: string): Promise<Category[]> {
     return this.categoryRepo.seedDefaults(userId);
   }
 }

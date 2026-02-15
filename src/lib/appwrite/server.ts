@@ -14,7 +14,7 @@ interface AppwriteServerInstance {
 let instance: AppwriteServerInstance | null = null;
 
 export function getAppwriteServer(): AppwriteServerInstance {
-  if (instance) return instance;
+  if (instance) {return instance;}
 
   const endpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
   const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
@@ -30,10 +30,7 @@ export function getAppwriteServer(): AppwriteServerInstance {
     throw new Error('Missing required env var: APPWRITE_API_KEY');
   }
 
-  const client = new Client()
-    .setEndpoint(endpoint)
-    .setProject(projectId)
-    .setKey(apiKey);
+  const client = new Client().setEndpoint(endpoint).setProject(projectId).setKey(apiKey);
 
   const tablesDb = new TablesDB(client);
 

@@ -133,6 +133,12 @@ const eslintConfig = [
     },
   },
   {
+    files: ['scripts/**/*.ts'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  {
     files: ['__tests__/**/*.ts'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',

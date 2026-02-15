@@ -8,8 +8,8 @@
  * In dev mode (PROJECT_ENV=dev): returns mock user without session check.
  */
 
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+
 import { getSessionUser } from '@/lib/appwrite/session';
 
 export interface AuthenticatedUser {
@@ -22,8 +22,8 @@ export interface AuthenticatedUser {
  * Get the authenticated user from request cookies.
  * Returns null if no valid session exists.
  */
-export async function getAuthenticatedUser(
-  request: NextRequest,
+export function getAuthenticatedUser(
+  request: NextRequest
 ): Promise<AuthenticatedUser | null> {
   return getSessionUser(request);
 }

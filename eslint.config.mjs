@@ -132,6 +132,12 @@ const eslintConfig = [
       'promise/no-return-wrap': 'error',
     },
   },
+  {
+    files: ['__tests__/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-non-null-assertion': 'off',
+    },
+  },
 ];
 
 export default eslintConfig;

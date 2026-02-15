@@ -28,10 +28,10 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="relative hidden w-60 shrink-0 border-r border-border/50 bg-card/50 lg:block">
+    <aside className="relative hidden w-60 shrink-0 border-r border-border/50 bg-sidebar lg:block">
       {/* Logo */}
       <div className="flex h-16 items-center px-6">
-        <Link href="/" className="text-2xl tracking-[-0.03em]" style={{ fontFamily: 'Georgia, serif' }}>
+        <Link href="/" className="font-display text-2xl tracking-[-0.03em] text-foreground">
           Aura
         </Link>
       </div>
@@ -45,8 +45,8 @@ export function Sidebar() {
             className={cn(
               'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
               isActive(href)
-                ? 'bg-accent text-accent-foreground'
-                : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground',
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:bg-accent hover:text-foreground',
             )}
           >
             <Icon className="h-4 w-4 shrink-0" />
@@ -57,7 +57,7 @@ export function Sidebar() {
 
       {/* Aurora edge — signature gradient border on right side */}
       <div
-        className="pointer-events-none absolute right-0 top-0 h-full w-px"
+        className="pointer-events-none absolute right-0 top-0 h-full w-px opacity-30"
         style={{
           background:
             'linear-gradient(180deg, transparent 0%, hsl(165 100% 42%) 30%, hsl(195 100% 50%) 70%, transparent 100%)',

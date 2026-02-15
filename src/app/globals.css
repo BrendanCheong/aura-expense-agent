@@ -7,8 +7,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -45,84 +48,169 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Aurora accent colors (used in both themes) */
+  --color-aura-teal: hsl(165, 100%, 42%);
+  --color-aura-teal-hover: hsl(165, 100%, 48%);
+  --color-aura-teal-muted: hsl(165, 60%, 20%);
+  --color-aura-teal-glow: hsla(165, 100%, 50%, 0.15);
+  --color-aura-cyan: hsl(195, 100%, 50%);
+  --color-aura-amber: hsl(38, 100%, 56%);
+  --color-aura-coral: hsl(0, 90%, 65%);
+  --color-aura-emerald: hsl(155, 70%, 50%);
 }
 
+/* ============================================================
+   LIGHT MODE — Warm parchment (Aurora Noir light variant)
+   ============================================================ */
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: hsl(40, 20%, 97%);
+  --foreground: hsl(222, 47%, 11%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(222, 47%, 11%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(222, 47%, 11%);
+  --primary: hsl(165, 100%, 42%);
+  --primary-foreground: hsl(222, 47%, 5%);
+  --secondary: hsl(40, 15%, 96%);
+  --secondary-foreground: hsl(222, 47%, 11%);
+  --muted: hsl(40, 12%, 92%);
+  --muted-foreground: hsl(218, 15%, 45%);
+  --accent: hsl(40, 15%, 96%);
+  --accent-foreground: hsl(222, 47%, 11%);
+  --destructive: hsl(0, 90%, 65%);
+  --border: hsl(40, 10%, 90%);
+  --input: hsl(40, 8%, 85%);
+  --ring: hsl(165, 100%, 42%);
+  /* Charts — slightly desaturated for ink feel */
+  --chart-1: hsl(0, 100%, 71%);
+  --chart-2: hsl(172, 66%, 50%);
+  --chart-3: hsl(199, 93%, 60%);
+  --chart-4: hsl(82, 77%, 55%);
+  --chart-5: hsl(45, 96%, 56%);
+  /* Sidebar */
+  --sidebar: hsl(40, 20%, 97%);
+  --sidebar-foreground: hsl(222, 47%, 11%);
+  --sidebar-primary: hsl(165, 100%, 42%);
+  --sidebar-primary-foreground: hsl(222, 47%, 5%);
+  --sidebar-accent: hsl(40, 15%, 96%);
+  --sidebar-accent-foreground: hsl(222, 47%, 11%);
+  --sidebar-border: hsl(40, 10%, 90%);
+  --sidebar-ring: hsl(165, 100%, 42%);
 }
 
+/* ============================================================
+   DARK MODE — Deep space with aurora glow (primary theme)
+   ============================================================ */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: hsl(222, 47%, 5%);
+  --foreground: hsl(210, 20%, 95%);
+  --card: hsl(222, 30%, 8%);
+  --card-foreground: hsl(210, 20%, 95%);
+  --popover: hsl(222, 30%, 8%);
+  --popover-foreground: hsl(210, 20%, 95%);
+  --primary: hsl(165, 100%, 42%);
+  --primary-foreground: hsl(222, 47%, 5%);
+  --secondary: hsl(222, 25%, 13%);
+  --secondary-foreground: hsl(210, 20%, 95%);
+  --muted: hsl(222, 22%, 18%);
+  --muted-foreground: hsl(215, 15%, 60%);
+  --accent: hsl(222, 25%, 13%);
+  --accent-foreground: hsl(210, 20%, 95%);
+  --destructive: hsl(0, 90%, 65%);
+  --border: hsl(222, 20%, 15%);
+  --input: hsl(222, 18%, 22%);
+  --ring: hsl(165, 100%, 42%);
+  /* Charts — bright saturated for dark bg */
+  --chart-1: hsl(0, 100%, 71%);
+  --chart-2: hsl(172, 66%, 50%);
+  --chart-3: hsl(199, 93%, 60%);
+  --chart-4: hsl(82, 77%, 55%);
+  --chart-5: hsl(45, 96%, 56%);
+  /* Sidebar */
+  --sidebar: hsl(222, 30%, 8%);
+  --sidebar-foreground: hsl(210, 20%, 95%);
+  --sidebar-primary: hsl(165, 100%, 42%);
+  --sidebar-primary-foreground: hsl(222, 47%, 5%);
+  --sidebar-accent: hsl(222, 25%, 13%);
+  --sidebar-accent-foreground: hsl(210, 20%, 95%);
+  --sidebar-border: hsl(222, 20%, 15%);
+  --sidebar-ring: hsl(165, 100%, 42%);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
-    @apply bg-background text-foreground;
   }
+}
+
+/* ============================================================
+   Aurora Noir — Utility classes
+   ============================================================ */
+
+/* Aurora background atmosphere (dark mode only) */
+.aurora-bg {
+  position: relative;
+}
+.dark .aurora-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(
+      ellipse 60% 40% at 15% 10%,
+      hsla(165, 100%, 42%, 0.04) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 40% 50% at 85% 80%,
+      hsla(195, 100%, 50%, 0.03) 0%,
+      transparent 60%
+    );
+}
+
+/* Aurora shimmer animation for new items */
+@keyframes aurora-shimmer {
+  0%   { box-shadow: inset 0 0 0 1px hsla(165, 100%, 50%, 0); }
+  30%  { box-shadow: inset 0 0 0 1px hsla(165, 100%, 50%, 0.3),
+                      0 0 20px hsla(165, 100%, 50%, 0.1); }
+  100% { box-shadow: inset 0 0 0 1px hsla(165, 100%, 50%, 0); }
+}
+
+.aurora-shimmer {
+  animation: aurora-shimmer 1.5s ease-out forwards;
+}
+
+/* Subtle pulse for low-confidence indicators */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Font utility classes for DESIGN.md typography */
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+.font-heading {
+  font-family: var(--font-heading), system-ui, sans-serif;
+}
+.font-body {
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+.font-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
 }

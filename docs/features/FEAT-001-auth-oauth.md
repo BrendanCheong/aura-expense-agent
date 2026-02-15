@@ -6,7 +6,8 @@
 > **Blocked By:** FEAT-003, FEAT-002  
 > **Priority:** P0 (Blocker)  
 > **Estimate:** 1 day  
-> **Assignee:** —
+> **Assignee:** —  
+> **Completed:** 2026-02-15
 
 ---
 

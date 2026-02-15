@@ -50,7 +50,7 @@ export default function CategoriesPage() {
             categorize transactions more accurately.
           </p>
         </div>
-        <Button onClick={() => setCreateOpen(true)} className="gap-1.5">
+        <Button onClick={() => setCreateOpen(true)} className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90">
           <Plus className="h-4 w-4" />
           <span className="hidden sm:inline">New Category</span>
         </Button>

@@ -53,14 +53,14 @@ function CallbackHandler() {
   }, [isDev, redirect, router]);
 
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
+    <main className="aurora-bg relative flex min-h-screen items-center justify-center">
+      <div className="relative z-10 text-center">
         {error ? (
-          <p className="text-red-600">{error}</p>
+          <p className="text-destructive">{error}</p>
         ) : (
           <>
-            <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
-            <p className="text-gray-500">Processing authentication...</p>
+            <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-border border-t-primary" />
+            <p className="text-sm text-muted-foreground">Processing authentication...</p>
           </>
         )}
       </div>

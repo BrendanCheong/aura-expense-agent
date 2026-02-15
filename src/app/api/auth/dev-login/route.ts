@@ -6,7 +6,10 @@ import { OAuthProvider } from '@/lib/enums';
 /**
  * POST /api/auth/dev-login
  *
- * Dev-only endpoint. Creates or returns the dev user.
+ * Dev-only endpoint. Creates or returns the dev user and sets
+ * a dev_session cookie so the browser maintains identity across
+ * requests (even though PROJECT_ENV=dev bypasses auth checks).
+ *
  * Only available when PROJECT_ENV=dev.
  */
 export async function POST() {
@@ -26,7 +29,21 @@ export async function POST() {
       oauthProvider: OAuthProvider.GOOGLE,
     });
 
-    return NextResponse.json({ user });
+    const response = NextResponse.json({ user });
+
+    // Set a dev session cookie so the browser has a persistent identity.
+    // This cookie is not validated in dev mode — it simply prevents the
+    // middleware from redirecting to /login if someone removes the
+    // PROJECT_ENV bypass in the future.
+    response.cookies.set('dev_session', 'dev-user-001', {
+      httpOnly: true,
+      secure: false, // localhost
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+
+    return response;
   } catch (err) {
     console.error('dev-login error:', err);
     return NextResponse.json(

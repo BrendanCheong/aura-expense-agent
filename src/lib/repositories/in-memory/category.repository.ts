@@ -64,25 +64,27 @@ const DEFAULT_CATEGORIES = [
 export class InMemoryCategoryRepository implements ICategoryRepository {
   private store: Map<string, Category> = new Map();
 
-  async findById(id: string): Promise<Category | null> {
-    return this.store.get(id) ?? null;
+  findById(id: string): Promise<Category | null> {
+    return Promise.resolve(this.store.get(id) ?? null);
   }
 
-  async findByUserId(userId: string): Promise<Category[]> {
-    return Array.from(this.store.values())
-      .filter((c) => c.userId === userId)
-      .sort((a, b) => a.sortOrder - b.sortOrder);
+  findByUserId(userId: string): Promise<Category[]> {
+    return Promise.resolve(
+      Array.from(this.store.values())
+        .filter((c) => c.userId === userId)
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+    );
   }
 
-  async findByUserIdAndName(userId: string, name: string): Promise<Category | null> {
+  findByUserIdAndName(userId: string, name: string): Promise<Category | null> {
     const lower = name.toLowerCase();
     for (const c of this.store.values()) {
-      if (c.userId === userId && c.name.toLowerCase() === lower) {return c;}
+      if (c.userId === userId && c.name.toLowerCase() === lower) {return Promise.resolve(c);}
     }
-    return null;
+    return Promise.resolve(null);
   }
 
-  async create(data: CategoryCreate): Promise<Category> {
+  create(data: CategoryCreate): Promise<Category> {
     const now = new Date().toISOString();
     const category: Category = {
       id: crypto.randomUUID(),
@@ -97,12 +99,12 @@ export class InMemoryCategoryRepository implements ICategoryRepository {
       updatedAt: now,
     };
     this.store.set(category.id, category);
-    return category;
+    return Promise.resolve(category);
   }
 
-  async update(id: string, data: CategoryUpdate): Promise<Category> {
+  update(id: string, data: CategoryUpdate): Promise<Category> {
     const existing = this.store.get(id);
-    if (!existing) {throw new Error(`Category ${id} not found`);}
+    if (!existing) {return Promise.reject(new Error(`Category ${id} not found`));}
 
     const updated: Category = {
       ...existing,
@@ -114,11 +116,12 @@ export class InMemoryCategoryRepository implements ICategoryRepository {
       updatedAt: new Date().toISOString(),
     };
     this.store.set(id, updated);
-    return updated;
+    return Promise.resolve(updated);
   }
 
-  async delete(id: string): Promise<void> {
+  delete(id: string): Promise<void> {
     this.store.delete(id);
+    return Promise.resolve();
   }
 
   async seedDefaults(userId: string): Promise<Category[]> {

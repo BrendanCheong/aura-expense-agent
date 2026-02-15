@@ -9,25 +9,31 @@ import type { Transaction, TransactionCreate, TransactionUpdate } from '@/types/
 export class InMemoryTransactionRepository implements ITransactionRepository {
   private store: Map<string, Transaction> = new Map();
 
-  async findById(id: string): Promise<Transaction | null> {
-    return this.store.get(id) ?? null;
+  findById(id: string): Promise<Transaction | null> {
+    return Promise.resolve(this.store.get(id) ?? null);
   }
 
-  async findByResendEmailId(resendEmailId: string): Promise<Transaction | null> {
+  findByResendEmailId(resendEmailId: string): Promise<Transaction | null> {
     for (const tx of this.store.values()) {
-      if (tx.resendEmailId === resendEmailId) {return tx;}
+      if (tx.resendEmailId === resendEmailId) {return Promise.resolve(tx);}
     }
-    return null;
+    return Promise.resolve(null);
   }
 
-  async findByUserId(
+  findByUserId(
     userId: string,
     options: TransactionQueryOptions
   ): Promise<PaginatedResult<Transaction>> {
     let data = Array.from(this.store.values()).filter((tx) => tx.userId === userId);
 
-    if (options.startDate) {data = data.filter((tx) => tx.transactionDate >= options.startDate!);}
-    if (options.endDate) {data = data.filter((tx) => tx.transactionDate < options.endDate!);}
+    if (options.startDate) {
+      const startDate = options.startDate;
+      data = data.filter((tx) => tx.transactionDate >= startDate);
+    }
+    if (options.endDate) {
+      const endDate = options.endDate;
+      data = data.filter((tx) => tx.transactionDate < endDate);
+    }
     if (options.categoryId) {data = data.filter((tx) => tx.categoryId === options.categoryId);}
     if (options.source) {data = data.filter((tx) => tx.source === options.source);}
 
@@ -54,37 +60,41 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
     const start = (options.page - 1) * options.limit;
     const paged = data.slice(start, start + options.limit);
 
-    return {
+    return Promise.resolve({
       data: paged,
       total,
       page: options.page,
       limit: options.limit,
       hasMore: total > start + options.limit,
-    };
+    });
   }
 
-  async findByUserAndDateRange(userId: string, start: string, end: string): Promise<Transaction[]> {
-    return Array.from(this.store.values()).filter(
-      (tx) => tx.userId === userId && tx.transactionDate >= start && tx.transactionDate < end
+  findByUserAndDateRange(userId: string, start: string, end: string): Promise<Transaction[]> {
+    return Promise.resolve(
+      Array.from(this.store.values()).filter(
+        (tx) => tx.userId === userId && tx.transactionDate >= start && tx.transactionDate < end
+      )
     );
   }
 
-  async findByUserCategoryDateRange(
+  findByUserCategoryDateRange(
     userId: string,
     categoryId: string,
     start: string,
     end: string
   ): Promise<Transaction[]> {
-    return Array.from(this.store.values()).filter(
-      (tx) =>
-        tx.userId === userId &&
-        tx.categoryId === categoryId &&
-        tx.transactionDate >= start &&
-        tx.transactionDate < end
+    return Promise.resolve(
+      Array.from(this.store.values()).filter(
+        (tx) =>
+          tx.userId === userId &&
+          tx.categoryId === categoryId &&
+          tx.transactionDate >= start &&
+          tx.transactionDate < end
+      )
     );
   }
 
-  async create(data: TransactionCreate): Promise<Transaction> {
+  create(data: TransactionCreate): Promise<Transaction> {
     const now = new Date().toISOString();
     const tx: Transaction = {
       id: crypto.randomUUID(),
@@ -102,12 +112,12 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
       updatedAt: now,
     };
     this.store.set(tx.id, tx);
-    return tx;
+    return Promise.resolve(tx);
   }
 
-  async update(id: string, data: TransactionUpdate): Promise<Transaction> {
+  update(id: string, data: TransactionUpdate): Promise<Transaction> {
     const existing = this.store.get(id);
-    if (!existing) {throw new Error(`Transaction ${id} not found`);}
+    if (!existing) {return Promise.reject(new Error(`Transaction ${id} not found`));}
 
     const updated: Transaction = {
       ...existing,
@@ -120,11 +130,12 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
       updatedAt: new Date().toISOString(),
     };
     this.store.set(id, updated);
-    return updated;
+    return Promise.resolve(updated);
   }
 
-  async delete(id: string): Promise<void> {
+  delete(id: string): Promise<void> {
     this.store.delete(id);
+    return Promise.resolve();
   }
 
   /**

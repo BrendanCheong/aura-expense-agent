@@ -4,17 +4,19 @@ import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
 export class InMemoryBudgetRepository implements IBudgetRepository {
   private store: Map<string, Budget> = new Map();
 
-  async findById(id: string): Promise<Budget | null> {
-    return this.store.get(id) ?? null;
+  findById(id: string): Promise<Budget | null> {
+    return Promise.resolve(this.store.get(id) ?? null);
   }
 
-  async findByUserAndPeriod(userId: string, year: number, month: number): Promise<Budget[]> {
-    return Array.from(this.store.values()).filter(
-      (b) => b.userId === userId && b.year === year && b.month === month
+  findByUserAndPeriod(userId: string, year: number, month: number): Promise<Budget[]> {
+    return Promise.resolve(
+      Array.from(this.store.values()).filter(
+        (b) => b.userId === userId && b.year === year && b.month === month
+      )
     );
   }
 
-  async findByUserCategoryPeriod(
+  findByUserCategoryPeriod(
     userId: string,
     categoryId: string,
     year: number,
@@ -27,13 +29,13 @@ export class InMemoryBudgetRepository implements IBudgetRepository {
         b.year === year &&
         b.month === month
       ) {
-        return b;
+        return Promise.resolve(b);
       }
     }
-    return null;
+    return Promise.resolve(null);
   }
 
-  async create(data: BudgetCreate): Promise<Budget> {
+  create(data: BudgetCreate): Promise<Budget> {
     const now = new Date().toISOString();
     const budget: Budget = {
       id: crypto.randomUUID(),
@@ -46,12 +48,12 @@ export class InMemoryBudgetRepository implements IBudgetRepository {
       updatedAt: now,
     };
     this.store.set(budget.id, budget);
-    return budget;
+    return Promise.resolve(budget);
   }
 
-  async update(id: string, data: BudgetUpdate): Promise<Budget> {
+  update(id: string, data: BudgetUpdate): Promise<Budget> {
     const existing = this.store.get(id);
-    if (!existing) {throw new Error(`Budget ${id} not found`);}
+    if (!existing) {return Promise.reject(new Error(`Budget ${id} not found`));}
 
     const updated: Budget = {
       ...existing,
@@ -59,14 +61,15 @@ export class InMemoryBudgetRepository implements IBudgetRepository {
       updatedAt: new Date().toISOString(),
     };
     this.store.set(id, updated);
-    return updated;
+    return Promise.resolve(updated);
   }
 
-  async delete(id: string): Promise<void> {
+  delete(id: string): Promise<void> {
     this.store.delete(id);
+    return Promise.resolve();
   }
 
-  async deleteByCategoryId(categoryId: string): Promise<void> {
+  deleteByCategoryId(categoryId: string): Promise<void> {
     const idsToDelete: string[] = [];
     for (const [id, budget] of this.store.entries()) {
       if (budget.categoryId === categoryId) {
@@ -76,6 +79,7 @@ export class InMemoryBudgetRepository implements IBudgetRepository {
     for (const id of idsToDelete) {
       this.store.delete(id);
     }
+    return Promise.resolve();
   }
 
   /** Test helper: reset the store */

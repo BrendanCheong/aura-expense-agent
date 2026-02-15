@@ -6,18 +6,18 @@ import { BudgetMode } from '@/lib/enums';
 export class InMemoryUserRepository implements IUserRepository {
   private users = new Map<string, User>();
 
-  async findById(id: string): Promise<User | null> {
-    return this.users.get(id) ?? null;
+  findById(id: string): Promise<User | null> {
+    return Promise.resolve(this.users.get(id) ?? null);
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  findByEmail(email: string): Promise<User | null> {
     for (const user of this.users.values()) {
-      if (user.email === email) {return user;}
+      if (user.email === email) {return Promise.resolve(user);}
     }
-    return null;
+    return Promise.resolve(null);
   }
 
-  async create(id: string, data: UserCreate): Promise<User> {
+  create(id: string, data: UserCreate): Promise<User> {
     const now = new Date().toISOString();
     const user: User = {
       id,
@@ -32,12 +32,12 @@ export class InMemoryUserRepository implements IUserRepository {
       updatedAt: now,
     };
     this.users.set(id, user);
-    return user;
+    return Promise.resolve(user);
   }
 
-  async update(id: string, data: UserUpdate): Promise<User> {
+  update(id: string, data: UserUpdate): Promise<User> {
     const existing = this.users.get(id);
-    if (!existing) {throw new Error(`User not found: ${id}`);}
+    if (!existing) {return Promise.reject(new Error(`User not found: ${id}`));}
 
     const updated: User = {
       ...existing,
@@ -45,7 +45,7 @@ export class InMemoryUserRepository implements IUserRepository {
       updatedAt: new Date().toISOString(),
     };
     this.users.set(id, updated);
-    return updated;
+    return Promise.resolve(updated);
   }
 
   /** Test helper: clear all data. */

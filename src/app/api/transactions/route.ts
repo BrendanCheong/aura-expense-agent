@@ -10,7 +10,9 @@ import {
   serverErrorResponse,
   unauthorizedResponse,
   validationErrorResponse,
+  invalidJsonResponse,
 } from '@/lib/validation/http';
+import { HttpStatus } from '@/lib/constants';
 
 function getUserIdFromRequest(request: NextRequest): string | null {
   return request.headers.get('x-user-id');
@@ -38,7 +40,7 @@ export async function GET(request: NextRequest) {
   try {
     const { transactionService } = await createTestContainer();
     const result = await transactionService.listTransactions(userId, queryResult.data);
-    return NextResponse.json(result, { status: 200 });
+    return NextResponse.json(result, { status: HttpStatus.OK });
   } catch {
     return serverErrorResponse();
   }
@@ -57,9 +59,7 @@ export async function POST(request: NextRequest) {
   if (!userId) return unauthorizedResponse();
 
   const body = await request.json().catch(() => null);
-  if (!body) {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
-  }
+  if (!body) return invalidJsonResponse();
 
   const bodyResult = createTransactionBodySchema.safeParse(body);
   if (!bodyResult.success) {
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
   try {
     const { transactionService } = await createTestContainer();
     const created = await transactionService.createManualTransaction(userId, bodyResult.data);
-    return NextResponse.json(created, { status: 201 });
+    return NextResponse.json(created, { status: HttpStatus.CREATED });
   } catch {
     return serverErrorResponse();
   }

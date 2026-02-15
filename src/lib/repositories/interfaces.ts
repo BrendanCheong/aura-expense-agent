@@ -3,6 +3,7 @@ import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category'
 import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
 import type { VendorCacheEntry } from '@/types/vendor-cache';
 import type { User, UserCreate, UserUpdate } from '@/types/user';
+import { TransactionSource } from '@/lib/enums';
 
 // --- Shared Types ---
 
@@ -12,7 +13,7 @@ export interface TransactionQueryOptions {
   startDate?: string;
   endDate?: string;
   categoryId?: string;
-  source?: 'email' | 'manual';
+  source?: TransactionSource;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 }

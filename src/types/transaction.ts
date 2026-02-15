@@ -1,3 +1,5 @@
+import { Confidence, TransactionSource } from '@/lib/enums';
+
 export interface Transaction {
   id: string;
   userId: string;
@@ -8,8 +10,8 @@ export interface Transaction {
   transactionDate: string;
   resendEmailId: string | null;
   rawEmailSubject: string;
-  confidence: 'high' | 'medium' | 'low';
-  source: 'email' | 'manual';
+  confidence: Confidence;
+  source: TransactionSource;
   createdAt: string;
   updatedAt: string;
 }
@@ -23,8 +25,8 @@ export interface TransactionCreate {
   transactionDate: string;
   resendEmailId: string | null;
   rawEmailSubject: string;
-  confidence: 'high' | 'medium' | 'low';
-  source: 'email' | 'manual';
+  confidence: Confidence;
+  source: TransactionSource;
 }
 
 export interface TransactionUpdate {
@@ -33,5 +35,5 @@ export interface TransactionUpdate {
   vendor?: string;
   description?: string;
   transactionDate?: string;
-  confidence?: 'high' | 'medium' | 'low';
+  confidence?: Confidence;
 }

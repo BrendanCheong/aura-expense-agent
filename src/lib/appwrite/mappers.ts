@@ -10,6 +10,7 @@ import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
 import type { VendorCacheEntry } from '@/types/vendor-cache';
 import type { User, UserCreate, UserUpdate } from '@/types/user';
 import type { Models } from 'node-appwrite';
+import { Confidence, TransactionSource, OAuthProvider, BudgetMode } from '@/lib/enums';
 import type {
   UserRow,
   CategoryRow,
@@ -43,8 +44,8 @@ export function mapRowToTransaction(row: TransactionRow): Transaction {
     transactionDate: row.transaction_date,
     resendEmailId: row.resend_email_id ?? null,
     rawEmailSubject: row.raw_email_subject ?? '',
-    confidence: row.confidence as Transaction['confidence'],
-    source: row.source as Transaction['source'],
+    confidence: row.confidence as Confidence,
+    source: row.source as TransactionSource,
     createdAt: row.$createdAt,
     updatedAt: row.$updatedAt,
   };
@@ -169,9 +170,9 @@ export function mapRowToUser(row: UserRow): User {
     name: row.name,
     avatarUrl: row.avatar_url ?? '',
     inboundEmail: row.inbound_email ?? '',
-    oauthProvider: row.oauth_provider as User['oauthProvider'],
+    oauthProvider: row.oauth_provider as OAuthProvider,
     monthlySalary: row.monthly_salary ?? null,
-    budgetMode: (row.budget_mode ?? 'direct') as User['budgetMode'],
+    budgetMode: (row.budget_mode ?? BudgetMode.DIRECT) as BudgetMode,
     createdAt: row.$createdAt,
     updatedAt: row.$updatedAt,
   };
@@ -185,7 +186,7 @@ export function mapUserToRow(data: UserCreate): UserRowData {
     inbound_email: '',
     oauth_provider: data.oauthProvider,
     monthly_salary: 0,
-    budget_mode: 'direct',
+    budget_mode: BudgetMode.DIRECT,
   };
 }
 

@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { notImplementedResponse } from '@/lib/validation/http';
 
 /**
  * POST /api/feedback/approve
@@ -18,8 +19,5 @@ export async function POST(_request: NextRequest) {
   // 4. Update vendor cache with new mapping
   // 5. Store correction in Mem0 for future recall
   // 6. Return confirmation with vendorCacheUpdated, memoryStored flags
-  return NextResponse.json(
-    { error: 'Not implemented' },
-    { status: 501 },
-  );
+  return notImplementedResponse();
 }

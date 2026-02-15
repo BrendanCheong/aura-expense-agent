@@ -1,5 +1,5 @@
 import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { notImplementedResponse } from '@/lib/validation/http';
 
 /**
  * POST /api/webhooks/resend
@@ -23,8 +23,5 @@ export async function POST(_request: NextRequest) {
   // 6. Dedup check (resendEmailId)
   // 7. Vendor cache fast path
   // 8. Invoke LangGraph agent pipeline
-  return NextResponse.json(
-    { error: 'Not implemented' },
-    { status: 501 },
-  );
+  return notImplementedResponse();
 }

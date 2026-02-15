@@ -6,8 +6,12 @@ import {
   paginationSchema,
   sortOrderSchema,
 } from './common.schemas';
+import { TransactionSource, Confidence } from '@/lib/enums';
 
-export const transactionSourceSchema = z.enum(['email', 'manual']);
+export const transactionSourceSchema = z.enum([
+  TransactionSource.EMAIL,
+  TransactionSource.MANUAL,
+]);
 
 export const listTransactionsQuerySchema = paginationSchema.extend({
   startDate: z.string().optional(),
@@ -36,7 +40,7 @@ export const updateTransactionBodySchema = z.object({
   vendor: z.string().min(1).max(200).optional(),
   description: z.string().max(1000).optional(),
   transactionDate: isoDateTimeSchema.optional(),
-  confidence: z.enum(['high', 'medium', 'low']).optional(),
+  confidence: z.enum([Confidence.HIGH, Confidence.MEDIUM, Confidence.LOW]).optional(),
 }).refine((value) => Object.keys(value).length > 0, {
   message: 'At least one field must be provided',
 });

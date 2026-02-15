@@ -8,6 +8,7 @@ import {
   mapCategoryToRow,
   mapBudgetToRow,
 } from '@/lib/appwrite/mappers';
+import { Confidence, TransactionSource } from '@/lib/enums';
 
 describe('Appwrite Row Mappers', () => {
   describe('mapRowToTransaction', () => {
@@ -44,8 +45,8 @@ describe('Appwrite Row Mappers', () => {
         transactionDate: '2026-02-01T12:30:00+08:00',
         resendEmailId: 'email-abc',
         rawEmailSubject: 'Transaction alert: GRAB',
-        confidence: 'high',
-        source: 'email',
+        confidence: Confidence.HIGH,
+        source: TransactionSource.EMAIL,
         createdAt: '2026-02-01T00:00:00.000Z',
         updatedAt: '2026-02-01T00:00:00.000Z',
       });
@@ -74,7 +75,7 @@ describe('Appwrite Row Mappers', () => {
 
       const result = mapRowToTransaction(row);
       expect(result.resendEmailId).toBeNull();
-      expect(result.source).toBe('manual');
+      expect(result.source).toBe(TransactionSource.MANUAL);
     });
   });
 
@@ -187,8 +188,8 @@ describe('Appwrite Row Mappers', () => {
         transactionDate: '2026-02-01T12:30:00+08:00',
         resendEmailId: 'email-abc',
         rawEmailSubject: 'Transaction alert',
-        confidence: 'high' as const,
-        source: 'email' as const,
+        confidence: Confidence.HIGH,
+        source: TransactionSource.EMAIL,
       };
 
       const result = mapTransactionToRow(data);

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { AppwriteUserRepository } from '@/lib/repositories/appwrite/user.repository';
+import { OAuthProvider, BudgetMode } from '@/lib/enums';
 
 // Mock TablesDB
 function createMockTablesDb() {
@@ -102,7 +103,7 @@ describe('AppwriteUserRepository', () => {
         email: 'new@example.com',
         name: 'New User',
         avatarUrl: 'https://example.com/a.png',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       expect(user.id).toBe('user-1');
@@ -136,7 +137,7 @@ describe('AppwriteUserRepository', () => {
       const user = await repo.update('user-1', {
         name: 'Updated Name',
         monthlySalary: 6000,
-        budgetMode: 'percentage',
+        budgetMode: BudgetMode.PERCENTAGE,
       });
 
       expect(user.name).toBe('Updated Name');

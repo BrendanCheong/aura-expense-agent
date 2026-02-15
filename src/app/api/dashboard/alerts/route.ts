@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { notImplementedResponse } from '@/lib/validation/http';
 
 /**
  * GET /api/dashboard/alerts
@@ -13,8 +14,5 @@ export async function GET(_request: NextRequest) {
   // 1. Authenticate user
   // 2. Compute current month spending vs budgets
   // 3. Return alerts array with type (warning/over_budget), amounts, messages
-  return NextResponse.json(
-    { error: 'Not implemented' },
-    { status: 501 },
-  );
+  return notImplementedResponse();
 }

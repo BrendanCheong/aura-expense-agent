@@ -1,3 +1,5 @@
+import { Confidence } from '@/lib/enums';
+
 export interface AgentInput {
   emailHtml: string;
   emailText: string;
@@ -12,7 +14,7 @@ export interface AgentOutput {
   vendor: string;
   amount: number;
   categoryId: string;
-  confidence: 'high' | 'medium' | 'low';
+  confidence: Confidence;
 }
 
 export interface ExpenseAgentConfig {

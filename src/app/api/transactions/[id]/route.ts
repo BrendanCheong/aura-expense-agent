@@ -1,5 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { notImplementedResponse } from '@/lib/validation/http';
+import { HttpStatus } from '@/lib/constants';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -19,10 +21,7 @@ export async function PATCH(_request: NextRequest, _context: RouteParams) {
   // 2. Parse route param (id) and request body
   // 3. Call transactionService.updateTransaction()
   // 4. Return updated transaction
-  return NextResponse.json(
-    { error: 'Not implemented' },
-    { status: 501 },
-  );
+  return notImplementedResponse();
 }
 
 /**
@@ -37,5 +36,5 @@ export async function DELETE(_request: NextRequest, _context: RouteParams) {
   // 2. Parse route param (id)
   // 3. Call transactionService.deleteTransaction()
   // 4. Return 204
-  return new NextResponse(null, { status: 204 });
+  return new NextResponse(null, { status: HttpStatus.NO_CONTENT });
 }

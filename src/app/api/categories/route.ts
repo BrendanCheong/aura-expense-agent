@@ -7,7 +7,10 @@ import {
   unauthorizedResponse,
   validationErrorResponse,
   serverErrorResponse,
+  invalidJsonResponse,
+  conflictResponse,
 } from '@/lib/validation/http';
+import { HttpStatus } from '@/lib/constants';
 
 /**
  * GET /api/categories
@@ -22,7 +25,7 @@ export async function GET(request: NextRequest) {
   try {
     const { categoryService } = await createContainer();
     const categories = await categoryService.listCategories(user.accountId);
-    return NextResponse.json(categories, { status: 200 });
+    return NextResponse.json(categories, { status: HttpStatus.OK });
   } catch {
     return serverErrorResponse();
   }
@@ -42,9 +45,7 @@ export async function POST(request: NextRequest) {
   if (!user) return unauthorizedResponse();
 
   const body = await request.json().catch(() => null);
-  if (!body) {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
-  }
+  if (!body) return invalidJsonResponse();
 
   const bodyResult = createCategoryBodySchema.safeParse(body);
   if (!bodyResult.success) {
@@ -58,10 +59,10 @@ export async function POST(request: NextRequest) {
       isDefault: false,
       sortOrder: 0,
     });
-    return NextResponse.json(category, { status: 201 });
+    return NextResponse.json(category, { status: HttpStatus.CREATED });
   } catch (error) {
     if (error instanceof Error && error.message.includes('already exists')) {
-      return NextResponse.json({ error: error.message }, { status: 409 });
+      return conflictResponse(error.message);
     }
     return serverErrorResponse();
   }

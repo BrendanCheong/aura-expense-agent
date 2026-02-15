@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createContainer } from '@/lib/container/container';
 import { getSessionUser } from '@/lib/appwrite/session';
+import { HttpStatus, ErrorMessage } from '@/lib/constants';
 
 /**
  * GET /api/user/profile
@@ -12,7 +13,10 @@ import { getSessionUser } from '@/lib/appwrite/session';
 export async function GET(request: NextRequest) {
   const session = await getSessionUser(request);
   if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json(
+      { error: ErrorMessage.UNAUTHORIZED },
+      { status: HttpStatus.UNAUTHORIZED },
+    );
   }
 
   try {
@@ -20,13 +24,19 @@ export async function GET(request: NextRequest) {
     const user = await container.authService.getUserById(session.accountId);
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: ErrorMessage.USER_NOT_FOUND },
+        { status: HttpStatus.NOT_FOUND },
+      );
     }
 
     return NextResponse.json({ user });
   } catch (err) {
     console.error('GET /api/user/profile error:', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: ErrorMessage.INTERNAL_SERVER_ERROR },
+      { status: HttpStatus.INTERNAL_SERVER_ERROR },
+    );
   }
 }
 
@@ -39,7 +49,10 @@ export async function GET(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   const session = await getSessionUser(request);
   if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json(
+      { error: ErrorMessage.UNAUTHORIZED },
+      { status: HttpStatus.UNAUTHORIZED },
+    );
   }
 
   try {
@@ -53,6 +66,9 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ user: updated });
   } catch (err) {
     console.error('PATCH /api/user/profile error:', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: ErrorMessage.INTERNAL_SERVER_ERROR },
+      { status: HttpStatus.INTERNAL_SERVER_ERROR },
+    );
   }
 }

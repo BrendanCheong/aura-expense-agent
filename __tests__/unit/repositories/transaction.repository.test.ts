@@ -1,6 +1,7 @@
 import { beforeEach, describe, it, expect } from 'vitest';
 import { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
 import type { TransactionCreate } from '@/types/transaction';
+import { Confidence, TransactionSource } from '@/lib/enums';
 import fixtures from '../../fixtures/transactions.json';
 
 let repo: InMemoryTransactionRepository;
@@ -14,8 +15,8 @@ const seedData: TransactionCreate[] = fixtures.map((tx) => ({
   transactionDate: tx.transaction_date,
   resendEmailId: tx.resend_email_id,
   rawEmailSubject: tx.raw_email_subject,
-  confidence: tx.confidence as 'high' | 'medium' | 'low',
-  source: tx.source as 'email' | 'manual',
+  confidence: tx.confidence as Confidence,
+  source: tx.source as TransactionSource,
 }));
 
 beforeEach(async () => {
@@ -99,9 +100,9 @@ describe('InMemoryTransactionRepository', () => {
       const result = await repo.findByUserId('test-user-001', {
         page: 1,
         limit: 100,
-        source: 'email',
+        source: TransactionSource.EMAIL,
       });
-      result.data.forEach(tx => expect(tx.source).toBe('email'));
+      result.data.forEach(tx => expect(tx.source).toBe(TransactionSource.EMAIL));
       // There should be 15 email transactions (16 total minus 1 manual)
       expect(result.data.length).toBe(15);
     });
@@ -135,8 +136,8 @@ describe('InMemoryTransactionRepository', () => {
         transactionDate: '2026-02-20T12:00:00+08:00',
         resendEmailId: 'resend-new',
         rawEmailSubject: 'Test Subject',
-        confidence: 'high',
-        source: 'manual',
+        confidence: Confidence.HIGH,
+        source: TransactionSource.MANUAL,
       });
 
       expect(created.id).toBeTruthy();

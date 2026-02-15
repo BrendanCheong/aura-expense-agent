@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { AuthService } from '@/lib/services/auth.service';
 import { InMemoryUserRepository } from '@/lib/repositories/in-memory/user.repository';
 import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
+import { OAuthProvider, BudgetMode } from '@/lib/enums';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -20,7 +21,7 @@ describe('AuthService', () => {
         email: 'new@example.com',
         name: 'New User',
         avatarUrl: 'https://example.com/avatar.png',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       expect(user.id).toBe('user-1');
@@ -33,7 +34,7 @@ describe('AuthService', () => {
         email: 'new@example.com',
         name: 'New User',
         avatarUrl: '',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       const categories = await categoryRepo.findByUserId('user-1');
@@ -56,7 +57,7 @@ describe('AuthService', () => {
         email: 'existing@example.com',
         name: 'User',
         avatarUrl: '',
-        oauthProvider: 'github',
+        oauthProvider: OAuthProvider.GITHUB,
       });
 
       // Second login — same email
@@ -64,7 +65,7 @@ describe('AuthService', () => {
         email: 'existing@example.com',
         name: 'User Updated',
         avatarUrl: 'https://new-avatar.png',
-        oauthProvider: 'github',
+        oauthProvider: OAuthProvider.GITHUB,
       });
 
       expect(second.id).toBe(first.id);
@@ -78,14 +79,14 @@ describe('AuthService', () => {
         email: 'user@example.com',
         name: 'Old Name',
         avatarUrl: 'https://old.png',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       const updated = await authService.getOrCreateUser('user-1', {
         email: 'user@example.com',
         name: 'New Name',
         avatarUrl: 'https://new.png',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       expect(updated.name).toBe('New Name');
@@ -99,7 +100,7 @@ describe('AuthService', () => {
         email: 'test@example.com',
         name: 'Test',
         avatarUrl: '',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       const user = await authService.getUserById('user-1');
@@ -119,16 +120,16 @@ describe('AuthService', () => {
         email: 'test@example.com',
         name: 'Test',
         avatarUrl: '',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       const updated = await authService.updateUserProfile('user-1', {
         monthlySalary: 6000,
-        budgetMode: 'percentage',
+        budgetMode: BudgetMode.PERCENTAGE,
       });
 
       expect(updated.monthlySalary).toBe(6000);
-      expect(updated.budgetMode).toBe('percentage');
+      expect(updated.budgetMode).toBe(BudgetMode.PERCENTAGE);
     });
 
     it('should throw for non-existent user', async () => {

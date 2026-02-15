@@ -7,7 +7,10 @@ import {
   unauthorizedResponse,
   validationErrorResponse,
   serverErrorResponse,
+  invalidJsonResponse,
+  notFoundResponse,
 } from '@/lib/validation/http';
+import { HttpStatus } from '@/lib/constants';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -30,9 +33,7 @@ export async function PATCH(request: NextRequest, context: RouteParams) {
   }
 
   const body = await request.json().catch(() => null);
-  if (!body) {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
-  }
+  if (!body) return invalidJsonResponse();
 
   const bodyResult = updateCategoryBodySchema.safeParse(body);
   if (!bodyResult.success) {
@@ -46,10 +47,10 @@ export async function PATCH(request: NextRequest, context: RouteParams) {
       paramResult.data.id,
       bodyResult.data,
     );
-    return NextResponse.json(updated, { status: 200 });
+    return NextResponse.json(updated, { status: HttpStatus.OK });
   } catch (error) {
     if (error instanceof Error && error.message.includes('not found')) {
-      return NextResponse.json({ error: error.message }, { status: 404 });
+      return notFoundResponse(error.message);
     }
     return serverErrorResponse();
   }
@@ -77,13 +78,13 @@ export async function DELETE(request: NextRequest, context: RouteParams) {
   try {
     const { categoryService } = await createContainer();
     await categoryService.deleteCategory(user.accountId, paramResult.data.id);
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: HttpStatus.NO_CONTENT });
   } catch (error) {
     if (error instanceof Error && error.message.includes('not found')) {
-      return NextResponse.json({ error: error.message }, { status: 404 });
+      return notFoundResponse(error.message);
     }
     if (error instanceof Error && error.message.includes('Cannot delete')) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      return NextResponse.json({ error: error.message }, { status: HttpStatus.BAD_REQUEST });
     }
     return serverErrorResponse();
   }

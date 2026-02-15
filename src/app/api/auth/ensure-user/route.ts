@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createContainer } from '@/lib/container/container';
 import { getSessionUser } from '@/lib/appwrite/session';
+import { HttpStatus, ErrorMessage } from '@/lib/constants';
+import { OAuthProvider } from '@/lib/enums';
 
 /**
  * POST /api/auth/ensure-user
@@ -16,15 +18,18 @@ export async function POST(request: NextRequest) {
 
     if (!accountId || !email || !name) {
       return NextResponse.json(
-        { error: 'Missing required fields: accountId, email, name' },
-        { status: 400 },
+        { error: ErrorMessage.MISSING_REQUIRED_FIELDS },
+        { status: HttpStatus.BAD_REQUEST },
       );
     }
 
     // Verify the caller is authenticated (session matches accountId)
     const sessionUser = await getSessionUser(request);
     if (!sessionUser || sessionUser.accountId !== accountId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        { error: ErrorMessage.UNAUTHORIZED },
+        { status: HttpStatus.UNAUTHORIZED },
+      );
     }
 
     const container = await createContainer();
@@ -32,15 +37,15 @@ export async function POST(request: NextRequest) {
       email,
       name,
       avatarUrl: avatarUrl ?? '',
-      oauthProvider: 'google', // Will be determined from session in future
+      oauthProvider: OAuthProvider.GOOGLE, // Will be determined from session in future
     });
 
     return NextResponse.json({ user });
   } catch (err) {
     console.error('ensure-user error:', err);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
+      { error: ErrorMessage.INTERNAL_SERVER_ERROR },
+      { status: HttpStatus.INTERNAL_SERVER_ERROR },
     );
   }
 }

@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { HttpStatus } from '@/lib/constants';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -17,5 +18,5 @@ export async function DELETE(_request: NextRequest, _context: RouteParams) {
   // 2. Parse route param (id)
   // 3. Call budgetService.deleteBudget()
   // 4. Return 204
-  return new NextResponse(null, { status: 204 });
+  return new NextResponse(null, { status: HttpStatus.NO_CONTENT });
 }

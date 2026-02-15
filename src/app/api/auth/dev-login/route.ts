@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createContainer } from '@/lib/container/container';
+import { HttpStatus, ErrorMessage } from '@/lib/constants';
+import { OAuthProvider } from '@/lib/enums';
 
 /**
  * POST /api/auth/dev-login
@@ -11,7 +13,7 @@ export async function POST() {
   if (process.env.PROJECT_ENV !== 'dev') {
     return NextResponse.json(
       { error: 'Dev login not available in production' },
-      { status: 403 },
+      { status: HttpStatus.FORBIDDEN },
     );
   }
 
@@ -21,15 +23,15 @@ export async function POST() {
       email: 'dev@aura.local',
       name: 'Dev User',
       avatarUrl: '',
-      oauthProvider: 'google',
+      oauthProvider: OAuthProvider.GOOGLE,
     });
 
     return NextResponse.json({ user });
   } catch (err) {
     console.error('dev-login error:', err);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
+      { error: ErrorMessage.INTERNAL_SERVER_ERROR },
+      { status: HttpStatus.INTERNAL_SERVER_ERROR },
     );
   }
 }

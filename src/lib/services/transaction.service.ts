@@ -12,6 +12,7 @@ import type {
 } from '@/lib/repositories/interfaces';
 import type { Transaction, TransactionUpdate } from '@/types/transaction';
 import { normalizeVendorName } from '@/lib/utils/vendor';
+import { Confidence, TransactionSource } from '@/lib/enums';
 
 export class TransactionService {
   constructor(
@@ -51,8 +52,8 @@ export class TransactionService {
       transactionDate: data.transactionDate,
       resendEmailId: null,
       rawEmailSubject: '',
-      confidence: 'high',
-      source: 'manual',
+      confidence: Confidence.HIGH,
+      source: TransactionSource.MANUAL,
     });
 
     const normalizedVendor = normalizeVendorName(data.vendor);

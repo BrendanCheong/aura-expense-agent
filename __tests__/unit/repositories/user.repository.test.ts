@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { InMemoryUserRepository } from '@/lib/repositories/in-memory/user.repository';
 import type { User } from '@/types/user';
+import { OAuthProvider, BudgetMode } from '@/lib/enums';
 
 describe('InMemoryUserRepository', () => {
   let repo: InMemoryUserRepository;
@@ -15,16 +16,16 @@ describe('InMemoryUserRepository', () => {
         email: 'test@example.com',
         name: 'Test User',
         avatarUrl: 'https://example.com/avatar.png',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       expect(user.id).toBe('user-1');
       expect(user.email).toBe('test@example.com');
       expect(user.name).toBe('Test User');
       expect(user.avatarUrl).toBe('https://example.com/avatar.png');
-      expect(user.oauthProvider).toBe('google');
+      expect(user.oauthProvider).toBe(OAuthProvider.GOOGLE);
       expect(user.monthlySalary).toBeNull();
-      expect(user.budgetMode).toBe('direct');
+      expect(user.budgetMode).toBe(BudgetMode.DIRECT);
       expect(user.inboundEmail).toContain('user-1');
       expect(user.createdAt).toBeTruthy();
       expect(user.updatedAt).toBeTruthy();
@@ -37,7 +38,7 @@ describe('InMemoryUserRepository', () => {
         email: 'test@example.com',
         name: 'Test',
         avatarUrl: '',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       const found = await repo.findById('user-1');
@@ -57,13 +58,13 @@ describe('InMemoryUserRepository', () => {
         email: 'test@example.com',
         name: 'Test',
         avatarUrl: '',
-        oauthProvider: 'github',
+        oauthProvider: OAuthProvider.GITHUB,
       });
 
       const found = await repo.findByEmail('test@example.com');
       expect(found).not.toBeNull();
       expect(found!.email).toBe('test@example.com');
-      expect(found!.oauthProvider).toBe('github');
+      expect(found!.oauthProvider).toBe(OAuthProvider.GITHUB);
     });
 
     it('should return null for non-existent email', async () => {
@@ -78,18 +79,18 @@ describe('InMemoryUserRepository', () => {
         email: 'test@example.com',
         name: 'Old Name',
         avatarUrl: '',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       const updated = await repo.update('user-1', {
         name: 'New Name',
         monthlySalary: 6000,
-        budgetMode: 'percentage',
+        budgetMode: BudgetMode.PERCENTAGE,
       });
 
       expect(updated.name).toBe('New Name');
       expect(updated.monthlySalary).toBe(6000);
-      expect(updated.budgetMode).toBe('percentage');
+      expect(updated.budgetMode).toBe(BudgetMode.PERCENTAGE);
       expect(updated.email).toBe('test@example.com');
     });
 
@@ -104,7 +105,7 @@ describe('InMemoryUserRepository', () => {
         email: 'test@example.com',
         name: 'Original',
         avatarUrl: 'https://example.com/avatar.png',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       const updated = await repo.update('user-1', { name: 'Changed' });
@@ -119,7 +120,7 @@ describe('InMemoryUserRepository', () => {
         email: 'test@example.com',
         name: 'Test',
         avatarUrl: '',
-        oauthProvider: 'google',
+        oauthProvider: OAuthProvider.GOOGLE,
       });
 
       repo.reset();

@@ -1,5 +1,5 @@
 import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { notImplementedResponse } from '@/lib/validation/http';
 
 /**
  * POST /api/feedback
@@ -17,8 +17,5 @@ export async function POST(_request: NextRequest) {
   // 3. Look up transaction and current category
   // 4. Invoke AI agent to propose new category
   // 5. Return proposed category with reasoning
-  return NextResponse.json(
-    { error: 'Not implemented' },
-    { status: 501 },
-  );
+  return notImplementedResponse();
 }

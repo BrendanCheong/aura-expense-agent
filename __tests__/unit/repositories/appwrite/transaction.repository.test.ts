@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AppwriteTransactionRepository } from '@/lib/repositories/appwrite/transaction.repository';
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
+import { Confidence, TransactionSource } from '@/lib/enums';
 
 // Mock TablesDB
 function createMockTablesDb() {
@@ -107,8 +108,8 @@ describe('AppwriteTransactionRepository', () => {
         transactionDate: '2026-02-01T12:30:00+08:00',
         resendEmailId: 'email-abc',
         rawEmailSubject: 'Transaction alert',
-        confidence: 'high',
-        source: 'email',
+        confidence: Confidence.HIGH,
+        source: TransactionSource.EMAIL,
       });
 
       expect(tablesDb.createRow).toHaveBeenCalledTimes(1);

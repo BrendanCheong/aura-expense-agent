@@ -1,5 +1,6 @@
 import type { IUserRepository } from '../interfaces';
 import type { User, UserCreate, UserUpdate } from '@/types/user';
+import { BudgetMode } from '@/lib/enums';
 
 export class InMemoryUserRepository implements IUserRepository {
   private users = new Map<string, User>();
@@ -25,7 +26,7 @@ export class InMemoryUserRepository implements IUserRepository {
       inboundEmail: `user-${id}@inbound.aura.app`,
       oauthProvider: data.oauthProvider,
       monthlySalary: null,
-      budgetMode: 'direct',
+      budgetMode: BudgetMode.DIRECT,
       createdAt: now,
       updatedAt: now,
     };

@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { notImplementedResponse } from '@/lib/validation/http';
 
 /**
  * GET /api/dashboard/summary
@@ -16,8 +17,5 @@ export async function GET(_request: NextRequest) {
   // 2. Parse & validate query params (period, year, month, week)
   // 3. Call dashboardService.getSummary()
   // 4. Return summary with byCategory, recentTransactions, dailySpending
-  return NextResponse.json(
-    { error: 'Not implemented' },
-    { status: 501 },
-  );
+  return notImplementedResponse();
 }

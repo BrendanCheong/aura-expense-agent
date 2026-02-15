@@ -184,9 +184,11 @@ describe('CategoryService', () => {
 
       // Transactions should be moved to "Other"
       const tx002 = await transactionRepo.findById('tx-002');
-      expect(tx002!.categoryId).toBe('cat-other');
+      expect(tx002).not.toBeNull();
+      expect(tx002?.categoryId).toBe('cat-other');
       const tx006 = await transactionRepo.findById('tx-006');
-      expect(tx006!.categoryId).toBe('cat-other');
+      expect(tx006).not.toBeNull();
+      expect(tx006?.categoryId).toBe('cat-other');
     });
 
     it('should throw when trying to delete "Other" system category', async () => {

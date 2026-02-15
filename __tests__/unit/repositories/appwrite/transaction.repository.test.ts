@@ -4,7 +4,6 @@ import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import { Confidence, TransactionSource } from '@/lib/enums';
 import { AppwriteTransactionRepository } from '@/lib/repositories/appwrite/transaction.repository';
 
-// Mock TablesDB
 function createMockTablesDb() {
   return {
     listRows: vi.fn(),
@@ -213,6 +212,7 @@ describe('AppwriteTransactionRepository', () => {
 
       expect(result).toHaveLength(2);
       const foodEntry = result.find((r) => r.categoryId === 'cat-food');
+      expect(foodEntry).toBeDefined();
       expect(foodEntry!.totalSpent).toBe(30);
     });
   });

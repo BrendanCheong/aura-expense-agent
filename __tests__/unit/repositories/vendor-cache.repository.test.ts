@@ -63,11 +63,11 @@ describe('InMemoryVendorCacheRepository', () => {
     it('increments the hit count', async () => {
       const entry = await repo.findByUserAndVendor('test-user-001', 'GRAB *GRABFOOD');
       expect(entry).not.toBeNull();
-      // Seeded via create(), so hitCount starts at 1
       expect(entry!.hitCount).toBe(1);
 
       await repo.incrementHitCount(entry!.id, entry!.hitCount);
       const updated = await repo.findByUserAndVendor('test-user-001', 'GRAB *GRABFOOD');
+      expect(updated).not.toBeNull();
       expect(updated!.hitCount).toBe(2);
     });
 
@@ -78,7 +78,6 @@ describe('InMemoryVendorCacheRepository', () => {
 
   describe('deleteByCategoryId', () => {
     it('removes all entries for a category', async () => {
-      // cat-food has GRAB *GRABFOOD
       await repo.deleteByCategoryId('cat-food');
       const result = await repo.findByUserAndVendor('test-user-001', 'GRAB *GRABFOOD');
       expect(result).toBeNull();

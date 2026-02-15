@@ -1,7 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import type { User } from '@/types/user';
-
 import { OAuthProvider, BudgetMode } from '@/lib/enums';
 import { InMemoryUserRepository } from '@/lib/repositories/in-memory/user.repository';
 
@@ -13,7 +11,7 @@ describe('InMemoryUserRepository', () => {
   });
 
   describe('create', () => {
-    it('should create a user with provided id', async () => {
+    it('creates a user with provided id', async () => {
       const user = await repo.create('user-1', {
         email: 'test@example.com',
         name: 'Test User',
@@ -35,7 +33,7 @@ describe('InMemoryUserRepository', () => {
   });
 
   describe('findById', () => {
-    it('should return user by id', async () => {
+    it('returns user by id', async () => {
       await repo.create('user-1', {
         email: 'test@example.com',
         name: 'Test',
@@ -48,14 +46,14 @@ describe('InMemoryUserRepository', () => {
       expect(found!.id).toBe('user-1');
     });
 
-    it('should return null for non-existent id', async () => {
+    it('returns null for non-existent id', async () => {
       const found = await repo.findById('non-existent');
       expect(found).toBeNull();
     });
   });
 
   describe('findByEmail', () => {
-    it('should return user by email', async () => {
+    it('returns user by email', async () => {
       await repo.create('user-1', {
         email: 'test@example.com',
         name: 'Test',
@@ -69,14 +67,14 @@ describe('InMemoryUserRepository', () => {
       expect(found!.oauthProvider).toBe(OAuthProvider.GITHUB);
     });
 
-    it('should return null for non-existent email', async () => {
+    it('returns null for non-existent email', async () => {
       const found = await repo.findByEmail('nobody@example.com');
       expect(found).toBeNull();
     });
   });
 
   describe('update', () => {
-    it('should update user fields', async () => {
+    it('updates user fields', async () => {
       await repo.create('user-1', {
         email: 'test@example.com',
         name: 'Old Name',
@@ -96,11 +94,11 @@ describe('InMemoryUserRepository', () => {
       expect(updated.email).toBe('test@example.com');
     });
 
-    it('should throw for non-existent user', async () => {
+    it('throws for non-existent user', async () => {
       await expect(repo.update('non-existent', { name: 'Test' })).rejects.toThrow();
     });
 
-    it('should only update provided fields', async () => {
+    it('only updates provided fields', async () => {
       await repo.create('user-1', {
         email: 'test@example.com',
         name: 'Original',
@@ -115,7 +113,7 @@ describe('InMemoryUserRepository', () => {
   });
 
   describe('reset', () => {
-    it('should clear all users', async () => {
+    it('clears all users', async () => {
       await repo.create('user-1', {
         email: 'test@example.com',
         name: 'Test',

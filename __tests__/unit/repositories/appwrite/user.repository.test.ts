@@ -3,8 +3,12 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { OAuthProvider, BudgetMode } from '@/lib/enums';
 import { AppwriteUserRepository } from '@/lib/repositories/appwrite/user.repository';
 
-// Mock TablesDB
-function createMockTablesDb() {
+function createMockTablesDb(): {
+  getRow: ReturnType<typeof vi.fn>;
+  listRows: ReturnType<typeof vi.fn>;
+  createRow: ReturnType<typeof vi.fn>;
+  updateRow: ReturnType<typeof vi.fn>;
+} {
   return {
     getRow: vi.fn(),
     listRows: vi.fn(),
@@ -21,11 +25,11 @@ describe('AppwriteUserRepository', () => {
 
   beforeEach(() => {
     mockDb = createMockTablesDb();
-    repo = new AppwriteUserRepository(mockDb as any);
+    repo = new AppwriteUserRepository(mockDb as never);
   });
 
   describe('findById', () => {
-    it('should return mapped user when found', async () => {
+    it('returns mapped user when found', async () => {
       mockDb.getRow.mockResolvedValue({
         $id: 'user-1',
         $createdAt: '2026-01-01T00:00:00.000Z',
@@ -46,7 +50,7 @@ describe('AppwriteUserRepository', () => {
       expect(user!.avatarUrl).toBe('https://example.com/a.png');
     });
 
-    it('should return null when not found', async () => {
+    it('returns null when not found', async () => {
       mockDb.getRow.mockRejectedValue({ code: 404 });
 
       const user = await repo.findById('missing');
@@ -55,7 +59,7 @@ describe('AppwriteUserRepository', () => {
   });
 
   describe('findByEmail', () => {
-    it('should return user by email', async () => {
+    it('returns user by email', async () => {
       mockDb.listRows.mockResolvedValue({
         total: 1,
         rows: [
@@ -79,7 +83,7 @@ describe('AppwriteUserRepository', () => {
       expect(user!.email).toBe('test@example.com');
     });
 
-    it('should return null when no match', async () => {
+    it('returns null when no match', async () => {
       mockDb.listRows.mockResolvedValue({ total: 0, rows: [] });
 
       const user = await repo.findByEmail('nobody@example.com');
@@ -88,7 +92,7 @@ describe('AppwriteUserRepository', () => {
   });
 
   describe('create', () => {
-    it('should create user with provided id', async () => {
+    it('creates user with provided id', async () => {
       mockDb.createRow.mockResolvedValue({
         $id: 'user-1',
         $createdAt: '2026-01-01T00:00:00.000Z',
@@ -123,7 +127,7 @@ describe('AppwriteUserRepository', () => {
   });
 
   describe('update', () => {
-    it('should update user fields', async () => {
+    it('updates user fields', async () => {
       mockDb.updateRow.mockResolvedValue({
         $id: 'user-1',
         $createdAt: '2026-01-01T00:00:00.000Z',

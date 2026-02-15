@@ -64,7 +64,6 @@ describe('AppwriteVendorCacheRepository', () => {
 
       const call = tablesDb.listRows.mock.calls[0];
       const queries = (call[0] as { queries: string[] }).queries;
-      // Should contain normalized name (uppercased, trimmed)
       expect(queries.some((q: string) => q.includes('GRAB *GRABFOOD'))).toBe(true);
     });
 
@@ -99,7 +98,6 @@ describe('AppwriteVendorCacheRepository', () => {
       expect(result.id).toBe('new-vc');
       expect(tablesDb.createRow).toHaveBeenCalledTimes(1);
 
-      // Verify the data passed to createRow has normalized vendor name
       const callArgs = tablesDb.createRow.mock.calls[0];
       const data = (callArgs[0] as { data: Record<string, unknown> }).data;
       expect(data.vendor_name).toBe('GRAB *GRABFOOD');

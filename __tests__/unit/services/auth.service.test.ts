@@ -106,7 +106,11 @@ describe('AuthService', () => {
 
       const user = await authService.getUserById('user-1');
       expect(user).not.toBeNull();
-      expect(user!.email).toBe('test@example.com');
+      if (!user) {
+        return;
+      }
+
+      expect(user.email).toBe('test@example.com');
     });
 
     it('should return null for non-existent user', async () => {

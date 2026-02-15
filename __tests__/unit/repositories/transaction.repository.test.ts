@@ -7,7 +7,6 @@ import type { TransactionCreate } from '@/types/transaction';
 import { Confidence, TransactionSource } from '@/lib/enums';
 import { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
 
-
 let repo: InMemoryTransactionRepository;
 
 const seedData: TransactionCreate[] = fixtures.map((tx) => ({
@@ -107,7 +106,6 @@ describe('InMemoryTransactionRepository', () => {
         source: TransactionSource.EMAIL,
       });
       result.data.forEach((tx) => expect(tx.source).toBe(TransactionSource.EMAIL));
-      // There should be 15 email transactions (16 total minus 1 manual)
       expect(result.data.length).toBe(15);
     });
 

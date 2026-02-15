@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AppwriteTransactionRepository } from '@/lib/repositories/appwrite/transaction.repository';
+
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import { Confidence, TransactionSource } from '@/lib/enums';
+import { AppwriteTransactionRepository } from '@/lib/repositories/appwrite/transaction.repository';
 
 // Mock TablesDB
 function createMockTablesDb() {
@@ -29,7 +30,7 @@ function makeRow(overrides: Record<string, unknown> = {}) {
     $sequence: 1,
     user_id: 'user-1',
     category_id: 'cat-food',
-    amount: 18.50,
+    amount: 18.5,
     vendor: 'GRAB *GRABFOOD',
     description: '',
     transaction_date: '2026-02-01T12:30:00+08:00',
@@ -56,11 +57,15 @@ describe('AppwriteTransactionRepository', () => {
 
       const result = await repo.findById('tx-1');
 
-      expect(tablesDb.getRow).toHaveBeenCalledWith({ databaseId: DB_ID, tableId: TABLE_ID, rowId: 'tx-1' });
+      expect(tablesDb.getRow).toHaveBeenCalledWith({
+        databaseId: DB_ID,
+        tableId: TABLE_ID,
+        rowId: 'tx-1',
+      });
       expect(result).not.toBeNull();
       expect(result!.id).toBe('tx-1');
       expect(result!.userId).toBe('user-1');
-      expect(result!.amount).toBe(18.50);
+      expect(result!.amount).toBe(18.5);
     });
 
     it('returns null when row does not exist', async () => {
@@ -102,7 +107,7 @@ describe('AppwriteTransactionRepository', () => {
       const result = await repo.create({
         userId: 'user-1',
         categoryId: 'cat-food',
-        amount: 18.50,
+        amount: 18.5,
         vendor: 'GRAB *GRABFOOD',
         description: '',
         transactionDate: '2026-02-01T12:30:00+08:00',
@@ -114,19 +119,19 @@ describe('AppwriteTransactionRepository', () => {
 
       expect(tablesDb.createRow).toHaveBeenCalledTimes(1);
       expect(result.id).toBe('new-tx');
-      expect(result.amount).toBe(18.50);
+      expect(result.amount).toBe(18.5);
     });
   });
 
   describe('update', () => {
     it('updates a row and returns mapped Transaction', async () => {
-      const updated = makeRow({ amount: 25.00 });
+      const updated = makeRow({ amount: 25.0 });
       tablesDb.updateRow.mockResolvedValue(updated);
 
-      const result = await repo.update('tx-1', { amount: 25.00 });
+      const result = await repo.update('tx-1', { amount: 25.0 });
 
       expect(tablesDb.updateRow).toHaveBeenCalledTimes(1);
-      expect(result.amount).toBe(25.00);
+      expect(result.amount).toBe(25.0);
     });
   });
 
@@ -136,7 +141,11 @@ describe('AppwriteTransactionRepository', () => {
 
       await repo.delete('tx-1');
 
-      expect(tablesDb.deleteRow).toHaveBeenCalledWith({ databaseId: DB_ID, tableId: TABLE_ID, rowId: 'tx-1' });
+      expect(tablesDb.deleteRow).toHaveBeenCalledWith({
+        databaseId: DB_ID,
+        tableId: TABLE_ID,
+        rowId: 'tx-1',
+      });
     });
   });
 
@@ -183,11 +192,7 @@ describe('AppwriteTransactionRepository', () => {
         rows: [makeRow(), makeRow({ $id: 'tx-2' })],
       });
 
-      const result = await repo.findByUserAndDateRange(
-        'user-1',
-        '2026-02-01',
-        '2026-03-01',
-      );
+      const result = await repo.findByUserAndDateRange('user-1', '2026-02-01', '2026-03-01');
 
       expect(result).toHaveLength(2);
     });
@@ -204,14 +209,10 @@ describe('AppwriteTransactionRepository', () => {
         ],
       });
 
-      const result = await repo.sumByUserCategoryDateRange(
-        'user-1',
-        '2026-02-01',
-        '2026-03-01',
-      );
+      const result = await repo.sumByUserCategoryDateRange('user-1', '2026-02-01', '2026-03-01');
 
       expect(result).toHaveLength(2);
-      const foodEntry = result.find(r => r.categoryId === 'cat-food');
+      const foodEntry = result.find((r) => r.categoryId === 'cat-food');
       expect(foodEntry!.totalSpent).toBe(30);
     });
   });

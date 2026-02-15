@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+
 import { normalizeVendorName, extractRoughVendor } from '@/lib/utils/vendor';
 
 describe('Vendor Utilities', () => {
@@ -42,7 +43,8 @@ describe('Vendor Utilities', () => {
 
   describe('extractRoughVendor', () => {
     it('extracts vendor from UOB bank alert format', () => {
-      const text = 'A transaction of SGD 16.23 was made at DIGITALOCEAN.COM. If this was not done by you';
+      const text =
+        'A transaction of SGD 16.23 was made at DIGITALOCEAN.COM. If this was not done by you';
       expect(extractRoughVendor(text)).toBe('DIGITALOCEAN.COM');
     });
 

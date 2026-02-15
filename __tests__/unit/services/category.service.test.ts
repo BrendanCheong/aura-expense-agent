@@ -1,18 +1,20 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { CategoryService } from '@/lib/services/category.service';
-import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
-import { InMemoryVendorCacheRepository } from '@/lib/repositories/in-memory/vendor-cache.repository';
-import { InMemoryBudgetRepository } from '@/lib/repositories/in-memory/budget.repository';
-import { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
-import type { Category } from '@/types/category';
-import type { VendorCacheEntry } from '@/types/vendor-cache';
-import type { Budget } from '@/types/budget';
-import type { Transaction } from '@/types/transaction';
 
-import categoriesFixture from '../../fixtures/categories.json';
-import vendorCacheFixture from '../../fixtures/vendor-cache.json';
 import budgetsFixture from '../../fixtures/budgets.json';
+import categoriesFixture from '../../fixtures/categories.json';
 import transactionsFixture from '../../fixtures/transactions.json';
+import vendorCacheFixture from '../../fixtures/vendor-cache.json';
+
+import type { Budget } from '@/types/budget';
+import type { Category } from '@/types/category';
+import type { Transaction } from '@/types/transaction';
+import type { VendorCacheEntry } from '@/types/vendor-cache';
+
+import { InMemoryBudgetRepository } from '@/lib/repositories/in-memory/budget.repository';
+import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
+import { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
+import { InMemoryVendorCacheRepository } from '@/lib/repositories/in-memory/vendor-cache.repository';
+import { CategoryService } from '@/lib/services/category.service';
 
 const USER_ID = 'test-user-001';
 
@@ -131,7 +133,7 @@ describe('CategoryService', () => {
           description: 'Duplicate',
           isDefault: false,
           sortOrder: 9,
-        }),
+        })
       ).rejects.toThrow('already exists');
     });
   });
@@ -148,13 +150,13 @@ describe('CategoryService', () => {
 
     it('should throw when updating non-existent category', async () => {
       await expect(
-        service.updateCategory(USER_ID, 'cat-nonexistent', { name: 'Test' }),
+        service.updateCategory(USER_ID, 'cat-nonexistent', { name: 'Test' })
       ).rejects.toThrow('not found');
     });
 
     it('should throw when updating category owned by another user', async () => {
       await expect(
-        service.updateCategory('other-user', 'cat-food', { name: 'Test' }),
+        service.updateCategory('other-user', 'cat-food', { name: 'Test' })
       ).rejects.toThrow('not found');
     });
   });
@@ -170,7 +172,9 @@ describe('CategoryService', () => {
 
       // Vendor cache entries for this category should be deleted
       const vendorEntries = await vendorCacheRepo.findByUserId(USER_ID);
-      const transportVendors = vendorEntries.filter((v: VendorCacheEntry) => v.categoryId === 'cat-transport');
+      const transportVendors = vendorEntries.filter(
+        (v: VendorCacheEntry) => v.categoryId === 'cat-transport'
+      );
       expect(transportVendors).toHaveLength(0);
 
       // Budgets for this category should be deleted
@@ -186,15 +190,11 @@ describe('CategoryService', () => {
     });
 
     it('should throw when trying to delete "Other" system category', async () => {
-      await expect(
-        service.deleteCategory(USER_ID, 'cat-other'),
-      ).rejects.toThrow();
+      await expect(service.deleteCategory(USER_ID, 'cat-other')).rejects.toThrow();
     });
 
     it('should throw when deleting a category not owned by user', async () => {
-      await expect(
-        service.deleteCategory('other-user', 'cat-food'),
-      ).rejects.toThrow('not found');
+      await expect(service.deleteCategory('other-user', 'cat-food')).rejects.toThrow('not found');
     });
 
     it('should delete category with no transactions', async () => {

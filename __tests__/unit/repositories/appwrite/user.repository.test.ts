@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { AppwriteUserRepository } from '@/lib/repositories/appwrite/user.repository';
+
 import { OAuthProvider, BudgetMode } from '@/lib/enums';
+import { AppwriteUserRepository } from '@/lib/repositories/appwrite/user.repository';
 
 // Mock TablesDB
 function createMockTablesDb() {
@@ -57,18 +58,20 @@ describe('AppwriteUserRepository', () => {
     it('should return user by email', async () => {
       mockDb.listRows.mockResolvedValue({
         total: 1,
-        rows: [{
-          $id: 'user-1',
-          $createdAt: '2026-01-01T00:00:00.000Z',
-          $updatedAt: '2026-01-01T00:00:00.000Z',
-          email: 'test@example.com',
-          name: 'Test',
-          avatar_url: '',
-          inbound_email: '',
-          oauth_provider: 'google',
-          monthly_salary: 0,
-          budget_mode: 'direct',
-        }],
+        rows: [
+          {
+            $id: 'user-1',
+            $createdAt: '2026-01-01T00:00:00.000Z',
+            $updatedAt: '2026-01-01T00:00:00.000Z',
+            email: 'test@example.com',
+            name: 'Test',
+            avatar_url: '',
+            inbound_email: '',
+            oauth_provider: 'google',
+            monthly_salary: 0,
+            budget_mode: 'direct',
+          },
+        ],
       });
 
       const user = await repo.findByEmail('test@example.com');

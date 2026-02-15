@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AppwriteCategoryRepository } from '@/lib/repositories/appwrite/category.repository';
+
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
+import { AppwriteCategoryRepository } from '@/lib/repositories/appwrite/category.repository';
 
 function createMockTablesDb() {
   return {
@@ -138,27 +139,33 @@ describe('AppwriteCategoryRepository', () => {
 
       await repo.delete('cat-1');
 
-      expect(tablesDb.deleteRow).toHaveBeenCalledWith({ databaseId: DB_ID, tableId: TABLE_ID, rowId: 'cat-1' });
+      expect(tablesDb.deleteRow).toHaveBeenCalledWith({
+        databaseId: DB_ID,
+        tableId: TABLE_ID,
+        rowId: 'cat-1',
+      });
     });
   });
 
   describe('seedDefaults', () => {
     it('creates 8 default categories per DATABASE_SCHEMA.md', async () => {
       let callCount = 0;
-      tablesDb.createRow.mockImplementation((params: { data: Record<string, unknown>, [key: string]: unknown }) => {
-        const data = params.data;
-        callCount++;
-        return Promise.resolve({
-          $id: `cat-${callCount}`,
-          $createdAt: '2026-02-01T00:00:00.000Z',
-          $updatedAt: '2026-02-01T00:00:00.000Z',
-          $permissions: [],
-          $tableId: TABLE_ID,
-          $databaseId: DB_ID,
-          $sequence: callCount,
-          ...data,
-        });
-      });
+      tablesDb.createRow.mockImplementation(
+        (params: { data: Record<string, unknown>; [key: string]: unknown }) => {
+          const data = params.data;
+          callCount++;
+          return Promise.resolve({
+            $id: `cat-${callCount}`,
+            $createdAt: '2026-02-01T00:00:00.000Z',
+            $updatedAt: '2026-02-01T00:00:00.000Z',
+            $permissions: [],
+            $tableId: TABLE_ID,
+            $databaseId: DB_ID,
+            $sequence: callCount,
+            ...data,
+          });
+        }
+      );
 
       const result = await repo.seedDefaults('user-1');
 
@@ -166,7 +173,7 @@ describe('AppwriteCategoryRepository', () => {
       expect(tablesDb.createRow).toHaveBeenCalledTimes(8);
 
       // Verify names match DATABASE_SCHEMA.md
-      const names = result.map(c => c.name);
+      const names = result.map((c) => c.name);
       expect(names).toContain('Food & Beverage');
       expect(names).toContain('Transportation');
       expect(names).toContain('Shopping');

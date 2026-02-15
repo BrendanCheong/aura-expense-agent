@@ -1,6 +1,8 @@
 import { beforeEach, describe, it, expect } from 'vitest';
-import { InMemoryVendorCacheRepository } from '@/lib/repositories/in-memory/vendor-cache.repository';
+
 import fixtures from '../../fixtures/vendor-cache.json';
+
+import { InMemoryVendorCacheRepository } from '@/lib/repositories/in-memory/vendor-cache.repository';
 
 let repo: InMemoryVendorCacheRepository;
 

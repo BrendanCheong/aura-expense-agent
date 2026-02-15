@@ -1,7 +1,10 @@
 import { beforeEach, describe, it, expect } from 'vitest';
-import { InMemoryBudgetRepository } from '@/lib/repositories/in-memory/budget.repository';
-import type { BudgetCreate } from '@/types/budget';
+
 import fixtures from '../../fixtures/budgets.json';
+
+import type { BudgetCreate } from '@/types/budget';
+
+import { InMemoryBudgetRepository } from '@/lib/repositories/in-memory/budget.repository';
 
 let repo: InMemoryBudgetRepository;
 

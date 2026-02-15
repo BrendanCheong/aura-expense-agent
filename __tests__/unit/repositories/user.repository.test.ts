@@ -1,7 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { InMemoryUserRepository } from '@/lib/repositories/in-memory/user.repository';
+
 import type { User } from '@/types/user';
+
 import { OAuthProvider, BudgetMode } from '@/lib/enums';
+import { InMemoryUserRepository } from '@/lib/repositories/in-memory/user.repository';
 
 describe('InMemoryUserRepository', () => {
   let repo: InMemoryUserRepository;
@@ -95,9 +97,7 @@ describe('InMemoryUserRepository', () => {
     });
 
     it('should throw for non-existent user', async () => {
-      await expect(
-        repo.update('non-existent', { name: 'Test' }),
-      ).rejects.toThrow();
+      await expect(repo.update('non-existent', { name: 'Test' })).rejects.toThrow();
     });
 
     it('should only update provided fields', async () => {

@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+
 import { formatCurrency, parseCurrency } from '@/lib/utils/currency';
 
 describe('Currency Utilities', () => {

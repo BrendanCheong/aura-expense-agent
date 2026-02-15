@@ -1,8 +1,12 @@
 import { beforeEach, describe, it, expect } from 'vitest';
-import { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
-import type { TransactionCreate } from '@/types/transaction';
-import { Confidence, TransactionSource } from '@/lib/enums';
+
 import fixtures from '../../fixtures/transactions.json';
+
+import type { TransactionCreate } from '@/types/transaction';
+
+import { Confidence, TransactionSource } from '@/lib/enums';
+import { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
+
 
 let repo: InMemoryTransactionRepository;
 
@@ -79,7 +83,7 @@ describe('InMemoryTransactionRepository', () => {
         categoryId: 'cat-food',
       });
       expect(result.data.length).toBeGreaterThan(0);
-      result.data.forEach(tx => expect(tx.categoryId).toBe('cat-food'));
+      result.data.forEach((tx) => expect(tx.categoryId).toBe('cat-food'));
     });
 
     it('filters by date range', async () => {
@@ -90,7 +94,7 @@ describe('InMemoryTransactionRepository', () => {
         endDate: '2026-02-10',
       });
       expect(result.data.length).toBeGreaterThan(0);
-      result.data.forEach(tx => {
+      result.data.forEach((tx) => {
         expect(tx.transactionDate >= '2026-02-05').toBe(true);
         expect(tx.transactionDate < '2026-02-10').toBe(true);
       });
@@ -102,7 +106,7 @@ describe('InMemoryTransactionRepository', () => {
         limit: 100,
         source: TransactionSource.EMAIL,
       });
-      result.data.forEach(tx => expect(tx.source).toBe(TransactionSource.EMAIL));
+      result.data.forEach((tx) => expect(tx.source).toBe(TransactionSource.EMAIL));
       // There should be 15 email transactions (16 total minus 1 manual)
       expect(result.data.length).toBe(15);
     });
@@ -116,11 +120,7 @@ describe('InMemoryTransactionRepository', () => {
 
   describe('findByUserAndDateRange', () => {
     it('returns transactions in February 2026', async () => {
-      const result = await repo.findByUserAndDateRange(
-        'test-user-001',
-        '2026-02-01',
-        '2026-03-01',
-      );
+      const result = await repo.findByUserAndDateRange('test-user-001', '2026-02-01', '2026-03-01');
       expect(result.length).toBe(16);
     });
   });
@@ -178,10 +178,10 @@ describe('InMemoryTransactionRepository', () => {
       const summaries = await repo.sumByUserCategoryDateRange(
         'test-user-001',
         '2026-02-01',
-        '2026-03-01',
+        '2026-03-01'
       );
       expect(summaries.length).toBeGreaterThan(0);
-      const foodSummary = summaries.find(s => s.categoryId === 'cat-food');
+      const foodSummary = summaries.find((s) => s.categoryId === 'cat-food');
       expect(foodSummary).toBeDefined();
       expect(foodSummary!.totalSpent).toBeGreaterThan(0);
     });

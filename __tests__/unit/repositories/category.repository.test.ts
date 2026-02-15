@@ -1,7 +1,10 @@
 import { beforeEach, describe, it, expect } from 'vitest';
-import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
-import type { CategoryCreate } from '@/types/category';
+
 import fixtures from '../../fixtures/categories.json';
+
+import type { CategoryCreate } from '@/types/category';
+
+import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
 
 let repo: InMemoryCategoryRepository;
 
@@ -102,8 +105,8 @@ describe('InMemoryCategoryRepository', () => {
     it('creates default categories for a new user', async () => {
       const defaults = await repo.seedDefaults('new-user-id');
       expect(defaults.length).toBeGreaterThanOrEqual(7);
-      expect(defaults.every(c => c.userId === 'new-user-id')).toBe(true);
-      expect(defaults.every(c => c.isDefault === true)).toBe(true);
+      expect(defaults.every((c) => c.userId === 'new-user-id')).toBe(true);
+      expect(defaults.every((c) => c.isDefault === true)).toBe(true);
     });
   });
 });

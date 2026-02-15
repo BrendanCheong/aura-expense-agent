@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AppwriteVendorCacheRepository } from '@/lib/repositories/appwrite/vendor-cache.repository';
+
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
+import { AppwriteVendorCacheRepository } from '@/lib/repositories/appwrite/vendor-cache.repository';
 
 function createMockTablesDb() {
   return {
@@ -89,7 +90,9 @@ describe('AppwriteVendorCacheRepository', () => {
 
   describe('create', () => {
     it('creates and returns a VendorCacheEntry with normalized name', async () => {
-      tablesDb.createRow.mockResolvedValue(makeRow({ $id: 'new-vc', vendor_name: 'GRAB *GRABFOOD' }));
+      tablesDb.createRow.mockResolvedValue(
+        makeRow({ $id: 'new-vc', vendor_name: 'GRAB *GRABFOOD' })
+      );
 
       const result = await repo.create('user-1', 'grab *grabfood', 'cat-food');
 

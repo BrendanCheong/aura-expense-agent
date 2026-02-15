@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AppwriteBudgetRepository } from '@/lib/repositories/appwrite/budget.repository';
+
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
+import { AppwriteBudgetRepository } from '@/lib/repositories/appwrite/budget.repository';
 
 function createMockTablesDb() {
   return {
@@ -26,7 +27,7 @@ function makeRow(overrides: Record<string, unknown> = {}) {
     $sequence: 1,
     user_id: 'user-1',
     category_id: 'cat-food',
-    amount: 400.00,
+    amount: 400.0,
     year: 2026,
     month: 2,
     ...overrides,
@@ -50,7 +51,7 @@ describe('AppwriteBudgetRepository', () => {
 
       expect(result).not.toBeNull();
       expect(result!.id).toBe('bgt-1');
-      expect(result!.amount).toBe(400.00);
+      expect(result!.amount).toBe(400.0);
       expect(result!.year).toBe(2026);
       expect(result!.month).toBe(2);
     });
@@ -103,7 +104,7 @@ describe('AppwriteBudgetRepository', () => {
       const result = await repo.create({
         userId: 'user-1',
         categoryId: 'cat-food',
-        amount: 400.00,
+        amount: 400.0,
         year: 2026,
         month: 2,
       });
@@ -115,11 +116,11 @@ describe('AppwriteBudgetRepository', () => {
 
   describe('update', () => {
     it('updates amount and returns mapped Budget', async () => {
-      tablesDb.updateRow.mockResolvedValue(makeRow({ amount: 500.00 }));
+      tablesDb.updateRow.mockResolvedValue(makeRow({ amount: 500.0 }));
 
-      const result = await repo.update('bgt-1', { amount: 500.00 });
+      const result = await repo.update('bgt-1', { amount: 500.0 });
 
-      expect(result.amount).toBe(500.00);
+      expect(result.amount).toBe(500.0);
     });
   });
 
@@ -129,7 +130,11 @@ describe('AppwriteBudgetRepository', () => {
 
       await repo.delete('bgt-1');
 
-      expect(tablesDb.deleteRow).toHaveBeenCalledWith({ databaseId: DB_ID, tableId: TABLE_ID, rowId: 'bgt-1' });
+      expect(tablesDb.deleteRow).toHaveBeenCalledWith({
+        databaseId: DB_ID,
+        tableId: TABLE_ID,
+        rowId: 'bgt-1',
+      });
     });
   });
 

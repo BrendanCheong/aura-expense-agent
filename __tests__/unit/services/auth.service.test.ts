@@ -1,8 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { AuthService } from '@/lib/services/auth.service';
-import { InMemoryUserRepository } from '@/lib/repositories/in-memory/user.repository';
-import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
+
 import { OAuthProvider, BudgetMode } from '@/lib/enums';
+import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
+import { InMemoryUserRepository } from '@/lib/repositories/in-memory/user.repository';
+import { AuthService } from '@/lib/services/auth.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -133,9 +134,7 @@ describe('AuthService', () => {
     });
 
     it('should throw for non-existent user', async () => {
-      await expect(
-        authService.updateUserProfile('missing', { name: 'Test' }),
-      ).rejects.toThrow();
+      await expect(authService.updateUserProfile('missing', { name: 'Test' })).rejects.toThrow();
     });
   });
 });

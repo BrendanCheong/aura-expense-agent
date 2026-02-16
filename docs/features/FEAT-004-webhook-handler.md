@@ -1,6 +1,6 @@
 # FEAT-004 — Resend Inbound Email Webhook Handler
 
-> **Status:** 🔴 Not Started  
+> **Status:** � Done  
 > **Execution Order:** 7 of 13  
 > **Sprint:** 3 — AI Pipeline  
 > **Blocked By:** FEAT-005, FEAT-006  
@@ -20,18 +20,18 @@ Build the webhook endpoint that receives Resend's `email.received` events, verif
 
 ## Acceptance Criteria
 
-- [ ] `POST /api/webhooks/resend` receives and parses Resend webhook payloads
-- [ ] Webhook signature is verified using Svix (Resend's webhook library)
-- [ ] Non `email.received` events return `200 { status: "ignored" }`
-- [ ] Full email content is fetched via `resend.emails.receiving.get()`
-- [ ] User is resolved from the `to` address (`inbound_email` field)
-- [ ] Unknown recipient returns `200 { error: "Unknown recipient" }` (not 4xx — don't trigger Resend retries)
-- [ ] Duplicate emails detected by `resend_email_id` return `200 { status: "duplicate" }`
-- [ ] Known vendor (vendor cache hit) creates transaction immediately without agent
-- [ ] Unknown vendor invokes the AI agent pipeline
-- [ ] Transaction is created with all fields populated
-- [ ] Vendor cache is updated after successful processing
-- [ ] Response time < 30 seconds (webhook timeout)
+- [x] `POST /api/webhooks/resend` receives and parses Resend webhook payloads
+- [x] Webhook signature is verified using Svix (Resend's webhook library)
+- [x] Non `email.received` events return `200 { status: "ignored" }`
+- [x] Full email content is fetched via `resend.emails.receiving.get()`
+- [x] User is resolved from the `to` address (`inbound_email` field)
+- [x] Unknown recipient returns `200 { error: "Unknown recipient" }` (not 4xx — don't trigger Resend retries)
+- [x] Duplicate emails detected by `resend_email_id` return `200 { status: "duplicate" }`
+- [x] Known vendor (vendor cache hit) creates transaction immediately without agent
+- [x] Unknown vendor invokes the AI agent pipeline
+- [x] Transaction is created with all fields populated
+- [x] Vendor cache is updated after successful processing
+- [x] Response time < 30 seconds (webhook timeout)
 
 ## Technical Details
 
@@ -112,12 +112,12 @@ Resend POST → Verify Signature → Fetch Full Email → Resolve User
 
 ## Definition of Done
 
-- [ ] All acceptance criteria pass manually with `scripts/mock-webhook.ts`
-- [ ] Unit tests: `WebhookService.processInboundEmail()` — duplicate, cached, agent (3 tests)
-- [ ] Unit tests: vendor name normalization (5 tests)
-- [ ] Integration test: Full webhook → transaction pipeline (fixture-based)
-- [ ] No TypeScript errors
-- [ ] Error handling for Resend API failures (retryable response)
+- [x] All acceptance criteria pass manually with `scripts/mock-webhook.ts`
+- [x] Unit tests: `WebhookService.processInboundEmail()` — duplicate, cached, agent (6 tests)
+- [x] Unit tests: vendor name normalization (13 tests)
+- [x] Integration test: Full webhook → transaction pipeline (10 tests, fixture-based)
+- [x] No TypeScript errors
+- [x] Error handling for Resend API failures (retryable response)
 
 ## References
 

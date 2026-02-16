@@ -6,8 +6,11 @@
  * Testing: Uses in-memory repositories and mock agent.
  */
 
+import type { IExpenseAgent } from '@/lib/agent/interfaces';
+import type { IEmailProvider } from '@/lib/resend/interfaces';
+
 import { getAppwriteServer } from '@/lib/appwrite/server';
-import { RepositoryFactory, type Repositories } from '@/lib/factories/repository.factory';
+import { type Repositories, RepositoryFactory } from '@/lib/factories/repository.factory';
 import { AuthService } from '@/lib/services/auth.service';
 import { BudgetService } from '@/lib/services/budget.service';
 import { CategoryService } from '@/lib/services/category.service';
@@ -22,12 +25,13 @@ export interface ServiceContainer {
   dashboardService: DashboardService;
   webhookService: WebhookService;
   authService: AuthService;
+  emailProvider: IEmailProvider;
 }
 
 /** Cached container instance (singleton per server lifetime). */
 let containerPromise: Promise<ServiceContainer> | null = null;
 
-function buildContainer(repos: Repositories): ServiceContainer {
+function buildContainer(repos: Repositories, agent: IExpenseAgent, emailProvider: IEmailProvider): ServiceContainer {
   const transactionService = new TransactionService(repos.transactions, repos.vendorCache);
   const categoryService = new CategoryService(
     repos.categories,
@@ -41,7 +45,7 @@ function buildContainer(repos: Repositories): ServiceContainer {
     repos.budgets,
     repos.categories
   );
-  const webhookService = new WebhookService(repos.transactions, repos.vendorCache, null);
+  const webhookService = new WebhookService(repos.transactions, repos.vendorCache, repos.users, agent);
   const authService = new AuthService(repos.users, repos.categories);
 
   return {
@@ -51,6 +55,7 @@ function buildContainer(repos: Repositories): ServiceContainer {
     dashboardService,
     webhookService,
     authService,
+    emailProvider,
   };
 }
 
@@ -63,7 +68,16 @@ export function createContainer(): Promise<ServiceContainer> {
     containerPromise = (async () => {
       const { tablesDb } = getAppwriteServer();
       const repos = await RepositoryFactory.createAppwrite(tablesDb);
-      return buildContainer(repos);
+
+      // Lazy-import production implementations to avoid pulling in
+      // LangChain/OpenAI/Resend at module load time (helps tree-shaking & tests).
+      const { LangGraphExpenseAgent } = await import('@/lib/agent/langgraph-agent');
+      const { ResendEmailProvider } = await import('@/lib/resend/client');
+
+      const agent: IExpenseAgent = new LangGraphExpenseAgent();
+      const emailProvider: IEmailProvider = new ResendEmailProvider();
+
+      return buildContainer(repos, agent, emailProvider);
     })();
   }
   return containerPromise;
@@ -79,8 +93,33 @@ export function resetContainer(): void {
 /**
  * Create a test container with in-memory repositories.
  * No external dependencies (no Appwrite, no OpenAI, no Brave Search).
+ * Agent and email provider must be injected for webhook tests.
  */
-export async function createTestContainer(): Promise<ServiceContainer & { repos: Repositories }> {
+export async function createTestContainer(overrides?: {
+  agent?: IExpenseAgent;
+  emailProvider?: IEmailProvider;
+}): Promise<ServiceContainer & { repos: Repositories }> {
   const repos = await RepositoryFactory.createInMemory();
-  return { ...buildContainer(repos), repos };
+
+  // Default no-op implementations for tests that don't need agent/email
+  const noopAgent: IExpenseAgent = {
+    processEmail: () => Promise.resolve({
+      transactionId: null,
+      vendor: null,
+      amount: null,
+      categoryId: null,
+      categoryName: null,
+      confidence: null,
+      transactionDate: null,
+      error: null,
+    }),
+  };
+  const noopEmailProvider: IEmailProvider = {
+    getReceivedEmail: () => Promise.resolve(null),
+  };
+
+  const agent = overrides?.agent ?? noopAgent;
+  const emailProvider = overrides?.emailProvider ?? noopEmailProvider;
+
+  return { ...buildContainer(repos, agent, emailProvider), repos };
 }

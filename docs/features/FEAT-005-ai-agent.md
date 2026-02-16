@@ -1,6 +1,6 @@
 # FEAT-005 — LangGraph.js Expense Agent
 
-> **Status:** � Complete  
+> **Status:** 🟡 In Progress  
 > **Execution Order:** 6 of 13  
 > **Sprint:** 3 — AI Pipeline  
 > **Blocked By:** FEAT-010, FEAT-006  

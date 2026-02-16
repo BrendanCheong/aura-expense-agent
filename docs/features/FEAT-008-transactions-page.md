@@ -1,6 +1,6 @@
 # FEAT-008 — Transaction List & Management
 
-> **Status:** 🔴 Not Started  
+> **Status:** 🟡 In Progress (Backend Complete)  
 > **Execution Order:** 8 of 13  
 > **Sprint:** 4 — UI Pages  
 > **Blocked By:** FEAT-001, FEAT-010, FEAT-006  

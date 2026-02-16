@@ -1,7 +1,21 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { getAuthenticatedUser } from '@/lib/auth/middleware';
 import { HttpStatus } from '@/lib/constants';
-import { notImplementedResponse } from '@/lib/validation/http';
+import { createContainer } from '@/lib/container/container';
+import { NotFoundError, ValidationError } from '@/lib/services/transaction.service';
+import {
+  unauthorizedResponse,
+  validationErrorResponse,
+  serverErrorResponse,
+  invalidJsonResponse,
+  notFoundResponse,
+} from '@/lib/validation/http';
+import {
+  updateTransactionBodySchema,
+  updateTransactionParamsSchema,
+  deleteTransactionParamsSchema,
+} from '@/lib/validation/transactions.schemas';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -15,13 +29,41 @@ interface RouteParams {
  *
  * Body (partial): { categoryId?, amount?, vendor?, description?, transactionDate?, confidence? }
  */
-export function PATCH(_request: NextRequest, _context: RouteParams) {
-  // TODO: Implement in FEAT-008
-  // 1. Authenticate user
-  // 2. Parse route param (id) and request body
-  // 3. Call transactionService.updateTransaction()
-  // 4. Return updated transaction
-  return notImplementedResponse();
+export async function PATCH(request: NextRequest, context: RouteParams) {
+  const user = await getAuthenticatedUser(request);
+  if (!user) {return unauthorizedResponse();}
+
+  const { id } = await context.params;
+  const paramResult = updateTransactionParamsSchema.safeParse({ id });
+  if (!paramResult.success) {
+    return validationErrorResponse(paramResult.error);
+  }
+
+  const body = await request.json().catch(() => null);
+  if (!body) {return invalidJsonResponse();}
+
+  const bodyResult = updateTransactionBodySchema.safeParse(body);
+  if (!bodyResult.success) {
+    return validationErrorResponse(bodyResult.error);
+  }
+
+  try {
+    const { transactionService } = await createContainer();
+    const updated = await transactionService.updateTransaction(
+      user.accountId,
+      paramResult.data.id,
+      bodyResult.data
+    );
+    return NextResponse.json(updated, { status: HttpStatus.OK });
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return notFoundResponse(error.message);
+    }
+    if (error instanceof ValidationError) {
+      return NextResponse.json({ error: error.message }, { status: HttpStatus.BAD_REQUEST });
+    }
+    return serverErrorResponse();
+  }
 }
 
 /**
@@ -30,11 +72,24 @@ export function PATCH(_request: NextRequest, _context: RouteParams) {
  * Delete a transaction. Returns 204 No Content.
  * Auth required. User can only delete own transactions.
  */
-export function DELETE(_request: NextRequest, _context: RouteParams) {
-  // TODO: Implement in FEAT-008
-  // 1. Authenticate user
-  // 2. Parse route param (id)
-  // 3. Call transactionService.deleteTransaction()
-  // 4. Return 204
-  return new NextResponse(null, { status: HttpStatus.NO_CONTENT });
+export async function DELETE(request: NextRequest, context: RouteParams) {
+  const user = await getAuthenticatedUser(request);
+  if (!user) {return unauthorizedResponse();}
+
+  const { id } = await context.params;
+  const paramResult = deleteTransactionParamsSchema.safeParse({ id });
+  if (!paramResult.success) {
+    return validationErrorResponse(paramResult.error);
+  }
+
+  try {
+    const { transactionService } = await createContainer();
+    await transactionService.deleteTransaction(user.accountId, paramResult.data.id);
+    return new NextResponse(null, { status: HttpStatus.NO_CONTENT });
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return notFoundResponse(error.message);
+    }
+    return serverErrorResponse();
+  }
 }

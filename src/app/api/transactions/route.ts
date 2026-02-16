@@ -1,7 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { getAuthenticatedUser } from '@/lib/auth/middleware';
 import { HttpStatus } from '@/lib/constants';
-import { createTestContainer } from '@/lib/container/container';
+import { createContainer } from '@/lib/container/container';
+import { ValidationError } from '@/lib/services/transaction.service';
 import {
   parseQueryObject,
   serverErrorResponse,
@@ -14,10 +16,6 @@ import {
   listTransactionsQuerySchema,
 } from '@/lib/validation/transactions.schemas';
 
-function getUserIdFromRequest(request: NextRequest): string | null {
-  return request.headers.get('x-user-id');
-}
-
 /**
  * GET /api/transactions
  *
@@ -27,8 +25,8 @@ function getUserIdFromRequest(request: NextRequest): string | null {
  * Query params: page, limit, startDate, endDate, categoryId, source, sortBy, sortOrder
  */
 export async function GET(request: NextRequest) {
-  const userId = getUserIdFromRequest(request);
-  if (!userId) {return unauthorizedResponse();}
+  const user = await getAuthenticatedUser(request);
+  if (!user) {return unauthorizedResponse();}
 
   const queryResult = listTransactionsQuerySchema.safeParse(
     parseQueryObject(request.nextUrl.searchParams)
@@ -38,8 +36,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const { transactionService } = await createTestContainer();
-    const result = await transactionService.listTransactions(userId, queryResult.data);
+    const { transactionService } = await createContainer();
+    const result = await transactionService.listTransactions(user.accountId, queryResult.data);
     return NextResponse.json(result, { status: HttpStatus.OK });
   } catch {
     return serverErrorResponse();
@@ -55,8 +53,8 @@ export async function GET(request: NextRequest) {
  * Body: { amount, vendor, categoryId, transactionDate, description? }
  */
 export async function POST(request: NextRequest) {
-  const userId = getUserIdFromRequest(request);
-  if (!userId) {return unauthorizedResponse();}
+  const user = await getAuthenticatedUser(request);
+  if (!user) {return unauthorizedResponse();}
 
   const body = await request.json().catch(() => null);
   if (!body) {return invalidJsonResponse();}
@@ -67,10 +65,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { transactionService } = await createTestContainer();
-    const created = await transactionService.createManualTransaction(userId, bodyResult.data);
+    const { transactionService } = await createContainer();
+    const created = await transactionService.createManualTransaction(user.accountId, bodyResult.data);
     return NextResponse.json(created, { status: HttpStatus.CREATED });
-  } catch {
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return NextResponse.json({ error: error.message }, { status: HttpStatus.BAD_REQUEST });
+    }
     return serverErrorResponse();
   }
 }

@@ -1,8 +1,5 @@
 /**
  * Integration tests — Category cascade operations.
- *
- * Tests #16-19 from integration test plan 05.
- * Full service stack with InMemory repositories seeded from fixtures.
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';

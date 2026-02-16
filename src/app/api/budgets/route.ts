@@ -10,7 +10,7 @@ import { notImplementedResponse } from '@/lib/validation/http';
  *
  * Query params: year (default: current), month (default: current)
  */
-export async function GET(_request: NextRequest) {
+export function GET(_request: NextRequest) {
   // TODO: Implement in FEAT-009
   // 1. Authenticate user
   // 2. Parse & validate query params with `listBudgetsQuerySchema`
@@ -28,7 +28,7 @@ export async function GET(_request: NextRequest) {
  *
  * Body: { categoryId, amount, year, month }
  */
-export async function POST(_request: NextRequest) {
+export function POST(_request: NextRequest) {
   // TODO: Implement in FEAT-009
   // 1. Authenticate user
   // 2. Parse & validate request body with `createBudgetBodySchema`

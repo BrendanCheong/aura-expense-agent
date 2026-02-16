@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { ColorPicker } from './color-picker';
 import { EmojiPicker } from './emoji-picker';
 
-import type { Category, CategoryUpdate } from '@/types/category';
+import type { Category } from '@/types/category';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -114,6 +114,7 @@ export function CategoryForm({ open, onOpenChange, category, onSubmit }: Categor
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Subscriptions"
                 maxLength={100}
+                // eslint-disable-next-line jsx-a11y/no-autofocus -- intentional UX: form opens with focus on name field
                 autoFocus
               />
             </div>

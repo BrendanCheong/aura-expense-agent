@@ -1,4 +1,4 @@
-import { ID, Query } from 'node-appwrite';
+import { ID, Query, type TablesDB } from 'node-appwrite';
 
 import type {
   ITransactionRepository,
@@ -8,7 +8,6 @@ import type {
 } from '../interfaces';
 import type { TransactionRow } from '@/types/appwrite/rows';
 import type { Transaction, TransactionCreate, TransactionUpdate } from '@/types/transaction';
-import type { TablesDB } from 'node-appwrite';
 
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import {

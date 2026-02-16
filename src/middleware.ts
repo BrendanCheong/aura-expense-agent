@@ -8,7 +8,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 const PROTECTED_PREFIXES = ['/dashboard', '/transactions', '/categories', '/budgets', '/settings'];
 
-const PUBLIC_PATHS = ['/', '/login', '/callback'];
+const _PUBLIC_PATHS = ['/', '/login', '/callback'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

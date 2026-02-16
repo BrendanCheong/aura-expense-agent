@@ -93,6 +93,7 @@ export interface IVendorCacheRepository {
 export interface IUserRepository {
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
+  findByInboundEmail(inboundEmail: string): Promise<User | null>;
   create(id: string, data: UserCreate): Promise<User>;
   update(id: string, data: UserUpdate): Promise<User>;
 }

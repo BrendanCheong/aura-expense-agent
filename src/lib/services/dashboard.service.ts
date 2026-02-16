@@ -29,7 +29,7 @@ export class DashboardService {
     private readonly categoryRepo: ICategoryRepository
   ) {}
 
-  async getSummary(_userId: string, _year: number, _month: number): Promise<DashboardSummary> {
+  getSummary(_userId: string, _year: number, _month: number): Promise<DashboardSummary> {
     // TODO: Implement in FEAT-007
     throw new Error('Dashboard service not yet implemented. See FEAT-007.');
   }

@@ -11,7 +11,7 @@ import { notImplementedResponse } from '@/lib/validation/http';
  *
  * Body: { transactionId, newCategoryId, vendor, reasoning }
  */
-export async function POST(_request: NextRequest) {
+export function POST(_request: NextRequest) {
   // TODO: Implement in FEAT-013
   // 1. Authenticate user
   // 2. Parse & validate request body

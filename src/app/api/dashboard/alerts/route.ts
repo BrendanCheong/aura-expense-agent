@@ -9,7 +9,7 @@ import { notImplementedResponse } from '@/lib/validation/http';
  * Returns categories approaching budget (>80%) or over budget (>=100%).
  * Auth required.
  */
-export async function GET(_request: NextRequest) {
+export function GET(_request: NextRequest) {
   // TODO: Implement in FEAT-007
   // 1. Authenticate user
   // 2. Compute current month spending vs budgets

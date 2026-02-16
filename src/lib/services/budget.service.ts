@@ -13,7 +13,7 @@ export class BudgetService {
     private readonly transactionRepo: ITransactionRepository
   ) {}
 
-  async listBudgets(userId: string, year: number, month: number): Promise<Budget[]> {
+  listBudgets(userId: string, year: number, month: number): Promise<Budget[]> {
     return this.budgetRepo.findByUserAndPeriod(userId, year, month);
   }
 

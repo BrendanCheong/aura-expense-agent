@@ -1,9 +1,8 @@
-import { ID, Query } from 'node-appwrite';
+import { ID, Query, type TablesDB } from 'node-appwrite';
 
 import type { ICategoryRepository } from '../interfaces';
 import type { CategoryRow } from '@/types/appwrite/rows';
 import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category';
-import type { TablesDB } from 'node-appwrite';
 
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import { mapRowToCategory, mapCategoryToRow, mapCategoryUpdateToRow } from '@/lib/appwrite/mappers';

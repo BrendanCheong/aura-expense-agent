@@ -15,7 +15,7 @@ interface RouteParams {
  *
  * Body (partial): { categoryId?, amount?, vendor?, description?, transactionDate?, confidence? }
  */
-export async function PATCH(_request: NextRequest, _context: RouteParams) {
+export function PATCH(_request: NextRequest, _context: RouteParams) {
   // TODO: Implement in FEAT-008
   // 1. Authenticate user
   // 2. Parse route param (id) and request body
@@ -30,7 +30,7 @@ export async function PATCH(_request: NextRequest, _context: RouteParams) {
  * Delete a transaction. Returns 204 No Content.
  * Auth required. User can only delete own transactions.
  */
-export async function DELETE(_request: NextRequest, _context: RouteParams) {
+export function DELETE(_request: NextRequest, _context: RouteParams) {
   // TODO: Implement in FEAT-008
   // 1. Authenticate user
   // 2. Parse route param (id)

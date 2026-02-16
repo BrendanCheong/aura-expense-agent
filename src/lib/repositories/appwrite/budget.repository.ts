@@ -1,9 +1,8 @@
-import { ID, Query } from 'node-appwrite';
+import { ID, Query, type TablesDB } from 'node-appwrite';
 
 import type { IBudgetRepository } from '../interfaces';
 import type { BudgetRow } from '@/types/appwrite/rows';
 import type { Budget, BudgetCreate, BudgetUpdate } from '@/types/budget';
-import type { TablesDB } from 'node-appwrite';
 
 import { APPWRITE_CONFIG } from '@/lib/appwrite/config';
 import { mapRowToBudget, mapBudgetToRow, mapBudgetUpdateToRow } from '@/lib/appwrite/mappers';

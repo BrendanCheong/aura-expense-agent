@@ -11,7 +11,7 @@ import { notImplementedResponse } from '@/lib/validation/http';
  *
  * Query params: period (week|month|year), year, month, week
  */
-export async function GET(_request: NextRequest) {
+export function GET(_request: NextRequest) {
   // TODO: Implement in FEAT-007
   // 1. Authenticate user
   // 2. Parse & validate query params (period, year, month, week)

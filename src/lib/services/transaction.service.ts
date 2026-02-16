@@ -21,7 +21,7 @@ export class TransactionService {
     private readonly vendorCacheRepo: IVendorCacheRepository
   ) {}
 
-  async listTransactions(
+  listTransactions(
     userId: string,
     options: TransactionQueryOptions
   ): Promise<PaginatedResult<Transaction>> {

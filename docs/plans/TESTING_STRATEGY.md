@@ -11,17 +11,17 @@
 
 ```
 ┌────────────────────────────────────────────────────────────┐
-│                       E2E Tests                             │
-│              (Playwright — full browser flows)               │
-│  Login → Dashboard → Create Budget → View Transactions      │
+│                       E2E Tests                            │
+│              (Playwright — full browser flows)             │
+│  Login → Dashboard → Create Budget → View Transactions     │
 ├────────────────────────────────────────────────────────────┤
-│                   Integration Tests                          │
-│             (Vitest — multiple units together)                │
-│  Webhook → Agent → DB  |  API Route → Auth → DB Response    │
+│                   Integration Tests                        │
+│             (Vitest — multiple units together)             │
+│  Webhook → Agent → DB  |  API Route → Auth → DB Response   │
 ├────────────────────────────────────────────────────────────┤
-│                      Unit Tests                              │
-│              (Vitest — isolated functions)                    │
-│  Date utils | Currency format | Email parser | Agent tools   │
+│                      Unit Tests                            │
+│              (Vitest — isolated functions)                 │
+│  Date utils | Currency format | Email parser | Agent tools │
 └────────────────────────────────────────────────────────────┘
 ```
 

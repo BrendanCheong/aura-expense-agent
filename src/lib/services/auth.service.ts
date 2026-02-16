@@ -42,14 +42,14 @@ export class AuthService {
   /**
    * Retrieve a user by their Appwrite account ID.
    */
-  async getUserById(id: string): Promise<User | null> {
+  getUserById(id: string): Promise<User | null> {
     return this.userRepo.findById(id);
   }
 
   /**
    * Update a user's mutable profile fields.
    */
-  async updateUserProfile(id: string, data: UserUpdate): Promise<User> {
+  updateUserProfile(id: string, data: UserUpdate): Promise<User> {
     return this.userRepo.update(id, data);
   }
 }

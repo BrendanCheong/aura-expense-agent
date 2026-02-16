@@ -48,6 +48,18 @@ export class InMemoryUserRepository implements IUserRepository {
     return Promise.resolve(updated);
   }
 
+  findByInboundEmail(inboundEmail: string): Promise<User | null> {
+    for (const user of this.users.values()) {
+      if (user.inboundEmail === inboundEmail) {return Promise.resolve(user);}
+    }
+    return Promise.resolve(null);
+  }
+
+  /** Test helper: seed a user directly into the store. */
+  seed(user: User): void {
+    this.users.set(user.id, user);
+  }
+
   /** Test helper: clear all data. */
   reset(): void {
     this.users.clear();

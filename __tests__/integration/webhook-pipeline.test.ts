@@ -13,17 +13,18 @@
 import { NextRequest } from 'next/server';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import categoriesFixture from '../fixtures/categories.json';
-import transactionsFixture from '../fixtures/transactions.json';
-import usersFixture from '../fixtures/users.json';
-import vendorCacheFixture from '../fixtures/vendor-cache.json';
+import {
+  seedUsers,
+  seedCategories,
+  seedTransactions,
+  seedVendorCache,
+} from '../helpers/seed';
 import webhookPayloads from '../fixtures/webhook-payloads.json';
 
 import type { AgentResult, IExpenseAgent } from '@/lib/agent/interfaces';
 import type { IEmailProvider, ReceivedEmail } from '@/lib/resend/interfaces';
-import type { Transaction } from '@/types/transaction';
 
-import { Confidence, TransactionSource, type OAuthProvider, type BudgetMode } from '@/lib/enums';
+import { Confidence, TransactionSource } from '@/lib/enums';
 import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
 import { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
 import { InMemoryUserRepository } from '@/lib/repositories/in-memory/user.repository';
@@ -110,77 +111,6 @@ function createMockEmailProvider(
 }
 
 // ---------------------------------------------------------------------------
-// Seed helpers (snake_case fixtures -> camelCase domain objects)
-// ---------------------------------------------------------------------------
-
-function seedUser(userRepo: InMemoryUserRepository): void {
-  const u = usersFixture.test_user;
-  userRepo.seed({
-    id: u.id,
-    email: u.email,
-    name: u.name,
-    avatarUrl: u.avatar_url,
-    inboundEmail: u.inbound_email,
-    oauthProvider: u.oauth_provider as OAuthProvider,
-    monthlySalary: u.monthly_salary,
-    budgetMode: u.budget_mode as BudgetMode,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  });
-}
-
-function seedCategories(categoryRepo: InMemoryCategoryRepository): void {
-  for (const cat of categoriesFixture) {
-    categoryRepo.seed({
-      id: cat.id,
-      userId: cat.user_id,
-      name: cat.name,
-      description: cat.description,
-      icon: cat.icon,
-      color: cat.color,
-      isDefault: cat.is_default,
-      sortOrder: cat.sort_order,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-  }
-}
-
-function seedTransactions(transactionRepo: InMemoryTransactionRepository): void {
-  for (const tx of transactionsFixture) {
-    transactionRepo.seed({
-      id: tx.id,
-      userId: tx.user_id,
-      categoryId: tx.category_id,
-      amount: tx.amount,
-      vendor: tx.vendor,
-      description: tx.description,
-      transactionDate: tx.transaction_date,
-      resendEmailId: tx.resend_email_id,
-      rawEmailSubject: tx.raw_email_subject,
-      confidence: tx.confidence as Transaction['confidence'],
-      source: tx.source as Transaction['source'],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-  }
-}
-
-function seedVendorCache(vendorCacheRepo: InMemoryVendorCacheRepository): void {
-  for (const vc of vendorCacheFixture) {
-    vendorCacheRepo.seed({
-      id: vc.id,
-      userId: vc.user_id,
-      vendorName: vc.vendor_name,
-      categoryId: vc.category_id,
-      hitCount: vc.hit_count,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Test suite
 // ---------------------------------------------------------------------------
 
@@ -212,7 +142,8 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
       mockAgent,
     );
 
-    seedUser(userRepo);
+    // Seed fixture data via shared helpers
+    seedUsers(userRepo);
     seedCategories(categoryRepo);
     seedTransactions(transactionRepo);
     seedVendorCache(vendorCacheRepo);

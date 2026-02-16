@@ -4,12 +4,13 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import budgetsFixture from '../fixtures/budgets.json';
-import categoriesFixture from '../fixtures/categories.json';
-import transactionsFixture from '../fixtures/transactions.json';
-import vendorCacheFixture from '../fixtures/vendor-cache.json';
-
-import type { Transaction } from '@/types/transaction';
+import {
+  seedCategories,
+  seedTransactions,
+  seedVendorCache,
+  seedBudgets,
+  transactionsFixture,
+} from '../helpers/seed';
 
 import { InMemoryBudgetRepository } from '@/lib/repositories/in-memory/budget.repository';
 import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
@@ -47,64 +48,11 @@ describe('Integration: Category Cascade', () => {
     transactionService = new TransactionService(transactionRepo, vendorCacheRepo);
     budgetService = new BudgetService(budgetRepo, transactionRepo);
 
-    // Seed all fixture data
-    for (const cat of categoriesFixture) {
-      categoryRepo.seed({
-        id: cat.id,
-        userId: cat.user_id,
-        name: cat.name,
-        description: cat.description,
-        icon: cat.icon,
-        color: cat.color,
-        isDefault: cat.is_default,
-        sortOrder: cat.sort_order,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-    }
-
-    for (const vc of vendorCacheFixture) {
-      vendorCacheRepo.seed({
-        id: vc.id,
-        userId: vc.user_id,
-        vendorName: vc.vendor_name,
-        categoryId: vc.category_id,
-        hitCount: vc.hit_count,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-    }
-
-    for (const b of budgetsFixture) {
-      budgetRepo.seed({
-        id: b.id,
-        userId: b.user_id,
-        categoryId: b.category_id,
-        amount: b.amount,
-        year: b.year,
-        month: b.month,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-    }
-
-    for (const tx of transactionsFixture) {
-      transactionRepo.seed({
-        id: tx.id,
-        userId: tx.user_id,
-        categoryId: tx.category_id,
-        amount: tx.amount,
-        vendor: tx.vendor,
-        description: tx.description,
-        transactionDate: tx.transaction_date,
-        resendEmailId: tx.resend_email_id,
-        rawEmailSubject: tx.raw_email_subject,
-        confidence: tx.confidence as Transaction['confidence'],
-        source: tx.source as Transaction['source'],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-    }
+    // Seed fixture data via shared helpers
+    seedCategories(categoryRepo);
+    seedVendorCache(vendorCacheRepo);
+    seedBudgets(budgetRepo);
+    seedTransactions(transactionRepo);
   });
 
   it('Test #16: Delete category → transactions move to Other', async () => {

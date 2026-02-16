@@ -22,7 +22,7 @@
 | 3   | [FEAT-001](FEAT-001-auth-oauth.md)          | OAuth Authentication (Google + GitHub)   | 1      | FEAT-003, FEAT-002           | 1d   | 🟡     |
 | 4   | [FEAT-010](FEAT-010-category-management.md) | Category Management (CRUD)               | 2      | FEAT-001, FEAT-002           | 1d   | 🟢     |
 | 5   | [FEAT-006](FEAT-006-vendor-cache.md)        | Vendor Cache (Agent Memory)              | 2      | FEAT-003, FEAT-002           | 0.5d | 🟢     |
-| 6   | [FEAT-005](FEAT-005-ai-agent.md)            | LangGraph.js Expense Agent               | 3      | FEAT-010, FEAT-006           | 2d   | �     |
+| 6   | [FEAT-005](FEAT-005-ai-agent.md)            | LangGraph.js Expense Agent               | 3      | FEAT-010, FEAT-006           | 2d   | 🟢     |
 | 7   | [FEAT-004](FEAT-004-webhook-handler.md)     | Resend Inbound Email Webhook Handler     | 3      | FEAT-005, FEAT-006           | 1.5d | 🟢     |
 | 8   | [FEAT-008](FEAT-008-transactions-page.md)   | Transactions Page (Full CRUD)            | 4      | FEAT-001, FEAT-010, FEAT-006 | 1.5d | 🔴     |
 | 9   | [FEAT-009](FEAT-009-budget-management.md)   | Budget Management & Salary Allocation    | 4      | FEAT-001, FEAT-010           | 1.5d | 🔴     |

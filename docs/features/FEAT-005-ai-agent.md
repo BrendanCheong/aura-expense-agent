@@ -1,6 +1,6 @@
 # FEAT-005 — LangGraph.js Expense Agent
 
-> **Status:** 🟡 In Progress  
+> **Status:** 🟢 Done  
 > **Execution Order:** 6 of 13  
 > **Sprint:** 3 — AI Pipeline  
 > **Blocked By:** FEAT-010, FEAT-006  
@@ -30,7 +30,7 @@ Implement the LangGraph.js agent that extracts expense data from email text/HTML
 - [x] 5-tier categorization chain: Vendor Cache → Mem0 Memory → LLM Match → Brave Search → Fallback "Other"
 - [x] Agent returns structured result: `{ transactionId, vendor, amount, categoryId, confidence }`
 - [x] Agent handles non-transaction emails gracefully (returns `null`)
-- [ ] Agent timeout: 25 seconds max (leaves 5s buffer for webhook response)
+- [x] Agent timeout: 25 seconds max (leaves 5s buffer for webhook response)
 
 ## Technical Details
 

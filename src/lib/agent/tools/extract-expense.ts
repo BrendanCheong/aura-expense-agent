@@ -81,7 +81,7 @@ export function extractExpenseFromText(text: string): ExtractedExpense | null {
  * The LLM uses this when the regex fast path fails or for complex emails.
  */
 export const extractExpenseTool = tool(
-  ({ emailText, emailHtml, _emailSubject, emailDate }) => {
+  ({ emailText, emailHtml, emailSubject, emailDate }) => {
     // Try regex fast path first
     const regexResult = extractExpenseFromText(emailText || emailHtml || '');
 
@@ -91,6 +91,7 @@ export const extractExpenseTool = tool(
         amount: regexResult.amount,
         transactionDate: regexResult.dateRaw || emailDate,
         method: 'regex',
+        emailSubject,
       });
     }
 
@@ -101,6 +102,7 @@ export const extractExpenseTool = tool(
       transactionDate: emailDate,
       method: 'needs_llm',
       rawContent: (emailText || emailHtml || '').slice(0, 2000),
+      emailSubject,
     });
   },
   {
@@ -115,7 +117,7 @@ export const extractExpenseTool = tool(
     schema: z.object({
       emailText: z.string().describe('Plain text content of the email'),
       emailHtml: z.string().describe('HTML content of the email'),
-      _emailSubject: z.string().describe('Subject line of the email'),
+      emailSubject: z.string().describe('Subject line of the email'),
       emailDate: z.string().describe('ISO 8601 date when email was received'),
     }),
   }

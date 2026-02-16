@@ -12,7 +12,6 @@ import { z } from 'zod';
 
 import type { TransactionCreate } from '@/types/transaction';
 
-import { createContainer } from '@/lib/container/container';
 import { Confidence, TransactionSource } from '@/lib/enums';
 
 
@@ -86,22 +85,3 @@ export function createLogExpenseTool(deps: LogExpenseDeps) {
     },
   );
 }
-
-/**
- * Default export — uses the dependency injector container.
- */
-export const logExpenseTool = tool(
-  async (params) => {
-    const container = await createContainer();
-    const deps: LogExpenseDeps = {
-      transactionRepo: container.transactionService as unknown as LogExpenseDeps['transactionRepo'],
-      vendorCacheRepo: (container as unknown as { repos?: { vendorCache: LogExpenseDeps['vendorCacheRepo'] } }).repos?.vendorCache as LogExpenseDeps['vendorCacheRepo'],
-    };
-    return JSON.stringify(await logExpense(params, deps));
-  },
-  {
-    name: 'log_expense',
-    description: `Log the extracted and categorized expense to the database and update the vendor cache for future lookups.`,
-    schema: LOG_EXPENSE_SCHEMA,
-  },
-);

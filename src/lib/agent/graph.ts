@@ -6,7 +6,7 @@
 */
 
 import { AIMessage, HumanMessage, SystemMessage, type BaseMessage } from '@langchain/core/messages';
-import { StateGraph } from '@langchain/langgraph';
+import { StateGraph, type RetryPolicy } from '@langchain/langgraph';
 import { ToolNode } from '@langchain/langgraph/prebuilt';
 import { ChatOpenAI } from '@langchain/openai';
 
@@ -14,6 +14,24 @@ import { SYSTEM_PROMPT, buildUserPrompt } from './prompts';
 import { AgentState, type AgentStateType } from './state';
 
 import type { StructuredToolInterface } from '@langchain/core/tools';
+
+/** Maximum time (ms) the agent is allowed to run before being aborted. */
+export const AGENT_TIMEOUT_MS = 25_000;
+
+/** Maximum number of graph supersteps before aborting.  Prevents infinite loops. */
+export const AGENT_RECURSION_LIMIT = 15;
+
+/**
+ * Default retry policy for agent nodes.
+ * Retries transient LLM / network errors with exponential backoff.
+ */
+export const AGENT_RETRY_POLICY: RetryPolicy = {
+  maxAttempts: 3,
+  initialInterval: 500,
+  backoffFactor: 2,
+  maxInterval: 5_000,
+  jitter: true,
+};
 
 export interface GraphConfig {
   tools: StructuredToolInterface[];
@@ -75,8 +93,8 @@ export function createExpenseAgentGraph(config: GraphConfig) {
   }
 
   const graph = new StateGraph(AgentState)
-    .addNode('agent', agentNode)
-    .addNode('tools', toolNode)
+    .addNode('agent', agentNode, { retryPolicy: AGENT_RETRY_POLICY })
+    .addNode('tools', toolNode, { retryPolicy: AGENT_RETRY_POLICY })
     .addEdge('__start__', 'agent')
     .addConditionalEdges('agent', shouldContinue, {
       tools: 'tools',
@@ -120,7 +138,7 @@ export async function processExpenseEmail(params: {
 }) {
   const agent = createExpenseAgent({ tools: params.tools ?? [] });
 
-  const result = await agent.invoke({
+  const initialState = {
     emailHtml: params.emailHtml,
     emailText: params.emailText,
     emailSubject: params.emailSubject,
@@ -140,7 +158,22 @@ export async function processExpenseEmail(params: {
     cacheHit: false,
     transactionId: null,
     error: null,
+  };
+
+  // Race the agent invocation against a timeout to ensure the webhook
+  // can respond within Resend's 30-second deadline (25s agent + 5s buffer).
+  const agentPromise = agent.invoke(initialState, {
+    recursionLimit: AGENT_RECURSION_LIMIT,
   });
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    setTimeout(
+      () => reject(new Error(`Agent timed out after ${AGENT_TIMEOUT_MS}ms`)),
+      AGENT_TIMEOUT_MS,
+    );
+  });
+
+  const result = await Promise.race([agentPromise, timeoutPromise]);
 
   return result;
 }

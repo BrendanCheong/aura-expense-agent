@@ -5,10 +5,7 @@
  * fetches the full email content, and processes it through the expense pipeline.
  *
  * Authentication: Svix webhook signature verification (not user auth).
- * Dev mode: Set SKIP_WEBHOOK_VERIFICATION=true to bypass Svix verification.
- *
- * @see FEAT-004 (Webhook Handler)
- * @see API_SPECIFICATION.md
+ * Dev mode: Set PROJECT_ENV=dev to bypass Svix verification.
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
@@ -35,7 +32,7 @@ interface ResendWebhookEvent {
  * Verify the Svix webhook signature.
  * Returns the parsed event if valid, or null if verification fails.
  *
- * In dev mode (SKIP_WEBHOOK_VERIFICATION=true), skips verification
+ * In dev mode (PROJECT_ENV=dev), skips verification
  * and parses the raw payload directly.
  */
 function verifyWebhookSignature(

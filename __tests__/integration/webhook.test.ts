@@ -2,22 +2,19 @@
  * Integration tests — Webhook Inbound Email Pipeline.
  *
  * Tests the full POST /api/webhooks/resend handler end-to-end
- * through the service layer
- *
- * Pattern: Prepare → Act → Assert
- *
+ * through the service layer.
  * Dev mode (PROJECT_ENV=dev) bypasses Svix signature verification.
- *
  */
 
 import { NextRequest } from 'next/server';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import webhookPayloads from '../fixtures/webhook-payloads.json';
+import { createPostRequest, MOCK_USER } from '../helpers/request';
 import {
-  seedUsers,
   seedCategories,
   seedTransactions,
+  seedUsers,
   seedVendorCache,
 } from '../helpers/seed';
 
@@ -29,8 +26,10 @@ import { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/categor
 import { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
 import { InMemoryUserRepository } from '@/lib/repositories/in-memory/user.repository';
 import { InMemoryVendorCacheRepository } from '@/lib/repositories/in-memory/vendor-cache.repository';
-// eslint-disable-next-line import/order -- POST must be imported after vi.mock
 import { WebhookService } from '@/lib/services/webhook.service';
+// ---------------------------------------------------------------------------
+// Mock setup — must be before route imports
+// ---------------------------------------------------------------------------
 
 const _containerRef: {
   webhookService: WebhookService | null;
@@ -41,24 +40,13 @@ vi.mock('@/lib/container/container', () => ({
   createContainer: vi.fn(() => Promise.resolve(_containerRef)),
 }));
 
-// Import route handler AFTER vi.mock (which is hoisted above all imports)
-// eslint-disable-next-line import/order
 import { POST } from '@/app/api/webhooks/resend/route';
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Constants & helpers
 // ---------------------------------------------------------------------------
 
-const USER_ID = 'test-user-001';
-const WEBHOOK_URL = 'http://localhost:4321/api/webhooks/resend';
-
-function createWebhookRequest(payload: unknown): NextRequest {
-  return new NextRequest(WEBHOOK_URL, {
-    method: 'POST',
-    body: JSON.stringify(payload),
-    headers: { 'Content-Type': 'application/json' },
-  });
-}
+const WH_PATH = '/api/webhooks/resend';
 
 function createMockAgent(result?: Partial<AgentResult>): IExpenseAgent {
   return {
@@ -153,14 +141,14 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
   });
 
   // =========================================================================
-  // Test #1: Vendor cache fast path (known vendor)
+  // Vendor cache fast path (known vendor)
   // =========================================================================
   it('should fast-path via vendor cache for known vendor (UOB -> DIGITALOCEAN.COM)', async () => {
     // ---- Prepare ----
     const payload = webhookPayloads.resend_email_received;
 
     // ---- Act ----
-    const response = await POST(createWebhookRequest(payload));
+    const response = await POST(createPostRequest(WH_PATH, payload));
 
     // ---- Assert ----
     expect(response.status).toBe(200);
@@ -177,14 +165,14 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
     expect(tx!.source).toBe(TransactionSource.EMAIL);
     expect(tx!.resendEmailId).toBe(payload.data.email_id);
 
-    const cached = await vendorCacheRepo.findByUserAndVendor(USER_ID, 'DIGITALOCEAN.COM');
+    const cached = await vendorCacheRepo.findByUserAndVendor(MOCK_USER.accountId, 'DIGITALOCEAN.COM');
     expect(cached!.hitCount).toBe(13);
 
     expect(mockAgent.processEmail).not.toHaveBeenCalled();
   });
 
   // =========================================================================
-  // Test #2: Agent required (cache miss)
+  // Agent required (cache miss)
   // =========================================================================
   it('should invoke agent for unknown vendor (cache miss)', async () => {
     // ---- Prepare ----
@@ -213,7 +201,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
     };
 
     // ---- Act ----
-    const response = await POST(createWebhookRequest(payload));
+    const response = await POST(createPostRequest(WH_PATH, payload));
 
     // ---- Assert ----
     expect(response.status).toBe(200);
@@ -223,13 +211,13 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
 
     expect(mockAgent.processEmail).toHaveBeenCalledOnce();
 
-    const cached = await vendorCacheRepo.findByUserAndVendor(USER_ID, 'NEW VENDOR');
+    const cached = await vendorCacheRepo.findByUserAndVendor(MOCK_USER.accountId, 'NEW VENDOR');
     expect(cached).not.toBeNull();
     expect(cached!.categoryId).toBe('cat-other');
   });
 
   // =========================================================================
-  // Test #3: Duplicate email (idempotency)
+  // Duplicate email (idempotency)
   // =========================================================================
   it('should return duplicate status for already-processed email', async () => {
     // ---- Prepare ----
@@ -248,7 +236,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
     const payload = webhookPayloads.resend_duplicate_email;
 
     // ---- Act ----
-    const response = await POST(createWebhookRequest(payload));
+    const response = await POST(createPostRequest(WH_PATH, payload));
 
     // ---- Assert ----
     expect(response.status).toBe(200);
@@ -259,7 +247,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
   });
 
   // =========================================================================
-  // Test #4: Non-transaction email (newsletter -> skipped)
+  // Non-transaction email (newsletter -> skipped)
   // =========================================================================
   it('should skip non-transaction emails when agent finds no expense', async () => {
     // ---- Prepare ----
@@ -291,7 +279,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
     };
 
     // ---- Act ----
-    const response = await POST(createWebhookRequest(payload));
+    const response = await POST(createPostRequest(WH_PATH, payload));
 
     // ---- Assert ----
     expect(response.status).toBe(200);
@@ -301,7 +289,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
   });
 
   // =========================================================================
-  // Test #5: Unknown recipient
+  // Unknown recipient
   // =========================================================================
   it('should return 200 with error for unknown recipient', async () => {
     // ---- Prepare ----
@@ -330,7 +318,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
     };
 
     // ---- Act ----
-    const response = await POST(createWebhookRequest(payload));
+    const response = await POST(createPostRequest(WH_PATH, payload));
 
     // ---- Assert ----
     expect(response.status).toBe(200);
@@ -340,7 +328,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
   });
 
   // =========================================================================
-  // Test #6: Non email.received event type
+  // Non email.received event type
   // =========================================================================
   it('should ignore non email.received events', async () => {
     // ---- Prepare ----
@@ -356,7 +344,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
     };
 
     // ---- Act ----
-    const response = await POST(createWebhookRequest(payload));
+    const response = await POST(createPostRequest(WH_PATH, payload));
 
     // ---- Assert ----
     expect(response.status).toBe(200);
@@ -367,7 +355,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
   });
 
   // =========================================================================
-  // Test #7: Invalid signature (non-dev mode)
+  // Invalid signature (non-dev mode)
   // =========================================================================
   it('should return 400 for invalid signature when not in dev mode', async () => {
     // ---- Prepare ----
@@ -385,7 +373,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
       },
     };
 
-    const request = new NextRequest(WEBHOOK_URL, {
+    const request = new NextRequest(`http://localhost:4321${WH_PATH}`, {
       method: 'POST',
       body: JSON.stringify(payload),
       headers: {
@@ -408,17 +396,17 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
   });
 
   // =========================================================================
-  // Test #8: Idempotency (process + duplicate)
+  // Idempotency (process + duplicate)
   // =========================================================================
   it('should process first email and return duplicate for second identical email', async () => {
     // ---- Prepare ----
     const payload = webhookPayloads.resend_email_received;
 
     // ---- Act ----
-    const response1 = await POST(createWebhookRequest(payload));
+    const response1 = await POST(createPostRequest(WH_PATH, payload));
     const body1 = await response1.json();
 
-    const response2 = await POST(createWebhookRequest(payload));
+    const response2 = await POST(createPostRequest(WH_PATH, payload));
     const body2 = await response2.json();
 
     // ---- Assert ----
@@ -432,7 +420,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
   });
 
   // =========================================================================
-  // Test #9: DBS GRAB *GRABFOOD via vendor cache
+  // DBS GRAB *GRABFOOD via vendor cache
   // =========================================================================
   it('should process DBS GRAB *GRABFOOD email via vendor cache (cat-food)', async () => {
     // ---- Prepare ----
@@ -449,7 +437,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
     };
 
     // ---- Act ----
-    const response = await POST(createWebhookRequest(payload));
+    const response = await POST(createPostRequest(WH_PATH, payload));
 
     // ---- Assert ----
     expect(response.status).toBe(200);
@@ -466,7 +454,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
   });
 
   // =========================================================================
-  // Test #10: Email not found from Resend
+  // Email not found from Resend
   // =========================================================================
   it('should return 200 with error when Resend email not found', async () => {
     // ---- Prepare ----
@@ -482,7 +470,7 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
     };
 
     // ---- Act ----
-    const response = await POST(createWebhookRequest(payload));
+    const response = await POST(createPostRequest(WH_PATH, payload));
 
     // ---- Assert ----
     expect(response.status).toBe(200);

@@ -142,6 +142,7 @@ const eslintConfig = [
     files: ['__tests__/**/*.ts'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
+      'import/order': 'off'
     },
   },
 ];

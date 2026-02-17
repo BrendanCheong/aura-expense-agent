@@ -8,7 +8,7 @@
  * The dev server must be running with PROJECT_ENV=dev for auth bypass.
  */
 
-import { Client, TablesDB, ID } from 'node-appwrite';
+import { Client, TablesDB } from 'node-appwrite';
 
 // ---------------------------------------------------------------------------
 // Client setup
@@ -17,7 +17,9 @@ import { Client, TablesDB, ID } from 'node-appwrite';
 let tablesDb: TablesDB | null = null;
 
 function getTablesDb(): TablesDB {
-  if (tablesDb) return tablesDb;
+  if (tablesDb) {
+    return tablesDb;
+  }
 
   const endpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
   const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;

@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
+import webhookPayloads from '../../fixtures/webhook-payloads.json';
 import {
-  seedUsers,
   seedCategories,
   seedTransactions,
+  seedUsers,
   seedVendorCache,
 } from '../../helpers/seed';
-import webhookPayloads from '../../fixtures/webhook-payloads.json';
 
 import type { AgentResult, IExpenseAgent } from '@/lib/agent/interfaces';
 import type { IEmailProvider, ReceivedEmail } from '@/lib/resend/interfaces';

@@ -10,20 +10,19 @@
  *   afterEach(() => resetAll(repos));
  */
 
-import type { Transaction } from '@/types/transaction';
-import type { OAuthProvider, BudgetMode } from '@/lib/enums';
-
+import budgetsFixture from '../fixtures/budgets.json';
 import categoriesFixture from '../fixtures/categories.json';
 import transactionsFixture from '../fixtures/transactions.json';
 import usersFixture from '../fixtures/users.json';
 import vendorCacheFixture from '../fixtures/vendor-cache.json';
-import budgetsFixture from '../fixtures/budgets.json';
 
-import type { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
+import type { OAuthProvider, BudgetMode } from '@/lib/enums';
+import type { InMemoryBudgetRepository } from '@/lib/repositories/in-memory/budget.repository';
 import type { InMemoryCategoryRepository } from '@/lib/repositories/in-memory/category.repository';
+import type { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
 import type { InMemoryUserRepository } from '@/lib/repositories/in-memory/user.repository';
 import type { InMemoryVendorCacheRepository } from '@/lib/repositories/in-memory/vendor-cache.repository';
-import type { InMemoryBudgetRepository } from '@/lib/repositories/in-memory/budget.repository';
+import type { Transaction } from '@/types/transaction';
 
 // ---------------------------------------------------------------------------
 // Repository type bundle (for seedAll / resetAll)

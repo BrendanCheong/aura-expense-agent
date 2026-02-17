@@ -14,11 +14,7 @@ import { SYSTEM_PROMPT, buildUserPrompt } from './prompts';
 import { AgentState, type AgentStateType } from './state';
 
 import type { StructuredToolInterface } from '@langchain/core/tools';
-
-/** Maximum time (ms) the agent is allowed to run before being aborted. */
 export const AGENT_TIMEOUT_MS = 25_000;
-
-/** Maximum number of graph supersteps before aborting.  Prevents infinite loops. */
 export const AGENT_RECURSION_LIMIT = 15;
 
 /**

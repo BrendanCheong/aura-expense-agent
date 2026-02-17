@@ -13,13 +13,13 @@
 import { NextRequest } from 'next/server';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import webhookPayloads from '../fixtures/webhook-payloads.json';
 import {
   seedUsers,
   seedCategories,
   seedTransactions,
   seedVendorCache,
 } from '../helpers/seed';
-import webhookPayloads from '../fixtures/webhook-payloads.json';
 
 import type { AgentResult, IExpenseAgent } from '@/lib/agent/interfaces';
 import type { IEmailProvider, ReceivedEmail } from '@/lib/resend/interfaces';
@@ -373,7 +373,6 @@ describe('Integration: Webhook Pipeline (POST /api/webhooks/resend)', () => {
     // ---- Prepare ----
     const originalEnv = process.env.PROJECT_ENV;
     process.env.PROJECT_ENV = 'prod';
-    process.env.RESEND_WEBHOOK_SECRET = 'whsec_MfKQ9r8GKYqrTwjUPD8ILPZIo2LaLaSw';
 
     const payload = {
       type: 'email.received',

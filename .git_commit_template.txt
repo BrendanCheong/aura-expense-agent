@@ -1,0 +1,51 @@
+
+# Write title above in the given format < 50 chars
+# Format = <type>(<scope>): <subject>
+
+# Write your body and footer below, if necessary. Keep lines < 72 chars.
+
+# ## Help ##
+#
+# For the type:
+#   * build: Dockerfile/SBT related changes
+#   * chore: chores and maintenance changes
+#   * ci: CI related changes
+#   * docs: editing documentation
+#   * feat: adding or modifying feature
+#   * fix: bug fix
+#   * perf: pure optimisation changes
+#   * refactor: code change without behaviour change
+#   * test: adding or correcting test cases
+#
+# For the scope (likely to be updated):
+#   * core
+#   * ingest
+#   * datastore
+#   * databricks
+#   * errors
+#   * (use * if there's no scope)
+#
+# For the subject:
+#   * use the imperative, present tense: "change" not "changed" nor
+#     "changes"
+#   * don't capitalize the first letter
+#   * no dot (.) at the end
+#   * lower case except for special words (function/class names)
+#
+# For the body:
+#   * Explain what and why things are changed
+#   * Capitalise first letter of the sentence
+#   * Usage of bullet points are okay
+#   * Use as many characters as needed for atypical text, such as URLs,
+#     terminal output, formatted messages, etc.
+#
+# For the footer:
+#   * Reference closed or related issues, other PRs (e.g. PR Close xxx)
+#   * Indicate BREAKING CHANGE if any (e.g. BREAKING CHANGE: <desc>)
+#
+# ## Usage ##
+#
+# Configure this project to use the git template file by running:
+#
+#     git config commit.template .git_commit_template.txt
+#

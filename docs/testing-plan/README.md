@@ -120,6 +120,38 @@ export function seedTransactionRepo(repo: InMemoryTransactionRepository, userId?
 
 ---
 
+## Frontend Component Tests
+
+> **Naming Convention:** Frontend React component test files use **PascalCase** and live co-located under `src/components/__tests__/`.
+
+```
+src/components/
+├── __tests__/
+│   └── transactions/
+│       └── Transactions.test.tsx     ← Tests for all transaction components
+├── shared/
+│   ├── CategoryBadge.tsx           ← PascalCase component files
+│   ├── ConfidenceIndicator.tsx
+│   ├── CurrencyDisplay.tsx
+│   └── EmptyState.tsx
+└── transactions/
+    ├── TransactionTable.tsx
+    ├── TransactionCard.tsx
+    ├── TransactionFilters.tsx
+    ├── TransactionSheet.tsx
+    └── AddTransactionSheet.tsx
+```
+
+### Rules
+
+- Component files: **PascalCase** (`CategoryBadge.tsx`, `TransactionTable.tsx`)
+- Component test files: **PascalCase** matching component name (`Transactions.test.tsx`)
+- Test files use `@vitest-environment jsdom` directive
+- Test files import `@testing-library/jest-dom/vitest` for matchers
+- The `ui/` folder (shadcn auto-generated) stays **kebab-case** by design
+
+---
+
 ## Test Coverage Targets
 
 | Layer                   | Target | Rationale                                                   |
@@ -160,7 +192,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    include: ['__tests__/**/*.test.ts'],
+    include: ['__tests__/**/*.test.ts', 'src/**/__tests__/**/*.test.{ts,tsx}'],
     exclude: ['__tests__/e2e/**'],
     coverage: {
       provider: 'v8',

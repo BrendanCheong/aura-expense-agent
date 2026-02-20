@@ -85,8 +85,8 @@ Implement a conversational feedback system on the `/transactions` page that allo
 | `src/lib/agent/tools/recall-memories.ts`                | **NEW** — Tool to query Mem0 during categorization          |
 | `src/lib/agent/graph.ts`                                | **MODIFY** — Add Mem0 memory recall to categorization chain |
 | `src/lib/agent/prompts.ts`                              | **MODIFY** — Add memory context to system prompt            |
-| `src/components/transactions/transaction-sheet.tsx`     | **MODIFY** — Add feedback button + category dropdown        |
-| `src/components/transactions/add-transaction-sheet.tsx` | **MODIFY** — Full create form                               |
+| `src/components/transactions/TransactionSheet.tsx`   | **MODIFY** — Add feedback button + category dropdown        |
+| `src/components/transactions/AddTransactionSheet.tsx` | **MODIFY** — Full create form                               |
 
 ### Feedback API Route
 

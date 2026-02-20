@@ -250,16 +250,16 @@ aura-expense-agent/
 │   ├── components/
 │   │   ├── ui/                            ← shadcn/ui components
 │   │   ├── charts/
-│   │   │   ├── spending-donut.tsx
-│   │   │   ├── budget-progress.tsx
-│   │   │   └── category-bar-chart.tsx
+│   │   │   ├── SpendingDonut.tsx
+│   │   │   ├── BudgetProgress.tsx
+│   │   │   └── CategoryBarChart.tsx
 │   │   ├── tables/
-│   │   │   └── transactions-table.tsx
+│   │   │   └── TransactionTable.tsx
 │   │   ├── alerts/
-│   │   │   └── budget-alert-banner.tsx
+│   │   │   └── BudgetAlertBanner.tsx
 │   │   └── layout/
-│   │       ├── sidebar.tsx
-│   │       └── header.tsx
+│   │       ├── Sidebar.tsx
+│   │       └── Header.tsx
 │   ├── lib/
 │   │   ├── appwrite/
 │   │   │   ├── client.ts                  ← Appwrite client singleton

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
-import { ColorPicker } from './color-picker';
-import { EmojiPicker } from './emoji-picker';
+import { ColorPicker } from './ColorPicker';
+import { EmojiPicker } from './EmojiPicker';
 
 import type { Category } from '@/types/category';
 

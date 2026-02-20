@@ -26,6 +26,7 @@ export interface ServiceContainer {
   webhookService: WebhookService;
   authService: AuthService;
   emailProvider: IEmailProvider;
+  vendorCacheRepo: import('@/lib/repositories/interfaces').IVendorCacheRepository;
 }
 
 /** Cached container instance (singleton per server lifetime). */
@@ -56,6 +57,7 @@ function buildContainer(repos: Repositories, agent: IExpenseAgent, emailProvider
     webhookService,
     authService,
     emailProvider,
+    vendorCacheRepo: repos.vendorCache,
   };
 }
 

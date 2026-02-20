@@ -4,8 +4,8 @@ import { Plus, Loader2, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { CategoryForm } from '@/components/categories/category-form';
-import { CategoryList } from '@/components/categories/category-list';
+import { CategoryForm } from '@/components/categories/CategoryForm';
+import { CategoryList } from '@/components/categories/CategoryList';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useCategories } from '@/hooks/use-categories';
@@ -74,7 +74,9 @@ export default function CategoriesPage() {
           onUpdate={async (id, data) => {
             await updateCategory(id, data);
             toast.success('Category updated');
-            return categories.find((c) => c.id === id)!;
+            const updated = categories.find((c) => c.id === id);
+            if (!updated) { throw new Error(`Category ${id} not found`); }
+            return updated;
           }}
           onDelete={async (id) => {
             await deleteCategory(id);

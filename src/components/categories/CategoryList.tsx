@@ -3,8 +3,8 @@
 import { Pencil, Trash2, ShieldAlert } from 'lucide-react';
 import { useState } from 'react';
 
-import { CategoryForm } from './category-form';
-import { DeleteCategoryDialog } from './delete-category-dialog';
+import { CategoryForm } from './CategoryForm';
+import { DeleteCategoryDialog } from './DeleteCategoryDialog';
 
 import type { Category, CategoryUpdate } from '@/types/category';
 

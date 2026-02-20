@@ -46,7 +46,7 @@ Implement the LangGraph.js agent that extracts expense data from email text/HTML
 | `src/lib/agent/tools/recall-memories.ts`   | Mem0 Cloud memory recall (DI factory) |
 | `src/lib/agent/tools/brave-search.ts`      | Smithery V2 Brave Search MCP          |
 | `src/lib/agent/tools/log-expense.ts`       | Write to DB + update cache (DI)       |
-| `src/lib/agent/tools/tool-factory.ts`      | DI tool factory                       |
+| `src/lib/factories/tool.factory.ts`        | DI tool factory                       |
 | `src/lib/agent/strategies/interfaces.ts`   | Strategy pattern interfaces           |
 | `src/lib/agent/strategies/vendor-cache.strategy.ts` | Tier 1 — vendor cache lookup |
 | `src/lib/agent/strategies/fallback-other.strategy.ts` | Tier 5 — fallback to Other |

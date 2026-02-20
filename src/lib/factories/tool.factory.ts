@@ -6,11 +6,11 @@
  * rather than importing singletons.
  */
 
-import { braveSearchTool } from './brave-search';
-import { extractExpenseTool } from './extract-expense';
-import { createLogExpenseTool } from './log-expense';
-import { createLookupCategoriesTool } from './lookup-categories';
-import { createRecallMemoriesTool } from './recall-memories';
+import { braveSearchTool } from '../agent/tools/brave-search';
+import { extractExpenseTool } from '../agent/tools/extract-expense';
+import { createLogExpenseTool } from '../agent/tools/log-expense';
+import { createLookupCategoriesTool } from '../agent/tools/lookup-categories';
+import { createRecallMemoriesTool } from '../agent/tools/recall-memories';
 
 import type { ServiceContainer } from '@/lib/container/container';
 import type { ITransactionRepository, IVendorCacheRepository } from '@/lib/repositories/interfaces';

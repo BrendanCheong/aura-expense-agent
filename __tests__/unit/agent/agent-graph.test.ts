@@ -24,7 +24,7 @@ vi.mock('@langchain/openai', () => {
   return { ChatOpenAI };
 });
 
-vi.mock('@/lib/agent/tools/tool-factory', () => ({
+vi.mock('@/lib/factories/tool.factory', () => ({
   createAgentTools: vi.fn().mockReturnValue([]),
 }));
 

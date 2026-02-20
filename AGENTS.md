@@ -14,6 +14,40 @@
 
 ---
 
+## Code Style & Conventions
+
+### ESLint Rules (enforced)
+
+- **`curly: ['error', 'all']`** — braces required on all `if`/`else`/`for`/`while`, even single-line returns
+- **`import/order`** — grouped: builtin → external → internal (`@/`), alphabetized within groups, blank line between groups
+- **`@typescript-eslint/no-unused-vars`** — unused vars error; prefix with `_` to suppress (e.g. `_unused`)
+
+### Naming
+
+- Private class methods: **underscore prefix** `_methodName`
+- Private class constants: `private static readonly _CONSTANT_NAME`
+- Appwrite rows: `snake_case` → TypeScript domain types: `camelCase` (via mappers)
+
+### Constants & Magic Values
+
+- **Repeated across files** → `src/lib/constants.ts` (e.g. `HttpStatus`, `ErrorMessage`, `PROJECT_ENV_DEV`, `SGT_OFFSET`)
+- **Single-use thresholds** → `private static readonly` on the class (e.g. `BudgetService._WARNING_THRESHOLD`)
+- **Never use raw status codes** — always `HttpStatus.OK`, `HttpStatus.BAD_REQUEST`, etc.
+- **Never match errors with `.includes()`** — use typed error classes with `instanceof`
+
+### Error Handling
+
+- All custom errors live in `src/lib/errors/index.ts`
+- Route handlers catch typed errors via `instanceof` (e.g. `BudgetNotFoundError`, `CategoryAlreadyExistsError`)
+- Services throw domain-specific errors; routes translate to HTTP status codes
+
+### SOLID
+
+- If a utility function is used by **only one class**, make it a **private method** on that class
+- Public utils in `src/lib/utils/` only if used by **2+ consumers**
+
+---
+
 ## Appwrite TablesDB API
 
 We use `node-appwrite@22` with the **TablesDB** service (not `Databases`). All method calls **must** use the **named parameter object style** — the positional argument style is deprecated.
@@ -307,9 +341,14 @@ const { queries } = call[0] as { queries: string[] };
 | `src/lib/services/`                       | Business logic services               |
 | `src/lib/factories/repository.factory.ts` | Factory for repo creation             |
 | `src/lib/container/container.ts`          | DI container wiring                   |
+| `src/lib/constants.ts`                    | Shared constants, HttpStatus, enums   |
+| `src/lib/errors/index.ts`                 | All custom error classes              |
 | `src/lib/appwrite/mappers.ts`             | Row ↔ entity mappers                  |
 | `src/types/appwrite/appwrite.d.ts`        | Auto-generated row types (CLI)        |
 | `src/types/appwrite/rows.ts`              | Row type aliases for repos/mappers    |
+| `src/types/budget.ts`                     | Budget domain types                   |
+| `src/types/webhook.ts`                    | Webhook domain types                  |
+| `src/types/dashboard.ts`                  | Dashboard domain types                |
 | `src/lib/appwrite/config.ts`              | Env-based config constants            |
 | `src/lib/appwrite/server.ts`              | Server-side Appwrite client singleton |
 | `scripts/setup-appwrite.ts`               | Database schema setup (idempotent)    |

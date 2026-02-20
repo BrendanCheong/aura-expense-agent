@@ -34,12 +34,13 @@ Aura automates that loop while still keeping you in control when AI confidence i
 - Inbound email webhook pipeline (verification, dedup, parsing)
 - AI expense extraction and categorization agent (LangGraph.js)
 - Vendor cache memory to improve repeat categorization speed/accuracy
+- Full transactions page UX (list, add, edit, delete, filtering)
+- Budget management API (CRUD, upsert, spending summaries)
 
 ### In progress / planned
 
-- Full transactions page UX (list + CRUD polish)
-- Budget management workflows
 - Dashboard visualizations and budget alerts
+- Budget management UI
 - AI feedback loop memory enhancements
 - Full test/deployment hardening
 

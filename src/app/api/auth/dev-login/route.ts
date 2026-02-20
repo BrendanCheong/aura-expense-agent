@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import { HttpStatus, ErrorMessage } from '@/lib/constants';
+import { DEV_USER } from '@/lib/appwrite/session';
+import { ErrorMessage, HttpStatus, PROJECT_ENV_DEV } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
 import { OAuthProvider } from '@/lib/enums';
 
@@ -14,7 +15,7 @@ import { OAuthProvider } from '@/lib/enums';
  * Only available when PROJECT_ENV=dev.
  */
 export async function POST() {
-  if (process.env.PROJECT_ENV !== 'dev') {
+  if (process.env.PROJECT_ENV !== PROJECT_ENV_DEV) {
     return NextResponse.json(
       { error: 'Dev login not available in production' },
       { status: HttpStatus.FORBIDDEN }
@@ -23,9 +24,9 @@ export async function POST() {
 
   try {
     const container = await createContainer();
-    const user = await container.authService.getOrCreateUser('dev-user-001', {
-      email: 'dev@aura.local',
-      name: 'Dev User',
+    const user = await container.authService.getOrCreateUser(DEV_USER.$id, {
+      email: DEV_USER.email,
+      name: DEV_USER.name,
       avatarUrl: '',
       oauthProvider: OAuthProvider.GOOGLE,
     });
@@ -36,7 +37,7 @@ export async function POST() {
     // This cookie is not validated in dev mode — it simply prevents the
     // middleware from redirecting to /login if someone removes the
     // PROJECT_ENV bypass in the future.
-    response.cookies.set('dev_session', 'dev-user-001', {
+    response.cookies.set('dev_session', DEV_USER.$id, {
       httpOnly: true,
       secure: false, // localhost
       sameSite: 'lax',

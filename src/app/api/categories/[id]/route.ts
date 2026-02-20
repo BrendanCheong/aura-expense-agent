@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth/middleware';
 import { HttpStatus } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
+import { CategoryNotFoundError, SystemCategoryError } from '@/lib/errors';
 import {
   updateCategoryBodySchema,
   deleteCategoryParamsSchema,
@@ -52,7 +53,7 @@ export async function PATCH(request: NextRequest, context: RouteParams) {
     );
     return NextResponse.json(updated, { status: HttpStatus.OK });
   } catch (error) {
-    if (error instanceof Error && error.message.includes('not found')) {
+    if (error instanceof CategoryNotFoundError) {
       return notFoundResponse(error.message);
     }
     return serverErrorResponse();
@@ -83,10 +84,10 @@ export async function DELETE(request: NextRequest, context: RouteParams) {
     await categoryService.deleteCategory(user.accountId, paramResult.data.id);
     return new NextResponse(null, { status: HttpStatus.NO_CONTENT });
   } catch (error) {
-    if (error instanceof Error && error.message.includes('not found')) {
+    if (error instanceof CategoryNotFoundError) {
       return notFoundResponse(error.message);
     }
-    if (error instanceof Error && error.message.includes('Cannot delete')) {
+    if (error instanceof SystemCategoryError) {
       return NextResponse.json({ error: error.message }, { status: HttpStatus.BAD_REQUEST });
     }
     return serverErrorResponse();

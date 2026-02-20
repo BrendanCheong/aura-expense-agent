@@ -13,6 +13,13 @@ import type {
 } from '@/lib/repositories/interfaces';
 import type { Category, CategoryCreate, CategoryUpdate } from '@/types/category';
 
+import { DEFAULT_CATEGORY_NAME, DATE_MIN, DATE_MAX } from '@/lib/constants';
+import {
+  CategoryNotFoundError,
+  CategoryAlreadyExistsError,
+  SystemCategoryError,
+} from '@/lib/errors';
+
 export class CategoryService {
   constructor(
     private readonly categoryRepo: ICategoryRepository,
@@ -28,7 +35,7 @@ export class CategoryService {
   async createCategory(userId: string, data: Omit<CategoryCreate, 'userId'>): Promise<Category> {
     const existing = await this.categoryRepo.findByUserIdAndName(userId, data.name);
     if (existing) {
-      throw new Error(`Category "${data.name}" already exists`);
+      throw new CategoryAlreadyExistsError(data.name);
     }
     return this.categoryRepo.create({ ...data, userId: userId });
   }
@@ -40,7 +47,7 @@ export class CategoryService {
   ): Promise<Category> {
     const category = await this.categoryRepo.findById(categoryId);
     if (!category || category.userId !== userId) {
-      throw new Error(`Category ${categoryId} not found`);
+      throw new CategoryNotFoundError(categoryId);
     }
     return this.categoryRepo.update(categoryId, data);
   }
@@ -48,26 +55,26 @@ export class CategoryService {
   async deleteCategory(userId: string, categoryId: string): Promise<void> {
     const category = await this.categoryRepo.findById(categoryId);
     if (!category || category.userId !== userId) {
-      throw new Error(`Category ${categoryId} not found`);
+      throw new CategoryNotFoundError(categoryId);
     }
 
     // Guard: "Other" system category cannot be deleted
-    if (category.name === 'Other') {
-      throw new Error('Cannot delete the "Other" system category');
+    if (category.name === DEFAULT_CATEGORY_NAME) {
+      throw new SystemCategoryError(`Cannot delete the "${DEFAULT_CATEGORY_NAME}" system category`);
     }
 
     // Find the "Other" category for this user to re-assign transactions
-    const otherCategory = await this.categoryRepo.findByUserIdAndName(userId, 'Other');
+    const otherCategory = await this.categoryRepo.findByUserIdAndName(userId, DEFAULT_CATEGORY_NAME);
     if (!otherCategory) {
-      throw new Error('Cannot delete category: "Other" fallback category not found');
+      throw new SystemCategoryError(`Cannot delete category: "${DEFAULT_CATEGORY_NAME}" fallback category not found`);
     }
 
     // Move all transactions from this category to "Other"
     const transactions = await this.transactionRepo.findByUserCategoryDateRange(
       userId,
       categoryId,
-      '1970-01-01T00:00:00Z',
-      '2099-12-31T23:59:59Z'
+      DATE_MIN,
+      DATE_MAX
     );
     for (const tx of transactions) {
       await this.transactionRepo.update(tx.id, { categoryId: otherCategory.id });

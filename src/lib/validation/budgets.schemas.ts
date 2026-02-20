@@ -14,6 +14,13 @@ export const createBudgetBodySchema = z.object({
   month: monthSchema,
 });
 
+export const upsertBudgetBodySchema = z.object({
+  categoryId: idSchema,
+  amount: amountSchema,
+  year: yearSchema,
+  month: monthSchema,
+});
+
 export const deleteBudgetParamsSchema = z.object({
   id: idSchema,
 });

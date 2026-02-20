@@ -11,6 +11,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 
+import { HttpStatus, PROJECT_ENV_DEV, RESEND_EMAIL_RECEIVED_EVENT } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
 
 /**
@@ -39,7 +40,7 @@ function verifyWebhookSignature(
   payload: string,
   headers: Headers,
 ): ResendWebhookEvent | null {
-  const skipVerification = process.env.PROJECT_ENV === 'dev';
+  const skipVerification = process.env.PROJECT_ENV === PROJECT_ENV_DEV;
 
   if (skipVerification) {
     try {
@@ -79,13 +80,13 @@ export async function POST(request: NextRequest) {
     if (!event) {
       return NextResponse.json(
         { error: 'Invalid webhook signature' },
-        { status: 400 },
+        { status: HttpStatus.BAD_REQUEST },
       );
     }
 
     // 3. Ignore non email.received events
-    if (event.type !== 'email.received') {
-      return NextResponse.json({ status: 'ignored' }, { status: 200 });
+    if (event.type !== RESEND_EMAIL_RECEIVED_EVENT) {
+      return NextResponse.json({ status: 'ignored' }, { status: HttpStatus.OK });
     }
 
     const resendEmailId = event.data.email_id;
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
     if (!email) {
       return NextResponse.json(
         { error: 'Email not found' },
-        { status: 200 }, // 200 to avoid Resend retries
+        { status: HttpStatus.OK }, // 200 to avoid Resend retries
       );
     }
 
@@ -107,7 +108,7 @@ export async function POST(request: NextRequest) {
     if (!toAddress) {
       return NextResponse.json(
         { error: 'No recipient address' },
-        { status: 200 },
+        { status: HttpStatus.OK },
       );
     }
 
@@ -116,7 +117,7 @@ export async function POST(request: NextRequest) {
       console.warn(`No user found for inbound address: ${toAddress}`);
       return NextResponse.json(
         { error: 'Unknown recipient' },
-        { status: 200 }, // 200 to avoid Resend retries
+        { status: HttpStatus.OK }, // 200 to avoid Resend retries
       );
     }
 
@@ -130,13 +131,13 @@ export async function POST(request: NextRequest) {
       userId,
     });
 
-    return NextResponse.json(result, { status: 200 });
+    return NextResponse.json(result, { status: HttpStatus.OK });
   } catch (error) {
     console.error('Webhook processing error:', error);
     // Return 500 so Resend retries the webhook
     return NextResponse.json(
       { error: 'Processing failed' },
-      { status: 500 },
+      { status: HttpStatus.INTERNAL_SERVER_ERROR },
     );
   }
 }

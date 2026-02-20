@@ -392,7 +392,7 @@ Get budgets for a specific month/year with actual spending totals.
 
 ### `POST /api/budgets`
 
-Create or update a budget for a category in a given month.
+Create a new budget for a category in a given month (strict create).
 
 **Request Body:**
 
@@ -405,7 +405,24 @@ Create or update a budget for a category in a given month.
 }
 ```
 
-**Behavior:** If a budget already exists for this category+month+year (unique index), update the amount. Otherwise, create a new one. (Upsert pattern.)
+**Behavior:** Creates a new budget. Returns `201 Created` with the budget object. If a budget already exists for this category+month+year, returns `409 Conflict`.
+
+### `PUT /api/budgets`
+
+Create or update a budget for a category in a given month (upsert).
+
+**Request Body:**
+
+```json
+{
+  "categoryId": "cat-food",
+  "amount": 400.0,
+  "year": 2026,
+  "month": 2
+}
+```
+
+**Behavior:** If a budget already exists for this category+month+year, update the amount and return `200 OK`. Otherwise, create a new one and return `201 Created`. Idempotent — the primary method for the frontend budget-setting workflow.
 
 ### `DELETE /api/budgets/[id]`
 

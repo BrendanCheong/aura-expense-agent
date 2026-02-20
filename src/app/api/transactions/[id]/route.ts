@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth/middleware';
 import { HttpStatus } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
-import { NotFoundError, ValidationError } from '@/lib/services/transaction.service';
+import { NotFoundError, ValidationError } from '@/lib/errors';
 import {
   unauthorizedResponse,
   validationErrorResponse,

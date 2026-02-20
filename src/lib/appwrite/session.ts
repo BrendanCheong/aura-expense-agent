@@ -10,7 +10,9 @@ import { Client, Account } from 'node-appwrite';
 
 import type { NextRequest } from 'next/server';
 
-const DEV_USER = {
+import { PROJECT_ENV_DEV } from '@/lib/constants';
+
+export const DEV_USER = {
   $id: 'dev-user-001',
   email: 'dev@aura.local',
   name: 'Dev User',
@@ -31,7 +33,7 @@ export interface SessionUser {
  */
 export async function getSessionUser(request: NextRequest): Promise<SessionUser | null> {
   // Dev bypass
-  if (process.env.PROJECT_ENV === 'dev') {
+  if (process.env.PROJECT_ENV === PROJECT_ENV_DEV) {
     return {
       accountId: DEV_USER.$id,
       email: DEV_USER.email,

@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth/middleware';
 import { HttpStatus } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
-import { ValidationError } from '@/lib/services/transaction.service';
+import { ValidationError } from '@/lib/errors';
 import {
   parseQueryObject,
   serverErrorResponse,

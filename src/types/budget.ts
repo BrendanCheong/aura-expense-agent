@@ -20,3 +20,30 @@ export interface BudgetCreate {
 export interface BudgetUpdate {
   amount?: number;
 }
+
+// ---------------------------------------------------------------------------
+// Enriched / computed budget types
+// ---------------------------------------------------------------------------
+
+export type BudgetStatus = 'on_track' | 'warning' | 'over_budget';
+
+export interface EnrichedBudget {
+  id: string;
+  categoryId: string;
+  budgetAmount: number;
+  spentAmount: number;
+  remainingAmount: number;
+  percentUsed: number;
+  status: BudgetStatus;
+  year: number;
+  month: number;
+}
+
+export interface BudgetsWithSpending {
+  year: number;
+  month: number;
+  budgets: EnrichedBudget[];
+  totalBudget: number;
+  totalSpent: number;
+  totalRemaining: number;
+}

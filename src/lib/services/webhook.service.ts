@@ -15,15 +15,12 @@
 
 import type { IExpenseAgent, AgentResult } from '@/lib/agent/interfaces';
 import type { ITransactionRepository, IVendorCacheRepository, IUserRepository } from '@/lib/repositories/interfaces';
+import type { WebhookProcessResult } from '@/types/webhook';
 
 import { extractExpenseFromText } from '@/lib/agent/tools/extract-expense';
+import { UNKNOWN_VENDOR } from '@/lib/constants';
 import { Confidence, TransactionSource } from '@/lib/enums';
 import { normalizeVendorName } from '@/lib/utils/vendor';
-
-export interface WebhookProcessResult {
-  status: 'duplicate' | 'cached' | 'processed' | 'skipped';
-  transactionId?: string;
-}
 
 export class WebhookService {
   constructor(
@@ -67,7 +64,7 @@ export class WebhookService {
     const extracted = extractExpenseFromText(emailText || emailHtml || '');
 
     // 3. Vendor cache lookup (only if we extracted a vendor)
-    if (extracted?.vendor && extracted.vendor !== 'UNKNOWN') {
+    if (extracted?.vendor && extracted.vendor !== UNKNOWN_VENDOR) {
       const normalizedVendor = normalizeVendorName(extracted.vendor);
       const cachedEntry = await this.vendorCacheRepo.findByUserAndVendor(userId, normalizedVendor);
 

@@ -60,6 +60,15 @@ export function createPatchRequest(path: string, body: unknown): NextRequest {
   });
 }
 
+/** Create a PUT request with JSON body. */
+export function createPutRequest(path: string, body: unknown): NextRequest {
+  return new NextRequest(`${HOST}${path}`, {
+    method: 'PUT',
+    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
 /** Create a DELETE request. */
 export function createDeleteRequest(path: string): NextRequest {
   return new NextRequest(`${HOST}${path}`, { method: 'DELETE' });

@@ -46,6 +46,10 @@ export const ErrorMessage = {
   TRANSACTION_NOT_FOUND: 'Transaction not found',
   CATEGORY_NOT_FOUND: 'Category not found',
 
+  // Budget errors
+  BUDGET_NOT_FOUND: 'Budget not found',
+  BUDGET_ALREADY_EXISTS: 'Budget already exists for this category and period',
+
   // Conflict errors
   ALREADY_EXISTS: 'Resource already exists',
 
@@ -57,4 +61,17 @@ export const ErrorMessage = {
 export type ErrorMessageKey = keyof typeof ErrorMessage;
 
 export const SMITHERY_BRAVE_URL = 'https://server.smithery.ai/brave';
-export const BRAVE_WEB_SEARCH_TOOL = 'brave_web_search';;
+export const BRAVE_WEB_SEARCH_TOOL = 'brave_web_search';
+
+/**
+ * Application-wide constants
+ */
+export const DEFAULT_CATEGORY_NAME = 'Other';
+export const UNKNOWN_VENDOR = 'UNKNOWN';
+export const SGT_OFFSET = '+08:00';
+export const PROJECT_ENV_DEV = 'dev';
+export const RESEND_EMAIL_RECEIVED_EVENT = 'email.received';
+
+/** Boundary dates for "all time" queries */
+export const DATE_MIN = '1970-01-01T00:00:00Z';
+export const DATE_MAX = '2099-12-31T23:59:59Z';

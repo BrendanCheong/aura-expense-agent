@@ -11,6 +11,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { getSessionUser } from '@/lib/appwrite/session';
+import { ErrorMessage, HttpStatus } from '@/lib/constants';
 
 export interface AuthenticatedUser {
   accountId: string;
@@ -32,5 +33,8 @@ export function getAuthenticatedUser(
  * Return a 401 Unauthorized JSON response.
  */
 export function unauthorized() {
-  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  return NextResponse.json(
+    { error: ErrorMessage.UNAUTHORIZED },
+    { status: HttpStatus.UNAUTHORIZED },
+  );
 }

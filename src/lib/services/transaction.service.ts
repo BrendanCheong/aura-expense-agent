@@ -13,6 +13,7 @@ import type {
 import type { Transaction, TransactionUpdate } from '@/types/transaction';
 
 import { Confidence, TransactionSource } from '@/lib/enums';
+import { NotFoundError, ValidationError } from '@/lib/errors';
 import { normalizeVendorName } from '@/lib/utils/vendor';
 
 export class TransactionService {
@@ -101,16 +102,3 @@ export class TransactionService {
   }
 }
 
-export class NotFoundError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'NotFoundError';
-  }
-}
-
-export class ValidationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ValidationError';
-  }
-}

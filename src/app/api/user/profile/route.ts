@@ -1,8 +1,16 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { getSessionUser } from '@/lib/appwrite/session';
-import { HttpStatus, ErrorMessage } from '@/lib/constants';
+import { getAuthenticatedUser } from '@/lib/auth/middleware';
+import { HttpStatus } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
+import {
+  unauthorizedResponse,
+  serverErrorResponse,
+  notFoundResponse,
+  invalidJsonResponse,
+  validationErrorResponse,
+} from '@/lib/validation/http';
+import { updateUserProfileBodySchema } from '@/lib/validation/user.schemas';
 
 /**
  * GET /api/user/profile
@@ -11,61 +19,58 @@ import { createContainer } from '@/lib/container/container';
  * Auth required.
  */
 export async function GET(request: NextRequest) {
-  const session = await getSessionUser(request);
-  if (!session) {
-    return NextResponse.json(
-      { error: ErrorMessage.UNAUTHORIZED },
-      { status: HttpStatus.UNAUTHORIZED }
-    );
+  const user = await getAuthenticatedUser(request);
+  if (!user) {
+    return unauthorizedResponse();
   }
 
   try {
     const container = await createContainer();
-    const user = await container.authService.getUserById(session.accountId);
+    const profile = await container.authService.getUserById(user.accountId);
 
-    if (!user) {
-      return NextResponse.json(
-        { error: ErrorMessage.USER_NOT_FOUND },
-        { status: HttpStatus.NOT_FOUND }
-      );
+    if (!profile) {
+      return notFoundResponse('User not found');
     }
 
-    return NextResponse.json({ user });
+    return NextResponse.json({ user: profile }, { status: HttpStatus.OK });
   } catch (err) {
     console.error('GET /api/user/profile error:', err);
-    return NextResponse.json(
-      { error: ErrorMessage.INTERNAL_SERVER_ERROR },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR }
-    );
+    return serverErrorResponse();
   }
 }
 
 /**
  * PATCH /api/user/profile
  *
- * Update user profile fields (monthlySalary, budgetMode, name).
+ * Update user profile fields (monthlySalary, budgetMode).
  * Auth required.
  */
 export async function PATCH(request: NextRequest) {
-  const session = await getSessionUser(request);
-  if (!session) {
-    return NextResponse.json(
-      { error: ErrorMessage.UNAUTHORIZED },
-      { status: HttpStatus.UNAUTHORIZED }
-    );
+  const user = await getAuthenticatedUser(request);
+  if (!user) {
+    return unauthorizedResponse();
+  }
+
+  const body = await request.json().catch(() => null);
+  if (!body) {
+    return invalidJsonResponse();
+  }
+
+  const bodyResult = updateUserProfileBodySchema.safeParse(body);
+  if (!bodyResult.success) {
+    return validationErrorResponse(bodyResult.error);
   }
 
   try {
-    const body = await request.json();
     const container = await createContainer();
-    const updated = await container.authService.updateUserProfile(session.accountId, body);
+    const updated = await container.authService.updateUserProfile(
+      user.accountId,
+      bodyResult.data
+    );
 
-    return NextResponse.json({ user: updated });
+    return NextResponse.json({ user: updated }, { status: HttpStatus.OK });
   } catch (err) {
     console.error('PATCH /api/user/profile error:', err);
-    return NextResponse.json(
-      { error: ErrorMessage.INTERNAL_SERVER_ERROR },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR }
-    );
+    return serverErrorResponse();
   }
 }

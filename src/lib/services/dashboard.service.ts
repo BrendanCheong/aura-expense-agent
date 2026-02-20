@@ -9,18 +9,7 @@ import type {
   IBudgetRepository,
   ICategoryRepository,
 } from '@/lib/repositories/interfaces';
-
-export interface DashboardSummary {
-  totalSpent: number;
-  totalBudget: number;
-  percentUsed: number;
-  categoryBreakdown: Array<{
-    categoryId: string;
-    categoryName: string;
-    spent: number;
-    budgeted: number;
-  }>;
-}
+import type { DashboardSummary } from '@/types/dashboard';
 
 export class DashboardService {
   constructor(

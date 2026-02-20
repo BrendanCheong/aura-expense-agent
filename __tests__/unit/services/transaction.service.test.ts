@@ -16,7 +16,8 @@ import {
 
 import { InMemoryTransactionRepository } from '@/lib/repositories/in-memory/transaction.repository';
 import { InMemoryVendorCacheRepository } from '@/lib/repositories/in-memory/vendor-cache.repository';
-import { TransactionService, NotFoundError, ValidationError } from '@/lib/services/transaction.service';
+import { TransactionService } from '@/lib/services/transaction.service';
+import { NotFoundError, ValidationError } from '@/lib/errors';
 
 const USER_ID = 'test-user-001';
 

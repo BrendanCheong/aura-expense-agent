@@ -46,8 +46,10 @@ function getTablesDb(): TablesDB {
 
 const DB_ID = process.env.APPWRITE_DATABASE_ID || 'aura_expense_db';
 const TABLES = {
+  users: 'users',
   categories: 'categories',
   transactions: 'transactions',
+  budgets: 'budgets',
   vendorCache: 'vendor_cache',
 } as const;
 
@@ -108,6 +110,24 @@ export const E2E_TRANSACTION_2 = {
   source: 'manual',
 };
 
+export const E2E_BUDGET = {
+  id: 'e2e-budget-001',
+  user_id: DEV_USER_ID,
+  category_id: 'e2e-cat-food',
+  amount: 400,
+  year: 2026,
+  month: 2,
+};
+
+export const E2E_BUDGET_2 = {
+  id: 'e2e-budget-002',
+  user_id: DEV_USER_ID,
+  category_id: 'e2e-cat-transport',
+  amount: 200,
+  year: 2026,
+  month: 2,
+};
+
 // Track dynamically created IDs for cleanup
 const createdIds: { table: string; id: string }[] = [];
 
@@ -118,7 +138,7 @@ const createdIds: { table: string; id: string }[] = [];
 export async function seedE2EData(): Promise<void> {
   const db = getTablesDb();
 
-  // Seed categories first (transactions reference them)
+  // Seed categories first (transactions and budgets reference them)
   for (const cat of [E2E_CATEGORY, E2E_CATEGORY_2]) {
     await db.createRow({
       databaseId: DB_ID,
@@ -138,6 +158,17 @@ export async function seedE2EData(): Promise<void> {
       data: tx,
     });
     createdIds.push({ table: TABLES.transactions, id: tx.id });
+  }
+
+  // Seed budgets
+  for (const budget of [E2E_BUDGET, E2E_BUDGET_2]) {
+    await db.createRow({
+      databaseId: DB_ID,
+      tableId: TABLES.budgets,
+      rowId: budget.id,
+      data: budget,
+    });
+    createdIds.push({ table: TABLES.budgets, id: budget.id });
   }
 }
 

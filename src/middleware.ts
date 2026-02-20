@@ -1,5 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { PROJECT_ENV_DEV } from '@/lib/constants';
+
 /**
  * Auth guard middleware.
  * Protects dashboard routes — redirects unauthenticated users to /login.
@@ -14,7 +16,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Dev bypass — allow all routes
-  if (process.env.PROJECT_ENV === 'dev') {
+  if (process.env.PROJECT_ENV === PROJECT_ENV_DEV) {
     return NextResponse.next();
   }
 

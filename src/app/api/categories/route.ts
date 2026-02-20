@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth/middleware';
 import { HttpStatus } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
+import { CategoryAlreadyExistsError } from '@/lib/errors';
 import { createCategoryBodySchema } from '@/lib/validation/categories.schemas';
 import {
   unauthorizedResponse,
@@ -61,7 +62,7 @@ export async function POST(request: NextRequest) {
     });
     return NextResponse.json(category, { status: HttpStatus.CREATED });
   } catch (error) {
-    if (error instanceof Error && error.message.includes('already exists')) {
+    if (error instanceof CategoryAlreadyExistsError) {
       return conflictResponse(error.message);
     }
     return serverErrorResponse();

@@ -24,8 +24,8 @@
 | 5   | [FEAT-006](FEAT-006-vendor-cache.md)        | Vendor Cache (Agent Memory)              | 2      | FEAT-003, FEAT-002           | 0.5d | 🟢     |
 | 6   | [FEAT-005](FEAT-005-ai-agent.md)            | LangGraph.js Expense Agent               | 3      | FEAT-010, FEAT-006           | 2d   | 🟢     |
 | 7   | [FEAT-004](FEAT-004-webhook-handler.md)     | Resend Inbound Email Webhook Handler     | 3      | FEAT-005, FEAT-006           | 1.5d | 🟢     |
-| 8   | [FEAT-008](FEAT-008-transactions-page.md)   | Transactions Page (Full CRUD)            | 4      | FEAT-001, FEAT-010, FEAT-006 | 1.5d | �     |
-| 9   | [FEAT-009](FEAT-009-budget-management.md)   | Budget Management & Salary Allocation    | 4      | FEAT-001, FEAT-010           | 1.5d | 🟡     |
+| 8   | [FEAT-008](FEAT-008-transactions-page.md)   | Transactions Page (Full CRUD)            | 4      | FEAT-001, FEAT-010, FEAT-006 | 1.5d | 🟢     |
+| 9   | [FEAT-009](FEAT-009-budget-management.md)   | Budget Management & Salary Allocation    | 4      | FEAT-001, FEAT-010           | 1.5d | 🟢     |
 | 10  | [FEAT-007](FEAT-007-dashboard.md)           | Dashboard with Charts & Alerts           | 4      | FEAT-008, FEAT-009, FEAT-010 | 2d   | 🔴     |
 | 11  | [FEAT-013](FEAT-013-ai-feedback.md)         | AI Feedback & Correction Flow (Mem0)     | 5      | FEAT-008, FEAT-005, FEAT-006 | 2.5d | 🔴     |
 | 12  | [FEAT-011](FEAT-011-testing-suite.md)       | Testing Suite (Unit + Integration + E2E) | 6      | All above                    | 2d   | 🔴     |

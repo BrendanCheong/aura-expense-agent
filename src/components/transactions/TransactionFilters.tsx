@@ -95,7 +95,7 @@ export function TransactionFilters({
     <div className="flex flex-wrap items-center gap-3" data-testid="transaction-filters">
       {/* Category filter */}
       <Select value={categoryId ?? 'all'} onValueChange={handleCategoryChange}>
-        <SelectTrigger className="w-[180px]" aria-label="Filter by category">
+        <SelectTrigger className="w-45" aria-label="Filter by category">
           <SelectValue placeholder="All Categories" />
         </SelectTrigger>
         <SelectContent>
@@ -113,7 +113,7 @@ export function TransactionFilters({
 
       {/* Source filter */}
       <Select value={source ?? 'all'} onValueChange={handleSourceChange}>
-        <SelectTrigger className="w-[140px]" aria-label="Filter by source">
+        <SelectTrigger className="w-35" aria-label="Filter by source">
           <SelectValue placeholder="All Sources" />
         </SelectTrigger>
         <SelectContent>
@@ -129,7 +129,7 @@ export function TransactionFilters({
           <Button
             variant="outline"
             className={cn(
-              'w-[140px] justify-start text-left font-normal',
+              'w-35 justify-start text-left font-normal',
               !startDate && 'text-muted-foreground',
             )}
             aria-label="Filter start date"
@@ -154,7 +154,7 @@ export function TransactionFilters({
           <Button
             variant="outline"
             className={cn(
-              'w-[140px] justify-start text-left font-normal',
+              'w-35 justify-start text-left font-normal',
               !endDate && 'text-muted-foreground',
             )}
             aria-label="Filter end date"

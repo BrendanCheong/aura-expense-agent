@@ -1,6 +1,16 @@
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
-import { notImplementedResponse } from '@/lib/validation/http';
+import { getAuthenticatedUser } from '@/lib/auth/middleware';
+import { HttpStatus } from '@/lib/constants';
+import { createContainer } from '@/lib/container/container';
+import type { DashboardPeriod } from '@/types/dashboard';
+import { dashboardSummaryQuerySchema } from '@/lib/validation/dashboard.schemas';
+import {
+  parseQueryObject,
+  serverErrorResponse,
+  unauthorizedResponse,
+  validationErrorResponse,
+} from '@/lib/validation/http';
 
 /**
  * GET /api/dashboard/summary
@@ -11,11 +21,36 @@ import { notImplementedResponse } from '@/lib/validation/http';
  *
  * Query params: period (week|month|year), year, month, week
  */
-export function GET(_request: NextRequest) {
-  // TODO: Implement in FEAT-007
-  // 1. Authenticate user
-  // 2. Parse & validate query params (period, year, month, week)
-  // 3. Call dashboardService.getSummary()
-  // 4. Return summary with byCategory, recentTransactions, dailySpending
-  return notImplementedResponse();
+export async function GET(request: NextRequest) {
+  const user = await getAuthenticatedUser(request);
+  if (!user) {
+    return unauthorizedResponse();
+  }
+
+  const queryResult = dashboardSummaryQuerySchema.safeParse(
+    parseQueryObject(request.nextUrl.searchParams)
+  );
+  if (!queryResult.success) {
+    return validationErrorResponse(queryResult.error);
+  }
+
+  const now = new Date();
+  const period: DashboardPeriod = queryResult.data.period;
+  const year = queryResult.data.year ?? now.getFullYear();
+  const month = queryResult.data.month ?? (period !== 'year' ? now.getMonth() + 1 : undefined);
+  const week = queryResult.data.week;
+
+  try {
+    const { dashboardService } = await createContainer();
+    const result = await dashboardService.getSummary({
+      userId: user.accountId,
+      period,
+      year,
+      month,
+      week,
+    });
+    return NextResponse.json(result, { status: HttpStatus.OK });
+  } catch {
+    return serverErrorResponse();
+  }
 }

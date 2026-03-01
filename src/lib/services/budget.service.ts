@@ -10,13 +10,13 @@ import type {
   Budget,
   BudgetCreate,
   BudgetUpdate,
-  BudgetStatus,
   EnrichedBudget,
   BudgetsWithSpending,
 } from '@/types/budget';
 
-import { SGT_OFFSET } from '@/lib/constants';
 import { BudgetNotFoundError, BudgetAlreadyExistsError } from '@/lib/errors';
+import { getMonthDateRange } from '@/lib/utils/date';
+import { calculateBudgetStatus } from '@/lib/utils/budget';
 
 // ---------------------------------------------------------------------------
 // Service
@@ -44,10 +44,7 @@ export class BudgetService {
     }
 
     // Compute date range for the month (SGT)
-    const startDate = `${year}-${String(month).padStart(2, '0')}-01T00:00:00${SGT_OFFSET}`;
-    const nextMonth = month === 12 ? 1 : month + 1;
-    const nextYear = month === 12 ? year + 1 : year;
-    const endDate = `${nextYear}-${String(nextMonth).padStart(2, '0')}-01T00:00:00${SGT_OFFSET}`;
+    const { start: startDate, end: endDate } = getMonthDateRange(year, month);
 
     // Get spending summary per category
     const spendingSummary = await this.transactionRepo.sumByUserCategoryDateRange(
@@ -61,8 +58,7 @@ export class BudgetService {
     const enrichedBudgets: EnrichedBudget[] = budgets.map((budget) => {
       const spentAmount = spendingMap.get(budget.categoryId) ?? 0;
       const remainingAmount = budget.amount - spentAmount;
-      const percentUsed = budget.amount > 0 ? (spentAmount / budget.amount) * 100 : spentAmount > 0 ? Infinity : 0;
-      const status = this._calculateStatus(percentUsed);
+      const { percentUsed, status } = calculateBudgetStatus(spentAmount, budget.amount);
 
       return {
         id: budget.id,
@@ -152,20 +148,4 @@ export class BudgetService {
     await this.budgetRepo.delete(budgetId);
   }
 
-  // ---------------------------------------------------------------------------
-  // Private helpers
-  // ---------------------------------------------------------------------------
-
-  private static readonly _OVER_BUDGET_THRESHOLD = 100;
-  private static readonly _WARNING_THRESHOLD = 80;
-
-  private _calculateStatus(percentUsed: number): BudgetStatus {
-    if (percentUsed >= BudgetService._OVER_BUDGET_THRESHOLD) {
-      return 'over_budget';
-    }
-    if (percentUsed >= BudgetService._WARNING_THRESHOLD) {
-      return 'warning';
-    }
-    return 'on_track';
-  }
 }

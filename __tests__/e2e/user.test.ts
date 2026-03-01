@@ -9,7 +9,21 @@
 
 import { test, expect } from '@playwright/test';
 
+import { seedE2EData, teardownE2EData } from './helpers/appwrite-seed';
+
 const API_BASE = '/api/user/profile';
+
+// ---------------------------------------------------------------------------
+// Setup / Teardown
+// ---------------------------------------------------------------------------
+
+test.beforeAll(async () => {
+  await seedE2EData();
+});
+
+test.afterAll(async () => {
+  await teardownE2EData();
+});
 
 // ---------------------------------------------------------------------------
 // GET /api/user/profile
@@ -22,7 +36,7 @@ test.describe('GET /api/user/profile', () => {
     expect(response.status()).toBe(200);
     const body = await response.json();
     expect(body.user).toBeDefined();
-    expect(body.user.accountId).toBeDefined();
+    expect(body.user.id).toBeDefined();
   });
 });
 

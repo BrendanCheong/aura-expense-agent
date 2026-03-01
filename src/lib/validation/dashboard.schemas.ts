@@ -10,3 +10,8 @@ export const dashboardSummaryQuerySchema = z.object({
   month: monthSchema.optional(),
   week: z.coerce.number().int().min(1).max(53).optional(),
 });
+
+export const dashboardAlertsQuerySchema = z.object({
+  year: yearSchema.optional(),
+  month: monthSchema.optional(),
+});

@@ -1,6 +1,6 @@
 # FEAT-007 — Dashboard with Charts & Alerts
 
-> **Status:** 🔴 Not Started  
+> **Status:** � In Progress (Backend Complete)  
 > **Execution Order:** 10 of 13  
 > **Sprint:** 4 — UI Pages  
 > **Blocked By:** FEAT-008, FEAT-009, FEAT-010  
@@ -61,13 +61,14 @@ Build the main dashboard page showing a spending donut chart, per-category budge
 ## Definition of Done
 
 - [ ] All acceptance criteria pass in browser
-- [ ] Unit tests: `DashboardService.getSummary()` (4 tests per `03-services.test-plan.md`)
-- [ ] Unit tests: `DashboardService.getAlerts()` (4 tests per `03-services.test-plan.md`)
-- [ ] Unit tests: `calculateBudgetStatus()` utility (4 tests per `01-utils.test-plan.md`)
-- [ ] E2E test: Dashboard loads with data (Playwright)
+- [x] Unit tests: `DashboardService.getSummary()` (8 tests — `dashboard.service.test.ts`)
+- [x] Unit tests: `DashboardService.getAlerts()` (4 tests — `dashboard.service.test.ts`)
+- [x] Unit tests: `calculateBudgetStatus()` utility (13 tests — `budget.test.ts`)
+- [x] Integration tests: Dashboard API routes (17 tests — `dashboard.test.ts`)
+- [ ] E2E test: Dashboard loads with data (Playwright) — **blocked by Appwrite SDK + Turbopack runtime issue**
 - [ ] Responsive: Mobile card layout, desktop grid layout
 - [ ] Accessible: ARIA labels on chart, keyboard navigable tabs
-- [ ] No TypeScript errors
+- [x] No TypeScript errors (dashboard code clean; pre-existing issue in user profile route)
 
 ## References
 

@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth/middleware';
 import { HttpStatus } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
+import { type BudgetMode } from '@/lib/enums';
 import {
   unauthorizedResponse,
   serverErrorResponse,
@@ -65,7 +66,7 @@ export async function PATCH(request: NextRequest) {
     const container = await createContainer();
     const updated = await container.authService.updateUserProfile(
       user.accountId,
-      bodyResult.data
+      bodyResult.data as { monthlySalary?: number; budgetMode?: BudgetMode }
     );
 
     return NextResponse.json({ user: updated }, { status: HttpStatus.OK });

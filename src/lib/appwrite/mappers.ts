@@ -184,12 +184,12 @@ export function mapUserToRow(data: UserCreate): UserRowData {
   return {
     email: data.email,
     name: data.name,
-    avatar_url: data.avatarUrl,
+    avatar_url: data.avatarUrl || undefined,
     inbound_email: '',
     oauth_provider: data.oauthProvider,
     monthly_salary: 0,
     budget_mode: BudgetMode.DIRECT,
-  };
+  } as UserRowData;
 }
 
 export function mapUserUpdateToRow(data: UserUpdate): Partial<UserRowData> {

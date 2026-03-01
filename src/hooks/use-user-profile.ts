@@ -1,8 +1,12 @@
 'use client';
 
+import { isAxiosError } from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 
 import type { User, UserUpdate } from '@/types/user';
+
+import { apiClient } from '@/lib/api-client';
+import { API_ROUTES } from '@/lib/constants';
 
 interface UseUserProfileReturn {
   user: User | null;
@@ -21,14 +25,12 @@ export function useUserProfile(): UseUserProfileReturn {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/user/profile');
-      if (!res.ok) {
-        throw new Error(`Failed to fetch profile: ${res.status}`);
-      }
-      const data: { user: User } = await res.json();
+      const { data } = await apiClient.get<{ user: User }>(API_ROUTES.USER_PROFILE);
       setUser(data.user);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      const message =
+        isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Unknown error';
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -40,17 +42,14 @@ export function useUserProfile(): UseUserProfileReturn {
 
   const updateProfile = useCallback(
     async (data: UserUpdate): Promise<void> => {
-      const res = await fetch('/api/user/profile', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Failed to update profile: ${res.status}`);
+      try {
+        const { data: updated } = await apiClient.patch<{ user: User }>(API_ROUTES.USER_PROFILE, data);
+        setUser(updated.user);
+      } catch (err) {
+        const message =
+          isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Failed to update profile';
+        throw new Error(message);
       }
-      const updated: { user: User } = await res.json();
-      setUser(updated.user);
     },
     [],
   );

@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
+import { apiClient } from '@/lib/api-client';
+import { API_ROUTES } from '@/lib/constants';
+
 interface VendorSuggestion {
   id: string;
   vendorName: string;
@@ -25,13 +28,10 @@ export function useVendorCache(): UseVendorCacheReturn {
 
     async function fetchVendors() {
       try {
-        const res = await fetch('/api/vendor-cache');
-        if (res.ok) {
-          const data: VendorSuggestion[] = await res.json();
-          if (!cancelled) {
-            // Sort by hit count descending (most used vendors first)
-            setVendors(data.sort((a, b) => b.hitCount - a.hitCount));
-          }
+        const { data } = await apiClient.get<VendorSuggestion[]>(API_ROUTES.VENDOR_CACHE);
+        if (!cancelled) {
+          // Sort by hit count descending (most used vendors first)
+          setVendors(data.sort((a, b) => b.hitCount - a.hitCount));
         }
       } catch {
         // Non-critical — autocomplete fails gracefully

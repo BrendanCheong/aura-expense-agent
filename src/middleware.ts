@@ -27,8 +27,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check for Appwrite session cookie
-  const sessionCookie = request.cookies.get('a_session');
+  // Check for session cookie (JWT stored after OAuth callback)
+  const sessionCookie = request.cookies.get('aura_session');
 
   if (!sessionCookie?.value) {
     const loginUrl = new URL('/login', request.url);

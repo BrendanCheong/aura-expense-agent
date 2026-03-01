@@ -3,7 +3,9 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState , Suspense } from 'react';
 
+import { apiClient } from '@/lib/api-client';
 import { getAppwriteAccount } from '@/lib/appwrite/client';
+import { API_ROUTES } from '@/lib/constants';
 
 
 function CallbackHandler() {
@@ -18,28 +20,20 @@ function CallbackHandler() {
       try {
         if (isDev) {
           // Dev mode — call server-side API to register dev user
-          const res = await fetch('/api/auth/dev-login', { method: 'POST' });
-          if (!res.ok) {throw new Error('Dev login failed');}
+          await apiClient.post(API_ROUTES.AUTH_DEV_LOGIN);
           router.replace(redirect);
           return;
         }
 
-        // Production — Appwrite handles OAuth callback automatically
-        // by the time we reach this page, the session cookie is set.
-        // We just need to ensure the user record exists in our DB.
+        // Production — Appwrite handles OAuth callback automatically.
+        // Get a temporary client JWT, then let the server handle everything:
+        // create a long-lived JWT, set HttpOnly cookie, ensure user record.
         const account = getAppwriteAccount();
-        const user = await account.get();
+        const { jwt } = await account.createJWT();
 
-        // Ensure user record exists
-        await fetch('/api/auth/ensure-user', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            accountId: user.$id,
-            email: user.email,
-            name: user.name,
-            avatarUrl: user.prefs?.avatar ?? '',
-          }),
+        // Server creates the real session (HttpOnly cookie + ensure user)
+        await apiClient.post(API_ROUTES.AUTH_SESSION, null, {
+          headers: { Authorization: `Bearer ${jwt}` },
         });
 
         router.replace(redirect);

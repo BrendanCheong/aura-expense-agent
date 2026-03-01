@@ -1,8 +1,12 @@
 'use client';
 
+import { isAxiosError } from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 
 import type { BudgetsWithSpending } from '@/types/budget';
+
+import { apiClient } from '@/lib/api-client';
+import { API_ROUTES } from '@/lib/constants';
 
 interface UseBudgetsReturn {
   budgetsWithSpending: BudgetsWithSpending | null;
@@ -27,14 +31,12 @@ export function useBudgets(): UseBudgetsReturn {
     setError(null);
     try {
       const params = new URLSearchParams({ year: String(year), month: String(month) });
-      const res = await fetch(`/api/budgets?${params.toString()}`);
-      if (!res.ok) {
-        throw new Error(`Failed to fetch budgets: ${res.status}`);
-      }
-      const data: BudgetsWithSpending = await res.json();
+      const { data } = await apiClient.get<BudgetsWithSpending>(`${API_ROUTES.BUDGETS}?${params.toString()}`);
       setBudgetsWithSpending(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      const message =
+        isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Unknown error';
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -51,31 +53,29 @@ export function useBudgets(): UseBudgetsReturn {
 
   const upsertBudget = useCallback(
     async (categoryId: string, amount: number): Promise<void> => {
-      const res = await fetch('/api/budgets', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ categoryId, amount, year, month }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Failed to upsert budget: ${res.status}`);
+      try {
+        await apiClient.put(API_ROUTES.BUDGETS, { categoryId, amount, year, month });
+        // Re-fetch to get updated spending data
+        await fetchBudgets();
+      } catch (err) {
+        const message =
+          isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Failed to upsert budget';
+        throw new Error(message);
       }
-      // Re-fetch to get updated spending data
-      await fetchBudgets();
     },
     [year, month, fetchBudgets],
   );
 
   const deleteBudget = useCallback(
     async (budgetId: string): Promise<void> => {
-      const res = await fetch(`/api/budgets/${budgetId}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Failed to delete budget: ${res.status}`);
+      try {
+        await apiClient.delete(API_ROUTES.BUDGET(budgetId));
+        await fetchBudgets();
+      } catch (err) {
+        const message =
+          isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Failed to delete budget';
+        throw new Error(message);
       }
-      await fetchBudgets();
     },
     [fetchBudgets],
   );

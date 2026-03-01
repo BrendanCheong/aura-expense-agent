@@ -19,7 +19,7 @@
 | --- | ------------------------------------------- | ---------------------------------------- | ------ | ---------------------------- | ---- | ------ |
 | 1   | [FEAT-003](FEAT-003-project-scaffolding.md) | Project Scaffolding & Configuration      | 1      | —                            | 1d   | 🟢     |
 | 2   | [FEAT-002](FEAT-002-database-setup.md)      | Appwrite Database Schema & Setup         | 1      | FEAT-003                     | 0.5d | 🟢     |
-| 3   | [FEAT-001](FEAT-001-auth-oauth.md)          | OAuth Authentication (Google + GitHub)   | 1      | FEAT-003, FEAT-002           | 1d   | 🟡     |
+| 3   | [FEAT-001](FEAT-001-auth-oauth.md)          | OAuth Authentication (Google + GitHub)   | 1      | FEAT-003, FEAT-002           | 1d   | �     |
 | 4   | [FEAT-010](FEAT-010-category-management.md) | Category Management (CRUD)               | 2      | FEAT-001, FEAT-002           | 1d   | 🟢     |
 | 5   | [FEAT-006](FEAT-006-vendor-cache.md)        | Vendor Cache (Agent Memory)              | 2      | FEAT-003, FEAT-002           | 0.5d | 🟢     |
 | 6   | [FEAT-005](FEAT-005-ai-agent.md)            | LangGraph.js Expense Agent               | 3      | FEAT-010, FEAT-006           | 2d   | 🟢     |
@@ -45,7 +45,7 @@
 | 2   | **FEAT-002 — Database**    | Creates all 5 Appwrite collections. Needs the project to exist so `scripts/setup-appwrite.ts` and `src/lib/appwrite/config.ts` have a home.                                   |
 | 3   | **FEAT-001 — Auth**        | Needs both the project (for pages, middleware) and the DB (for `users` table, category seeding on first login). After this, you have a working login → protected routes flow. |
 
-**Milestone:** User can sign in with Google/GitHub, see a protected dashboard shell, and sign out.
+**Milestone:** User can sign in with Google/GitHub, see a protected dashboard shell, and sign out. ✅
 
 ---
 

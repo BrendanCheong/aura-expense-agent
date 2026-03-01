@@ -1,8 +1,12 @@
 'use client';
 
+import { isAxiosError } from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 
 import type { Category, CategoryUpdate } from '@/types/category';
+
+import { apiClient } from '@/lib/api-client';
+import { API_ROUTES } from '@/lib/constants';
 
 interface UseCategoriesReturn {
   categories: Category[];
@@ -28,14 +32,12 @@ export function useCategories(): UseCategoriesReturn {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/categories');
-      if (!res.ok) {
-        throw new Error(`Failed to fetch categories: ${res.status}`);
-      }
-      const data = await res.json();
+      const { data } = await apiClient.get<Category[]>(API_ROUTES.CATEGORIES);
       setCategories(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      const message =
+        isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Unknown error';
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -52,49 +54,43 @@ export function useCategories(): UseCategoriesReturn {
       icon?: string;
       color?: string;
     }): Promise<Category> => {
-      const res = await fetch('/api/categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Failed to create category: ${res.status}`);
+      try {
+        const { data: created } = await apiClient.post<Category>(API_ROUTES.CATEGORIES, data);
+        setCategories((prev) => [...prev, created]);
+        return created;
+      } catch (err) {
+        const message =
+          isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Failed to create category';
+        throw new Error(message);
       }
-      const created: Category = await res.json();
-      setCategories((prev) => [...prev, created]);
-      return created;
     },
     []
   );
 
   const updateCategory = useCallback(
     async (id: string, data: CategoryUpdate): Promise<Category> => {
-      const res = await fetch(`/api/categories/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Failed to update category: ${res.status}`);
+      try {
+        const { data: updated } = await apiClient.patch<Category>(API_ROUTES.CATEGORY(id), data);
+        setCategories((prev) => prev.map((c) => (c.id === id ? updated : c)));
+        return updated;
+      } catch (err) {
+        const message =
+          isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Failed to update category';
+        throw new Error(message);
       }
-      const updated: Category = await res.json();
-      setCategories((prev) => prev.map((c) => (c.id === id ? updated : c)));
-      return updated;
     },
     []
   );
 
   const deleteCategory = useCallback(async (id: string): Promise<void> => {
-    const res = await fetch(`/api/categories/${id}`, {
-      method: 'DELETE',
-    });
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      throw new Error(body.error || `Failed to delete category: ${res.status}`);
+    try {
+      await apiClient.delete(API_ROUTES.CATEGORY(id));
+      setCategories((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      const message =
+        isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Failed to delete category';
+      throw new Error(message);
     }
-    setCategories((prev) => prev.filter((c) => c.id !== id));
   }, []);
 
   return {

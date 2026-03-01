@@ -5,6 +5,11 @@ import { HttpStatus, ErrorMessage } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
 import { OAuthProvider } from '@/lib/enums';
 
+const PROVIDER_MAP: Record<string, OAuthProvider> = {
+  google: OAuthProvider.GOOGLE,
+  github: OAuthProvider.GITHUB,
+};
+
 /**
  * POST /api/auth/ensure-user
  *
@@ -14,7 +19,7 @@ import { OAuthProvider } from '@/lib/enums';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { accountId, email, name, avatarUrl } = body;
+    const { accountId, email, name, avatarUrl, provider } = body;
 
     if (!accountId || !email || !name) {
       return NextResponse.json(
@@ -37,7 +42,7 @@ export async function POST(request: NextRequest) {
       email,
       name,
       avatarUrl: avatarUrl ?? '',
-      oauthProvider: OAuthProvider.GOOGLE, // Will be determined from session in future
+      oauthProvider: PROVIDER_MAP[provider as string] ?? OAuthProvider.GITHUB,
     });
 
     return NextResponse.json({ user });

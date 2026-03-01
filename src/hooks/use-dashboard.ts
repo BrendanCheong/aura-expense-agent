@@ -1,5 +1,6 @@
 'use client';
 
+import { isAxiosError } from 'axios';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 
 import type {
@@ -8,6 +9,9 @@ import type {
   DashboardSummaryResponse,
   RecentTransaction,
 } from '@/types/dashboard';
+
+import { apiClient } from '@/lib/api-client';
+import { API_ROUTES } from '@/lib/constants';
 
 interface UseDashboardReturn {
   summary: DashboardSummaryResponse | null;
@@ -50,23 +54,19 @@ export function useDashboard(): UseDashboardReturn {
       });
 
       const [summaryRes, alertsRes] = await Promise.all([
-        fetch(`/api/dashboard/summary?${summaryParams.toString()}`),
-        fetch(`/api/dashboard/alerts?${alertsParams.toString()}`),
+        apiClient.get<DashboardSummaryResponse>(`${API_ROUTES.DASHBOARD_SUMMARY}?${summaryParams.toString()}`),
+        apiClient.get<DashboardAlertsResponse>(`${API_ROUTES.DASHBOARD_ALERTS}?${alertsParams.toString()}`).catch(() => null),
       ]);
 
-      if (!summaryRes.ok) {
-        throw new Error(`Failed to fetch dashboard summary: ${summaryRes.status}`);
-      }
+      setSummary(summaryRes.data);
 
-      const summaryData: DashboardSummaryResponse = await summaryRes.json();
-      setSummary(summaryData);
-
-      if (alertsRes.ok) {
-        const alertsData: DashboardAlertsResponse = await alertsRes.json();
-        setAlerts(alertsData);
+      if (alertsRes) {
+        setAlerts(alertsRes.data);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      const message =
+        isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Unknown error';
+      setError(message);
       setSummary(null);
     } finally {
       setIsLoading(false);

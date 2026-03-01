@@ -4,11 +4,12 @@
  * Singleton pattern — one instance per process.
  */
 
-import { Client, TablesDB } from 'node-appwrite';
+import { Client, TablesDB, Users } from 'node-appwrite';
 
 interface AppwriteServerInstance {
   client: Client;
   tablesDb: TablesDB;
+  users: Users;
 }
 
 let instance: AppwriteServerInstance | null = null;
@@ -33,8 +34,9 @@ export function getAppwriteServer(): AppwriteServerInstance {
   const client = new Client().setEndpoint(endpoint).setProject(projectId).setKey(apiKey);
 
   const tablesDb = new TablesDB(client);
+  const users = new Users(client);
 
-  instance = { client, tablesDb };
+  instance = { client, tablesDb, users };
   return instance;
 }
 

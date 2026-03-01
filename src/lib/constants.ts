@@ -75,3 +75,19 @@ export const RESEND_EMAIL_RECEIVED_EVENT = 'email.received';
 /** Boundary dates for "all time" queries */
 export const DATE_MIN = '1970-01-01T00:00:00Z';
 export const DATE_MAX = '2099-12-31T23:59:59Z';
+
+export const API_ROUTES = {
+  CATEGORIES: '/api/categories',
+  CATEGORY: (id: string) => `/api/categories/${id}`,
+  TRANSACTIONS: '/api/transactions',
+  TRANSACTION: (id: string) => `/api/transactions/${id}`,
+  BUDGETS: '/api/budgets',
+  BUDGET: (id: string) => `/api/budgets/${id}`,
+  DASHBOARD_SUMMARY: '/api/dashboard/summary',
+  DASHBOARD_ALERTS: '/api/dashboard/alerts',
+  USER_PROFILE: '/api/user/profile',
+  AUTH_SESSION: '/api/auth/session',
+  AUTH_REFRESH: '/api/auth/refresh',
+  AUTH_DEV_LOGIN: '/api/auth/dev-login',
+  VENDOR_CACHE: '/api/vendor-cache',
+} as const;

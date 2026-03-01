@@ -1,9 +1,13 @@
 'use client';
 
+import { isAxiosError } from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 
 import type { PaginatedResult, TransactionQueryOptions } from '@/lib/repositories/interfaces';
 import type { Transaction, TransactionUpdate } from '@/types/transaction';
+
+import { apiClient } from '@/lib/api-client';
+import { API_ROUTES } from '@/lib/constants';
 
 interface UseTransactionsReturn {
   transactions: Transaction[];
@@ -61,18 +65,16 @@ export function useTransactions(): UseTransactionsReturn {
     setError(null);
     try {
       const qs = buildQueryString(filters);
-      const res = await fetch(`/api/transactions?${qs}`);
-      if (!res.ok) {
-        throw new Error(`Failed to fetch transactions: ${res.status}`);
-      }
-      const data: PaginatedResult<Transaction> = await res.json();
+      const { data } = await apiClient.get<PaginatedResult<Transaction>>(`${API_ROUTES.TRANSACTIONS}?${qs}`);
       setTransactions(data.data);
       setTotal(data.total);
       setPage(data.page);
       setLimit(data.limit);
       setHasMore(data.hasMore);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      const message =
+        isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Unknown error';
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -99,52 +101,46 @@ export function useTransactions(): UseTransactionsReturn {
       transactionDate: string;
       description?: string;
     }): Promise<Transaction> => {
-      const res = await fetch('/api/transactions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Failed to create transaction: ${res.status}`);
+      try {
+        const { data: created } = await apiClient.post<Transaction>(API_ROUTES.TRANSACTIONS, data);
+        // Re-fetch to get updated list in correct sort order
+        await fetchTransactions();
+        return created;
+      } catch (err) {
+        const message =
+          isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Failed to create transaction';
+        throw new Error(message);
       }
-      const created: Transaction = await res.json();
-      // Re-fetch to get updated list in correct sort order
-      await fetchTransactions();
-      return created;
     },
     [fetchTransactions],
   );
 
   const updateTransaction = useCallback(
     async (id: string, data: TransactionUpdate): Promise<Transaction> => {
-      const res = await fetch(`/api/transactions/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Failed to update transaction: ${res.status}`);
+      try {
+        const { data: updated } = await apiClient.patch<Transaction>(API_ROUTES.TRANSACTION(id), data);
+        setTransactions((prev) => prev.map((t) => (t.id === id ? updated : t)));
+        return updated;
+      } catch (err) {
+        const message =
+          isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Failed to update transaction';
+        throw new Error(message);
       }
-      const updated: Transaction = await res.json();
-      setTransactions((prev) => prev.map((t) => (t.id === id ? updated : t)));
-      return updated;
     },
     [],
   );
 
   const deleteTransaction = useCallback(
     async (id: string): Promise<void> => {
-      const res = await fetch(`/api/transactions/${id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Failed to delete transaction: ${res.status}`);
+      try {
+        await apiClient.delete(API_ROUTES.TRANSACTION(id));
+        setTransactions((prev) => prev.filter((t) => t.id !== id));
+        setTotal((prev) => prev - 1);
+      } catch (err) {
+        const message =
+          isAxiosError(err) ? (err.response?.data as { error?: string } | undefined)?.error ?? err.message : 'Failed to delete transaction';
+        throw new Error(message);
       }
-      setTransactions((prev) => prev.filter((t) => t.id !== id));
-      setTotal((prev) => prev - 1);
     },
     [],
   );

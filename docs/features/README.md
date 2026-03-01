@@ -75,17 +75,18 @@
 
 ---
 
-### Sprint 4 — UI Pages (5 days)
+### Sprint 4 — UI Pages (5 days) ✅
 
 > **Goal:** All user-facing pages with real data flowing through.
+> **Status:** Complete — all pages implemented with full test coverage.
 
-| #   | Feature                     | Why This Order                                                                                                                                                                          |
-| --- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 8   | **FEAT-008 — Transactions** | Needs auth (protected page), categories (dropdown), vendor cache (autocomplete). Full CRUD: list, add, edit, re-categorize, delete. **Does NOT include AI feedback** — that's FEAT-013. |
-| 9   | **FEAT-009 — Budgets**      | Needs auth and categories (per-category budgets). Both Direct Amount and Salary Allocation modes. Independent of transactions — can be built in parallel if desired.                    |
-| 10  | **FEAT-007 — Dashboard**    | **Moved to last in Sprint 4.** Aggregates transactions, budgets, and categories. Building it after those three pages means the donut chart, progress bars, and alerts render real data. |
+| #   | Feature                     | Status |
+| --- | --------------------------- | ------ |
+| 8   | **FEAT-008 — Transactions** | ✅ Complete |
+| 9   | **FEAT-009 — Budgets**      | ✅ Complete |
+| 10  | **FEAT-007 — Dashboard**    | ✅ Complete (backend + frontend, 38 React/hook tests) |
 
-**Milestone:** All 4 main pages work: Categories, Transactions, Budgets, Dashboard.
+**Milestone:** All 4 main pages work: Categories, Transactions, Budgets, Dashboard. ✅
 
 ---
 

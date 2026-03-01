@@ -1,9 +1,10 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
+import type { DashboardPeriod } from '@/types/dashboard';
+
 import { getAuthenticatedUser } from '@/lib/auth/middleware';
 import { HttpStatus } from '@/lib/constants';
 import { createContainer } from '@/lib/container/container';
-import type { DashboardPeriod } from '@/types/dashboard';
 import { dashboardSummaryQuerySchema } from '@/lib/validation/dashboard.schemas';
 import {
   parseQueryObject,

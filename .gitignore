@@ -141,3 +141,7 @@ vite.config.ts.timestamp-*
 # Agents
 .agents
 /docs/plans/history
+
+# playwright
+playwright-report/
+test-results/
